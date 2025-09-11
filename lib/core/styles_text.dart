@@ -1,0 +1,42 @@
+import 'package:flutter/material.dart';
+import 'dart:ui';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:hexcolor/hexcolor.dart';
+
+import 'colors_app.dart';
+
+final primareFont = GoogleFonts.montserrat(
+  fontWeight: FontWeight.w800,
+  fontStyle: FontStyle.normal,
+  fontSize: 90.sp,
+  color: titleColorText,
+  shadows: [
+    Shadow(offset: Offset(0, 4.h), blurRadius: 4.r, color: Color(0x08000000)),
+  ],
+);
+final autentificare = GoogleFonts.montserrat(
+  fontWeight: FontWeight.w600,
+  fontStyle: FontStyle.normal,
+  fontSize: 25.sp,
+  color: textColor,
+);
+final titleCardInfo = GoogleFonts.nunitoSans(
+  fontWeight: FontWeight.w500,
+  fontStyle: FontStyle.normal,
+  fontSize: 15.sp,
+  color: subTextColor,
+);
+
+final textHint = GoogleFonts.nunitoSans(
+  fontWeight: FontWeight.w500,
+  fontStyle: FontStyle.normal,
+  fontSize: 18.sp,
+  color: textColor,
+);
+final buttonTextStyle = GoogleFonts.montserrat(
+  fontWeight: FontWeight.w600,
+  fontStyle: FontStyle.normal,
+  fontSize: 20.sp,
+  color: titleColorText,
+);

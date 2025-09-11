@@ -1,0 +1,28 @@
+{
+  "licenseCode": "Enter the license code",
+  "codeDigits": "The license code consists of 8 digits",
+  "enter": "OK",
+  "password": "Password",
+  "login": "Login",
+  "auth": "Autentificare",
+  "user": "User",
+  "userHint": "User name",
+  "pass": "Password",
+  "passHint": "Password123",
+  "saveAuth": "Remember me",
+  "connect": "Connect",
+
+  "errors": {
+    "incorrectLicense": "Yor code is incorrect",
+    "error500": "Internal server error (500). Please try again later.",
+    "error502": "Server temporarily unavailable (502). Please try again later.",
+    "error503": "Service overloaded or temporarily unavailable (503). Please try again later.",
+    "error504": "Server response timeout exceeded (504). Please try again later.",
+    "error404": "Requested resource not found (404). Please try again later.",
+    "error509": "Server bandwidth limit exceeded (509). Please try again later.",
+    "error520": "Unknown server error (520). Please try again later.",
+    "error521": "Server is offline (521). Please try again later.",
+    "error524": "Connection timeout expired (524). Please try again later.",
+    "error525": "SSL certificate error (525). Please try again later."
+  }
+}

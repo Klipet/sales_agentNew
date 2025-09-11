@@ -1,0 +1,28 @@
+{
+  "licenseCode": "Introduceți codul licenței",
+  "codeDigits": "Codul licenței constă din 8 cifre",
+  "enter": "OK",
+  "password": "Parola",
+  "login": "Login",
+  "auth": "Autentificare",
+  "user": "Utilizator",
+  "userHint": "Utilizator name",
+  "pass": "Parola",
+  "passHint": "Password123",
+  "saveAuth": "Reține datele de autentificare",
+  "connect": "Conectare",
+
+  "errors": {
+    "incorrectLicense": "Codul licenței incorect",
+    "error500": "Eroare internă a serverului (500). Încercați din nou mai târziu.",
+    "error502": "Serverul este temporar indisponibil (502). Încercați din nou mai târziu.",
+    "error503": "Serviciul este supraîncărcat sau temporar indisponibil (503). Încercați din nou mai târziu.",
+    "error504": "Timpul de așteptare pentru răspunsul serverului a fost depășit (504). Încercați din nou mai târziu.",
+    "error404": "Resursa solicitată nu a fost găsită (404). Încercați din nou mai târziu.",
+    "error509": "Lățimea de bandă a serverului a fost depășită (509). Încercați din nou mai târziu.",
+    "error520": "Eroare necunoscută a serverului (520). Încercați din nou mai târziu.",
+    "error521": "Serverul este deconectat (521). Încercați din nou mai târziu.",
+    "error524": "Timpul de așteptare al conexiunii a expirat (524). Încercați din nou mai târziu.",
+    "error525": "Eroare de certificat SSL (525). Încercați din nou mai târziu."
+  }
+}
