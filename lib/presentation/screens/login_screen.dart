@@ -25,7 +25,7 @@ class LoginScreen extends StatelessWidget {
           ),
           SizedBox(height: 26.h), // отступ перед формой
           Center(
-            child: AuthLoginWidgetUI(), // используем полноценный UI виджет
+            child: AuthLoginWidget(), // используем полноценный UI виджет
           ),
         ],
       ),
