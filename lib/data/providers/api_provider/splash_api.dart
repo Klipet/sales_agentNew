@@ -37,7 +37,7 @@ class SplashApi{
         'Authorization': basicAuth,
     },
       body: jsonEncode(deviceInfo.toJson()),
-    );
+    ).timeout(Duration(seconds: 5));
     if(response.statusCode == 200){
 
       final data = jsonDecode(response.body);

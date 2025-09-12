@@ -34,7 +34,7 @@ class ActivationApi {
           'Authorization': basicAuth,
         },
         body: jsonEncode(deviceInfo.toJson()),
-      );
+      ).timeout(Duration(seconds: 5));
       if (response.statusCode == 200) {
         final responseJson = jsonDecode(response.body);
         final apiResponse = ModelResponse.fromJson(responseJson);

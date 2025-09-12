@@ -1,9 +1,16 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:sales_agent/data/providers/api_provider/login_api.dart';
+import 'package:sales_agent/data/repositories/login_repositori.dart';
+import 'package:sales_agent/logic/blocs/login_bloc/login_bloc.dart';
+import 'package:sales_agent/logic/blocs/login_bloc/login_event.dart';
+import 'package:sales_agent/logic/blocs/login_bloc/login_state.dart';
 
 import '../../core/colors_app.dart';
+import '../../core/errors/error_toast.dart';
 import '../../core/styles_text.dart';
 
 class AuthLoginWidget extends StatelessWidget {
@@ -11,7 +18,10 @@ class AuthLoginWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return BlocProvider(
+        create: (_) => LoginBloc(LoginRepository(), LoginApi()),
+      child: AuthLoginWidgetUI(),
+    );
   }
 }
 
@@ -30,90 +40,115 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 448.w,
-      height: 464.h,
-      decoration: BoxDecoration(
-        color: containerColor,
-        borderRadius: BorderRadius.all(Radius.circular(30.r)),
-        border: Border.all(color: HexColor('#E5E5E5'), width: 1.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 48.r),
-            child: Center(child: Text('auth'.tr(), style: autentificare)),
+    return BlocConsumer<LoginBloc, LoginState>(
+      listener: (BuildContext context, LoginState state) {
+        if(state is LoginFailure){
+          showMesageError(state.message, context);
+        }else if(state is LoginSuccess){
+
+
+        }else if(state is LoginLoading){
+          Container(
+            width: 448.w,
+            height: 464.h,
+            child: CircularProgressIndicator(color: textColor,),
+          );
+        }
+      },
+      builder: (BuildContext context, LoginState state) {
+        return Container(
+          width: 448.w,
+          height: 464.h,
+          decoration: BoxDecoration(
+            color: containerColor,
+            borderRadius: BorderRadius.all(Radius.circular(30.r)),
+            border: Border.all(color: HexColor('#E5E5E5'), width: 1.r),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 75.r, top: 32.r, bottom: 8.r),
-            child: Text('user'.tr(), style: titleCardInfo),
-          ),
-          Center(
-            child: ediTextAut(
-              _controllerLogin,
-              'userHint'.tr(),
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(left: 75.r, top: 16.r, bottom: 8.r),
-            child: Text('pass'.tr(), style: titleCardInfo),
-          ),
-          Center(
-            child: ediTextAut(
-              _controllerPassword,
-              'passHint'.tr(),
-              obscureText: hidePassword,
-              suffixIcon: true,
-              keyboardType: TextInputType.text,
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.only(top: 16.r, left: 75.r),
-            child: Row(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      savePass = !savePass;
-                    });
-                  },
-                  child: Image.asset(
-                    savePass
-                        ? 'assets/icons/chek_box.png'
-                        : 'assets/icons/chec_unbox.png',
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: 8.0),
-                  child: Text('saveAuth'.tr(), style: titleCardInfo),
-                ),
-              ],
-            ),
-          ),
-          Center(
-            child: Padding(
-              padding: EdgeInsets.only(top: 48.r),
-              child: ElevatedButton(
-                  onPressed: () {},
-                  style: ButtonStyle(
-                    fixedSize: WidgetStateProperty.all(Size(175.w, 48.h)),
-                    backgroundColor: WidgetStateProperty.all(buttonColor),
-                    shape: WidgetStateProperty.all(
-                     RoundedRectangleBorder(
-                       borderRadius: BorderRadiusGeometry.circular(100.r)
-                     )
-                    )
-                  ),
-                  child: Text('connect'.tr(),
-                    style: buttonTextStyle,
-                  )
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(top: 48.r),
+                child: Center(child: Text('auth'.tr(), style: autentificare)),
               ),
-            ),
+              Padding(
+                padding: EdgeInsets.only(left: 75.r, top: 32.r, bottom: 8.r),
+                child: Text('user'.tr(), style: titleCardInfo),
+              ),
+              Center(
+                child: ediTextAut(
+                  _controllerLogin,
+                  'userHint'.tr(),
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 75.r, top: 16.r, bottom: 8.r),
+                child: Text('pass'.tr(), style: titleCardInfo),
+              ),
+              Center(
+                child: ediTextAut(
+                  _controllerPassword,
+                  'passHint'.tr(),
+                  obscureText: hidePassword,
+                  suffixIcon: true,
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: 16.r, left: 75.r),
+                child: Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          savePass = !savePass;
+                        });
+                      },
+                      child: Image.asset(
+                        savePass
+                            ? 'assets/icons/chek_box.png'
+                            : 'assets/icons/chec_unbox.png',
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(left: 8.0),
+                      child: Text('saveAuth'.tr(), style: titleCardInfo),
+                    ),
+                  ],
+                ),
+              ),
+              Center(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 48.r),
+                  child: ElevatedButton(
+                      onPressed: () {
+                        context.read<LoginBloc>().add(
+                          FetchLoginData(
+                              _controllerLogin.text,
+                              _controllerPassword.text,
+                              savePass)
+                        );
+                      },
+                      style: ButtonStyle(
+                          fixedSize: WidgetStateProperty.all(Size(175.w, 48.h)),
+                          backgroundColor: WidgetStateProperty.all(buttonColor),
+                          shape: WidgetStateProperty.all(
+                              RoundedRectangleBorder(
+                                  borderRadius: BorderRadiusGeometry.circular(100.r)
+                              )
+                          )
+                      ),
+                      child: Text('connect'.tr(),
+                        style: buttonTextStyle,
+                      )
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      }
     );
   }
 
