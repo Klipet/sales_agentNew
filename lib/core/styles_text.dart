@@ -40,3 +40,30 @@ final buttonTextStyle = GoogleFonts.montserrat(
   fontSize: 20.sp,
   color: titleColorText,
 );
+
+final textStyleDriver = GoogleFonts.nunitoSans(
+  fontWeight: FontWeight.w400,
+  fontStyle: FontStyle.normal,
+  fontSize: 16.sp,
+  color: textColor
+);
+
+final textStyleHomeTitle = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 14.sp,
+    color: HexColor("#919191")
+);
+
+final textStyleHomeSubTitle = GoogleFonts.montserrat(
+    fontWeight: FontWeight.w600,
+    fontStyle: FontStyle.normal,
+    fontSize: 18.sp,
+    color: textColor
+);
+final textStyleHomeTime = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);

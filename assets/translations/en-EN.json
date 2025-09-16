@@ -12,6 +12,29 @@
   "saveAuth": "Remember me",
   "connect": "Connect",
 
+  "driver": {
+    "home" : "Home",
+    "orders": "My orders",
+    "client": "Client",
+    "asl": "Assortment",
+    "history": "History orders",
+    "setting": "Settings"
+  },
+
+  "home": {
+    "titleName": "Sales Consultant",
+    "titleSesion": "Session expires in:",
+    "bodyTotal": "All orders",
+    "bodyBtTotal": "View all",
+    "bodyJob": "In progress",
+    "bodyBtJob": "View in progress",
+    "bodyAwait": "Pending",
+    "bodyBtAwait": "View pending",
+    "bodySave": "Templates",
+    "bodyBtSave": "View templates",
+    "bodyBtCreate": "New order"
+  },
+
   "errors": {
     "incorrectLicense": "Yor code is incorrect",
     "error500": "Internal server error (500). Please try again later.",

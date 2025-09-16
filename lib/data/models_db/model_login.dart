@@ -9,5 +9,6 @@ class ModelLogin {
   late String password;
   late String tokenUid;
   late String tokenValid;
+  late String userName;
   late bool savePass;
 }

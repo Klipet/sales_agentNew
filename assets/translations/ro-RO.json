@@ -12,6 +12,29 @@
   "saveAuth": "Reține datele de autentificare",
   "connect": "Conectare",
 
+  "driver": {
+    "home" : "Acasă",
+    "orders": "Comenzile mele",
+    "client": "Clienți",
+    "asl": "Asortiment",
+    "history": "Istoric comenzi",
+    "setting": "Setări"
+  },
+
+  "home": {
+    "titleName": "Consultant Vânzări",
+    "titleSesion": "Sesiunea expiră în:",
+    "bodyTotal": "Toate comenzile",
+    "bodyBtTotal": "Vezi toate",
+    "bodyJob": "În lucru",
+    "bodyBtJob": "Vezi în lucru",
+    "bodyAwait": "În așteptare",
+    "bodyBtAwait": "Vezi în așteptare",
+    "bodySave": "Șabloane",
+    "bodyBtSave": "Vezi șabloane",
+    "bodyBtCreate": "Comandă nouă"
+  },
+
   "errors": {
     "incorrectLicense": "Codul licenței incorect",
     "error500": "Eroare internă a serverului (500). Încercați din nou mai târziu.",

@@ -11,3 +11,4 @@ HexColor borderColor = HexColor('#E5E5E5');
 HexColor textColor = HexColor('#040D12');
 HexColor subTextColor = HexColor('#919191');
 HexColor buttonColor = HexColor('#5CB338');
+HexColor colorDividerSelected = HexColor('#F2F2F2');

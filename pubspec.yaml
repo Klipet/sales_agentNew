@@ -30,6 +30,7 @@ dependencies:
   network_info_plus: ^6.1.4
   equatable: ^2.0.7
   pinput: ^5.0.2
+  sidebarx: ^0.17.2
   number_pad_keyboard: ^0.0.6
   flutter_styled_toast: ^2.2.1
   animated_text_kit: ^4.2.3
@@ -61,6 +62,15 @@ flutter:
       - assets/icons/pass_hide.png
       - assets/icons/chec_unbox.png
       - assets/icons/chek_box.png
+      - assets/icons/drawers/assortiment.png
+      - assets/icons/drawers/contragents.png
+      - assets/icons/drawers/history.png
+      - assets/icons/drawers/home.png
+      - assets/icons/drawers/orders.png
+      - assets/icons/drawers/settings.png
+      - assets/icons/home/human.png
+      - assets/icons/home/total.png
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

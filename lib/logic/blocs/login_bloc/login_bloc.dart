@@ -11,6 +11,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginApi actualizationUser;
 
   LoginBloc(this.repository, this.actualizationUser) : super(LoginInitial()) {
+    on<CheckSavedLogin>(_onCheckSavedLogin);
     on<FetchLoginData>(_onFetchActivationData);
   }
 
@@ -19,8 +20,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     try {
       String login;
       String password;
-
-      if (event.save == true) {
+      final savePass = await repository.getSavePassword();
+      if (savePass == true) {
         login = await repository.getLogin() ?? '';
         password = await repository.getPassword() ?? '';
       } else {
@@ -34,7 +35,11 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       if(apiResponse.errorCode == 0){
         final token = apiResponse.token.uid;
         final validTo = apiResponse.token.validTo;
-        repository.saveLogin(login, password, token, validTo, event.save);
+        final userName = apiResponse.user.name;
+        final surName = apiResponse.user.surname ?? '';
+        final String fullName = '$userName$surName';
+        await repository.saveLogin(login, password, token, validTo, fullName, event.save);
+        emit(LoginSuccess());
       }else{
         emit(LoginFailure(apiResponse.errorMessage.toString()));
       }
@@ -43,4 +48,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
+  Future<void> _onCheckSavedLogin(
+      CheckSavedLogin event, Emitter<LoginState> emit) async {
+    final loginDB = await repository.getLogin();
+    final passwordDB = await repository.getPassword();
+    final savePass = await repository.getSavePassword();
+    if (loginDB != null && passwordDB != null && savePass == true) {
+      add(FetchLoginData(passwordDB, loginDB, savePass!)); // автологин
+    }
+  }
 }

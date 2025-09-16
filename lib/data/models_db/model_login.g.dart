@@ -41,6 +41,11 @@ const ModelLoginSchema = CollectionSchema(
       id: 4,
       name: r'tokenValid',
       type: IsarType.string,
+    ),
+    r'userName': PropertySchema(
+      id: 5,
+      name: r'userName',
+      type: IsarType.string,
     )
   },
   estimateSize: _modelLoginEstimateSize,
@@ -67,6 +72,7 @@ int _modelLoginEstimateSize(
   bytesCount += 3 + object.password.length * 3;
   bytesCount += 3 + object.tokenUid.length * 3;
   bytesCount += 3 + object.tokenValid.length * 3;
+  bytesCount += 3 + object.userName.length * 3;
   return bytesCount;
 }
 
@@ -81,6 +87,7 @@ void _modelLoginSerialize(
   writer.writeBool(offsets[2], object.savePass);
   writer.writeString(offsets[3], object.tokenUid);
   writer.writeString(offsets[4], object.tokenValid);
+  writer.writeString(offsets[5], object.userName);
 }
 
 ModelLogin _modelLoginDeserialize(
@@ -96,6 +103,7 @@ ModelLogin _modelLoginDeserialize(
   object.savePass = reader.readBool(offsets[2]);
   object.tokenUid = reader.readString(offsets[3]);
   object.tokenValid = reader.readString(offsets[4]);
+  object.userName = reader.readString(offsets[5]);
   return object;
 }
 
@@ -115,6 +123,8 @@ P _modelLoginDeserializeProp<P>(
     case 3:
       return (reader.readString(offset)) as P;
     case 4:
+      return (reader.readString(offset)) as P;
+    case 5:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -808,6 +818,140 @@ extension ModelLoginQueryFilter
       ));
     });
   }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition> userNameEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition>
+      userNameGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'userName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition> userNameLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'userName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition> userNameBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'userName',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition>
+      userNameStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'userName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition> userNameEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'userName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition> userNameContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'userName',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition> userNameMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'userName',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition>
+      userNameIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'userName',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition>
+      userNameIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'userName',
+        value: '',
+      ));
+    });
+  }
 }
 
 extension ModelLoginQueryObject
@@ -875,6 +1019,18 @@ extension ModelLoginQuerySortBy
   QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> sortByTokenValidDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'tokenValid', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> sortByUserName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> sortByUserNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userName', Sort.desc);
     });
   }
 }
@@ -952,6 +1108,18 @@ extension ModelLoginQuerySortThenBy
       return query.addSortBy(r'tokenValid', Sort.desc);
     });
   }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> thenByUserName() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userName', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> thenByUserNameDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'userName', Sort.desc);
+    });
+  }
 }
 
 extension ModelLoginQueryWhereDistinct
@@ -987,6 +1155,13 @@ extension ModelLoginQueryWhereDistinct
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'tokenValid', caseSensitive: caseSensitive);
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QDistinct> distinctByUserName(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'userName', caseSensitive: caseSensitive);
     });
   }
 }
@@ -1026,6 +1201,12 @@ extension ModelLoginQueryProperty
   QueryBuilder<ModelLogin, String, QQueryOperations> tokenValidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'tokenValid');
+    });
+  }
+
+  QueryBuilder<ModelLogin, String, QQueryOperations> userNameProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'userName');
     });
   }
 }

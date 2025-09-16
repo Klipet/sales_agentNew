@@ -3,13 +3,12 @@ import 'package:sales_agent/data/models_db/model_login.dart';
 import 'db_provider.dart';
 
 class LoginRepository {
-  Future<void> saveLogin(
-    String login,
-    String password,
-    String token,
-    String validTo,
-      bool savePass
-  ) async {
+  Future<void> saveLogin(String login,
+      String password,
+      String token,
+      String validTo,
+      String userName,
+      bool savePass) async {
     final isar = await DbProvider.instance();
     final model = ModelLogin()
       ..id = 0
@@ -17,7 +16,8 @@ class LoginRepository {
       ..password = password
       ..tokenUid = token
       ..tokenValid = validTo
-    ..savePass = savePass;
+      ..userName = userName
+      ..savePass = savePass;
 
     await isar.writeTxn(() => isar.modelLogins.put(model));
   }
@@ -45,6 +45,13 @@ class LoginRepository {
     final settings = await isar.modelLogins.get(0);
     return settings?.tokenValid;
   }
+
+  Future<String?> getUserName() async {
+    final isar = await DbProvider.instance();
+    final settings = await isar.modelLogins.get(0);
+    return settings?.userName;
+  }
+
   Future<bool?> getSavePassword() async {
     final isar = await DbProvider.instance();
     final settings = await isar.modelLogins.get(0);
