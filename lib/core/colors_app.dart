@@ -12,3 +12,7 @@ HexColor textColor = HexColor('#040D12');
 HexColor subTextColor = HexColor('#919191');
 HexColor buttonColor = HexColor('#5CB338');
 HexColor colorDividerSelected = HexColor('#F2F2F2');
+HexColor colorBtTotal = HexColor('#1D4F58');
+HexColor colorBtJob = HexColor('#28A4D9');
+HexColor colorBtAwait = HexColor('#50BFC6');
+HexColor colorBtSave = HexColor('#99EAD7');

@@ -20,6 +20,7 @@ class ListDriver {
         color: colorDividerSelected,
         border: BoxBorder.all(color: borderColor, width: 1.r),
         borderRadius: BorderRadius.all(Radius.circular(15.r)),
+          shape: BoxShape.rectangle
       ),
       itemDecoration: BoxDecoration(
         border: BoxBorder.all(color: borderColor, width: 1.r),
@@ -37,6 +38,7 @@ class ListDriver {
   SidebarXTheme dividerSidebarXThemeExpanded(double size) {
     return SidebarXTheme(
       width: size.w,
+      
       padding: EdgeInsets.only(left: 24.r, right: 24.r),
       itemTextPadding: EdgeInsets.only(left: 17.r),
       selectedItemTextPadding: EdgeInsets.only(left: 17.r),
@@ -46,6 +48,9 @@ class ListDriver {
         border: BoxBorder.all(color: borderColor, width: 1.r),
         borderRadius: BorderRadius.all(Radius.circular(15.r)),
       ),
+        iconTheme: IconThemeData(
+
+        ),
       itemDecoration: BoxDecoration(
         border: BoxBorder.all(color: borderColor, width: 1.r),
         borderRadius: BorderRadius.all(Radius.circular(15.r)),

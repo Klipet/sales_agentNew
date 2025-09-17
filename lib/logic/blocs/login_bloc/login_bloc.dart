@@ -1,16 +1,20 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sales_agent/data/providers/api_provider/login_api.dart';
+import 'package:sales_agent/data/providers/api_provider/orders_api.dart';
 import 'package:sales_agent/data/repositories/login_repositori.dart';
 
+import '../../../data/repositories/orders_repositori.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository repository;
+  final OrdersRepositori ordersRepositori;
   final LoginApi actualizationUser;
+  final OrdersApi ordersApi;
 
-  LoginBloc(this.repository, this.actualizationUser) : super(LoginInitial()) {
+  LoginBloc(this.repository, this.actualizationUser, this.ordersApi, this.ordersRepositori) : super(LoginInitial()) {
     on<CheckSavedLogin>(_onCheckSavedLogin);
     on<FetchLoginData>(_onFetchActivationData);
   }
@@ -39,6 +43,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         final surName = apiResponse.user.surname ?? '';
         final String fullName = '$userName$surName';
         await repository.saveLogin(login, password, token, validTo, fullName, event.save);
+        await ordersRepositori.deleteOrder();
+        await ordersRepositori.deleteLine();
+        final orders = await ordersApi.getOrders();
+        for(var modelDoc in orders!){
+          await ordersRepositori.saveOrders(modelDoc);
+        }
         emit(LoginSuccess());
       }else{
         emit(LoginFailure(apiResponse.errorMessage.toString()));

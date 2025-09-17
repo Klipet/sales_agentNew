@@ -52,7 +52,7 @@ final textStyleHomeTitle = GoogleFonts.poppins(
     fontWeight: FontWeight.w400,
     fontStyle: FontStyle.normal,
     fontSize: 14.sp,
-    color: HexColor("#919191")
+    color: subTextColor
 );
 
 final textStyleHomeSubTitle = GoogleFonts.montserrat(
@@ -66,4 +66,28 @@ final textStyleHomeTime = GoogleFonts.poppins(
     fontStyle: FontStyle.normal,
     fontSize: 16.sp,
     color: textColor
+);
+final textStyleBodyTitle = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: subTextColor
+);
+final textStyleBodyTitleCount = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontStyle: FontStyle.normal,
+    fontSize: 32.sp,
+    color: subTextColor
+);
+final textStyleBodyBt = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontStyle: FontStyle.normal,
+    fontSize: 18.sp,
+    color: titleColorText
+);
+final textStyleBodyBtCreate = GoogleFonts.montserrat(
+    fontWeight: FontWeight.w700,
+    fontStyle: FontStyle.normal,
+    fontSize: 23.sp,
+    color: titleColorText
 );

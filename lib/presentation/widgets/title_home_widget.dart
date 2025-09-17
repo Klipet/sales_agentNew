@@ -67,13 +67,15 @@ class _TitleHomeWidgetState extends State<TitleHomeWidget> {
     {
       final userName = snapshot.data ?? '';
 
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            width: 452.w,
-            height: 65.h,
+          //  width: 452.w,
+          //  height: 65.h,
+            padding: EdgeInsets.only(right: 29.h, left: 8.h, top: 9.w, bottom: 9.w),
+            margin: EdgeInsets.only(),
             decoration: BoxDecoration(
                 color: containerColor,
                 border: BoxBorder.all(
@@ -86,29 +88,36 @@ class _TitleHomeWidgetState extends State<TitleHomeWidget> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: EdgeInsets.only(left: 8.h),
-                  child: Image.asset('assets/icons/home/human.png', color: textColor,),
-                ),
+               // Padding(
+                //  padding: EdgeInsets.only(left: 8.h),
+                //  child:
+                  Image.asset('assets/icons/home/human.png', color: textColor,),
+              //  ),
                 Padding(
                   padding: EdgeInsets.only(left: 12.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('home.titleName'.tr(), style: textStyleHomeTitle,),
-                      Text(userName , style: textStyleHomeSubTitle,),
-                    ],
+                  child: Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('home.titleName'.tr(), style: textStyleHomeTitle,),
+                        Text(userName , style: textStyleHomeSubTitle,),
+                      ],
+                    ),
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(left: 41.w),
-                  child: VerticalDivider(
-                    color: borderColor,
-                    thickness: 1,
-                      indent: 13.99.h,
-                      endIndent: 15.h,
-                      // отступ вокруг линии
+                  child: SizedBox(
+                    height: 50.h,
+                    child: VerticalDivider(
+                      color: borderColor,
+                      thickness: 1,
+                        indent: 5.h,
+                       endIndent: 5.h,
+                        width: 1
+                        // отступ вокруг линии
+                    ),
                   ),
                 ),
                 Padding(
@@ -127,7 +136,6 @@ class _TitleHomeWidgetState extends State<TitleHomeWidget> {
               ],
             ),
           ),
-
         ],
       );
     }
