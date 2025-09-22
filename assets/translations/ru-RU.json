@@ -11,6 +11,14 @@
   "passHint": "Пароль123",
   "saveAuth": "Запомнить данные",
   "connect": "Вход",
+  "calendarComand": "Заказы",
+
+  "dialog": {
+    "address": "Адрес: {address}",
+    "status": "Статус: {status}",
+    "summ": "Сумма заказа: {sum}",
+    "btText": "Посмотреть заказ"
+  },
 
   "driver": {
     "home" : "Главная",
@@ -32,7 +40,8 @@
     "bodyBtAwait": "Посмотреть в ожидании",
     "bodySave": "Шаблоны",
     "bodyBtSave": "Посмотреть шаблоны",
-    "bodyBtCreate": "Новый заказ"
+    "bodyBtCreateOne": "Новый",
+    "bodyBtCreateThee": "заказ"
   },
 
   "errors": {

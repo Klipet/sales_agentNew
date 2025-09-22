@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
 
@@ -57,7 +58,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      //  crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Column(
             //  mainAxisAlignment: MainAxisAlignment.center,
@@ -65,7 +66,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
             children: [
               titleBodyCard(
                 'home.bodyTotal'.tr(),
-                'assets/icons/home/total.png',
+                'assets/icons/home/total.svg',
                 totalCount,
               ),
               buttonBodyCard('home.bodyBtTotal'.tr(), colorBtTotal),
@@ -77,7 +78,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
             children: [
               titleBodyCard(
                 'home.bodyJob'.tr(),
-                'assets/icons/home/job.png',
+                'assets/icons/home/job.svg',
                 jobCount,
               ),
               buttonBodyCard('home.bodyBtJob'.tr(), colorBtJob),
@@ -89,7 +90,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
             children: [
               titleBodyCard(
                 'home.bodyAwait'.tr(),
-                'assets/icons/home/await.png',
+                'assets/icons/home/await.svg',
                 awaitCount,
               ),
               buttonBodyCard('home.bodyBtAwait'.tr(), colorBtAwait),
@@ -101,16 +102,13 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
             children: [
               titleBodyCard(
                 'home.bodySave'.tr(),
-                'assets/icons/home/save.png',
+                'assets/icons/home/save.svg',
                 saveCount,
               ),
               buttonBodyCard('home.bodyBtSave'.tr(), colorBtSave),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 20.h),
-            child: buttonNewComand(),
-          ),
+          buttonNewCommand(),
         ],
       ),
     );
@@ -158,7 +156,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(img),
+              SvgPicture.asset(img, width: 24.w, height: 24.h,),
               Padding(
                 padding: EdgeInsets.only(left: 8.h),
                 child: Text(title, style: textStyleBodyTitle),
@@ -174,35 +172,49 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
     );
   }
 
-  Widget buttonNewComand() {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ButtonStyle(
-        fixedSize: WidgetStateProperty.all<Size>(Size(200.w, 152.h)),
-        backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
-        padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.only(top: 17.h, bottom: 24.h, left: 40.w, right: 40.w)),
-        iconSize: WidgetStateProperty.all<double>(48.r),
-        textStyle: WidgetStateProperty.all<TextStyle>(textStyleBodyBtCreate),
-        foregroundColor: WidgetStateProperty.all<Color>(titleColorText),
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.r),
-          ),
+  Widget buttonNewCommand() {
+    return Container(
+      width: 200.w,
+    //  height: 152.h,
+      margin: EdgeInsets.only(left: 20.h),
+     padding: EdgeInsets.only(top: 10.h, bottom: 22.h, left: 42.w, right: 42.w),
+      decoration: BoxDecoration(
+        color: buttonColor,
+        border: BoxBorder.all(color: borderColor, width: 1.w),
+        borderRadius: BorderRadius.all(
+           Radius.circular(30.r),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.add_rounded, color: titleColorText),
-          Center(
-            child: Text(
-              'home.bodyBtCreate'.tr(),
-              maxLines: 2,
-              textAlign: TextAlign.center,
-            ),
+      child: GestureDetector(
+        onTap: (){},
+        child: ButtonTheme(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                  child: Icon(Icons.add_rounded, color: titleColorText, size: 48.r,)),
+              SizedBox(
+                child: Text(
+                    'home.bodyBtCreateOne'.tr(),
+                    maxLines: 1,
+                    style: textStyleBodyBtCreate,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis
+                ),
+              ),
+              SizedBox(
+                //  padding: EdgeInsets.only(bottom: 24.w),
+                child: Text(
+                  'home.bodyBtCreateThee'.tr(),
+                  maxLines: 1,
+                  style: textStyleBodyBtCreate,
+                  textAlign: TextAlign.center,
+
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

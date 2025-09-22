@@ -35,6 +35,8 @@ dependencies:
   flutter_styled_toast: ^2.2.1
   animated_text_kit: ^4.2.3
   json_annotation: ^4.9.0
+  flutter_svg: ^2.2.1
+  table_calendar: ^3.2.0
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -64,17 +66,17 @@ flutter:
       - assets/icons/pass_hide.png
       - assets/icons/chec_unbox.png
       - assets/icons/chek_box.png
-      - assets/icons/drawers/assortiment.png
-      - assets/icons/drawers/contragents.png
-      - assets/icons/drawers/history.png
-      - assets/icons/drawers/home.png
-      - assets/icons/drawers/orders.png
-      - assets/icons/drawers/settings.png
-      - assets/icons/home/human.png
-      - assets/icons/home/total.png
-      - assets/icons/home/await.png
-      - assets/icons/home/job.png
-      - assets/icons/home/save.png
+      - assets/icons/drawers/assortiment.svg
+      - assets/icons/drawers/contragents.svg
+      - assets/icons/drawers/history.svg
+      - assets/icons/drawers/home.svg
+      - assets/icons/drawers/orders.svg
+      - assets/icons/drawers/settings.svg
+      - assets/icons/home/human.svg
+      - assets/icons/home/total.svg
+      - assets/icons/home/await.svg
+      - assets/icons/home/job.svg
+      - assets/icons/home/save.svg
 
 
 

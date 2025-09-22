@@ -11,6 +11,14 @@
   "passHint": "Password123",
   "saveAuth": "Reține datele de autentificare",
   "connect": "Conectare",
+  "calendarComand": "Comenzi",
+
+  "dialog": {
+    "address": "Adresă: {address}",
+    "status": "Status: {status}",
+    "sum": "Suma comenzii: {sum}",
+    "btText": "Vezi comanda"
+  },
 
   "driver": {
     "home" : "Acasă",
@@ -32,7 +40,8 @@
     "bodyBtAwait": "Vezi în așteptare",
     "bodySave": "Șabloane",
     "bodyBtSave": "Vezi șabloane",
-    "bodyBtCreate": "Comandă nouă"
+    "bodyBtCreateOne": "Comandă",
+    "bodyBtCreateThee": "nouă"
   },
 
   "errors": {

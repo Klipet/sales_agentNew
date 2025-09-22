@@ -45,7 +45,7 @@ const ModelDocumentDbSchema = CollectionSchema(
     r'dateValid': PropertySchema(
       id: 5,
       name: r'dateValid',
-      type: IsarType.string,
+      type: IsarType.dateTime,
     ),
     r'deliveryAddress': PropertySchema(
       id: 6,
@@ -125,7 +125,6 @@ int _modelDocumentDbEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  bytesCount += 3 + object.dateValid.length * 3;
   {
     final value = object.deliveryAddress;
     if (value != null) {
@@ -154,7 +153,7 @@ void _modelDocumentDbSerialize(
   writer.writeString(offsets[2], object.code);
   writer.writeString(offsets[3], object.comment);
   writer.writeString(offsets[4], object.dateProcessed);
-  writer.writeString(offsets[5], object.dateValid);
+  writer.writeDateTime(offsets[5], object.dateValid);
   writer.writeString(offsets[6], object.deliveryAddress);
   writer.writeLong(offsets[7], object.state);
   writer.writeString(offsets[8], object.stockName);
@@ -175,7 +174,7 @@ ModelDocumentDb _modelDocumentDbDeserialize(
     code: reader.readString(offsets[2]),
     comment: reader.readStringOrNull(offsets[3]),
     dateProcessed: reader.readStringOrNull(offsets[4]),
-    dateValid: reader.readString(offsets[5]),
+    dateValid: reader.readDateTime(offsets[5]),
     deliveryAddress: reader.readStringOrNull(offsets[6]),
     state: reader.readLong(offsets[7]),
     stockName: reader.readStringOrNull(offsets[8]),
@@ -205,7 +204,7 @@ P _modelDocumentDbDeserializeProp<P>(
     case 4:
       return (reader.readStringOrNull(offset)) as P;
     case 5:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 6:
       return (reader.readStringOrNull(offset)) as P;
     case 7:
@@ -1054,58 +1053,49 @@ extension ModelDocumentDbQueryFilter
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateValidEqualTo(
-    String value, {
-    bool caseSensitive = true,
-  }) {
+      dateValidEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'dateValid',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       dateValidGreaterThan(
-    String value, {
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'dateValid',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       dateValidLessThan(
-    String value, {
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'dateValid',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       dateValidBetween(
-    String lower,
-    String upper, {
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -1114,77 +1104,6 @@ extension ModelDocumentDbQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateValidStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'dateValid',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateValidEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'dateValid',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateValidContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'dateValid',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateValidMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'dateValid',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateValidIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'dateValid',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateValidIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'dateValid',
-        value: '',
       ));
     });
   }
@@ -2393,10 +2312,10 @@ extension ModelDocumentDbQueryWhereDistinct
     });
   }
 
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QDistinct> distinctByDateValid(
-      {bool caseSensitive = true}) {
+  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QDistinct>
+      distinctByDateValid() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'dateValid', caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'dateValid');
     });
   }
 
@@ -2482,7 +2401,8 @@ extension ModelDocumentDbQueryProperty
     });
   }
 
-  QueryBuilder<ModelDocumentDb, String, QQueryOperations> dateValidProperty() {
+  QueryBuilder<ModelDocumentDb, DateTime, QQueryOperations>
+      dateValidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dateValid');
     });

@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:sales_agent/core/utils/convert_data.dart';
 import 'package:sales_agent/data/models_api/models_documents/model_lines.dart';
 import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
 import 'package:sales_agent/data/models_db/model_db_orders/model_lines_db.dart';
@@ -8,7 +9,6 @@ import '../models_api/models_documents/model_documents.dart';
 import 'db_provider.dart';
 
 class OrdersRepositori {
-
   Future<void> saveOrders(ModelDocuments modelDoc) async {
     final isar = await DbProvider.instance();
     final db = ModelDocumentDb(
@@ -17,7 +17,7 @@ class OrdersRepositori {
       code: modelDoc.code,
       comment: modelDoc.comment,
       dateProcessed: modelDoc.dateProcessed,
-      dateValid: modelDoc.dateValid,
+      dateValid: ConvertData().convertDate(modelDoc.dateValid),
       deliveryAddress: modelDoc.deliveryAddress,
       state: modelDoc.state,
       stockName: modelDoc.stockName,
@@ -63,11 +63,51 @@ class OrdersRepositori {
     return count;
   }
 
-Future<List<ModelDocumentDb>> getOrders() async{
-  final isar = await DbProvider.instance();
-  final orders = await isar.modelDocumentDbs.where().findAll();
-  return orders;
-}
+  Future<Map<DateTime, List<int>>> loadOrdersGroupedByDate() async {
+    final isar = await DbProvider.instance();
+
+    // Загружаем только нужные документы (state = 1 или 2)
+    final docs = await isar.modelDocumentDbs
+        .filter()
+        .stateEqualTo(1)
+        .or()
+        .stateEqualTo(2)
+        .findAll();
+
+    final Map<DateTime, List<int>> grouped = {};
+
+    for (var doc in docs) {
+      DateTime dataDoc = doc.dateValid;
+      final date = DateTime(dataDoc.year, dataDoc.month, dataDoc.day);
+
+      grouped.putIfAbsent(date, () => []);
+      grouped[date]!.add(doc.state);
+    }
+
+    print('loadOrdersGroupedByDate: $grouped');
+    return grouped;
+  }
+
+  Future<List<ModelDocumentDb>> loadOrdersForDay(DateTime day) async {
+    final isar = await DbProvider.instance();
+    print(day);
+    final start = day;
+
+    final end = day.add(Duration(days: 1));
+
+    // получаем документы в диапазоне конкретного дня
+    return await isar.modelDocumentDbs
+        .filter()
+        .dateValidBetween(start, end)
+        .stateBetween(1, 2)
+        .findAll();
+  }
+
+  Future<List<ModelDocumentDb>> getOrders() async {
+    final isar = await DbProvider.instance();
+    final orders = await isar.modelDocumentDbs.where().findAll();
+    return orders;
+  }
 
   Future<void> deleteOrder() async {
     final isar = await DbProvider.instance();

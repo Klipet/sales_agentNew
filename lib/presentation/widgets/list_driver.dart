@@ -12,9 +12,12 @@ class ListDriver {
   SidebarXTheme dividerSidebarXTheme(double size) {
     return SidebarXTheme(
       width: size.w,
-      padding: EdgeInsets.only(left: 24.r, right: 24.r),
+      padding: EdgeInsets.only(left: 24.r, right: 20.r),
       itemTextPadding: EdgeInsets.only(left: 17.r),
       selectedItemTextPadding: EdgeInsets.only(left: 17.r),
+    //  itemMargin: EdgeInsets.only(left: 24.h, right: 24.h),
+      itemPadding: EdgeInsets.all(16.r),
+      selectedItemPadding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(color: containerColor),
       selectedItemDecoration: BoxDecoration(
         color: colorDividerSelected,
@@ -29,19 +32,15 @@ class ListDriver {
       textStyle: textStyleDriver,
       selectedTextStyle: textStyleDriver,
       hoverTextStyle: textStyleDriver,
-      hoverIconTheme: IconThemeData(
-          color: Colors.black
-      )
     );
   }
 
   SidebarXTheme dividerSidebarXThemeExpanded(double size) {
     return SidebarXTheme(
       width: size.w,
-      
       padding: EdgeInsets.only(left: 24.r, right: 24.r),
-      itemTextPadding: EdgeInsets.only(left: 17.r),
-      selectedItemTextPadding: EdgeInsets.only(left: 17.r),
+    //  itemTextPadding: EdgeInsets.only(left: 17.r),
+    //  selectedItemTextPadding: EdgeInsets.only(left: 17.r),
       decoration: BoxDecoration(color: containerColor),
       selectedItemDecoration: BoxDecoration(
         color: colorDividerSelected,
