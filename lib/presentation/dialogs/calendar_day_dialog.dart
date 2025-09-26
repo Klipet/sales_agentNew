@@ -9,6 +9,7 @@ import 'package:sales_agent/data/repositories/orders_repositori.dart';
 import '../../core/styles_text.dart';
 import '../../core/utils/convert_data.dart';
 import '../../data/models_db/model_db_orders/model_document_db.dart';
+import 'order_detail_dialog.dart';
 
 void showBlurDialogCalendar(BuildContext context, DateTime day, List<int> orders) {
   final formatDay = DateFormat('dd.MM.yyyy').format(day);
@@ -180,13 +181,13 @@ void showBlurDialogCalendar(BuildContext context, DateTime day, List<int> orders
                                       Spacer(),
                                       GestureDetector(
                                         onTap: (){
-
+                                          showDetailOrder(context: context, order: order);
                                         },
                                         child: Container(
                                           height: 48.h,
                                           width: 155.w,
                                           decoration: BoxDecoration(
-                                            color: order.state == 1 ? colorBtJob : colorBtAwait,
+                                            color: order.state == 1 ? colorBtAwait : colorBtJob,
                                             border: Border.all(
                                               color: borderColor,
                                               width: 1,

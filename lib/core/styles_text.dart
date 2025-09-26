@@ -152,3 +152,43 @@ final textStyleDialogBt = GoogleFonts.poppins(
     color: titleColorText
 );
 
+
+final textStyleDialogOrderData = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 18.sp,
+    color: textColor
+);
+final textStyleDialogOrderSub = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontStyle: FontStyle.normal,
+    fontSize: 15.sp,
+    color: textColor
+);
+final textStyleDialogOrderTitle = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 14.sp,
+    color: subTextColor
+);
+final textStyleDialogOrderContent = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textStyleDialogOrderTotal = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textStyleDialogOrderSum = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontStyle: FontStyle.normal,
+    fontSize: 20.sp,
+    color: textColor
+);
+
+
+

@@ -40,7 +40,16 @@
     "bodyBtAwait": "Vezi în așteptare",
     "bodySave": "Șabloane",
     "bodyBtSave": "Vezi șabloane",
-    "bodyBtCreate": "Comandă nouă"
+    "bodyBtCreateOne": "Comandă",
+    "bodyBtCreateThee": "nouă"
+  },
+  "order": {
+    "name": "Denumire",
+    "count": "Cant.",
+    "price": "Preț unitar (MDL)",
+    "sum": "Suma (MDL)",
+    "stock": "Stocuri",
+    "total": "Total:"
   },
 
   "errors": {

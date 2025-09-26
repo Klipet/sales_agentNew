@@ -40,7 +40,16 @@
     "bodyBtAwait": "View pending",
     "bodySave": "Templates",
     "bodyBtSave": "View templates",
-    "bodyBtCreate": "New order"
+    "bodyBtCreateOne": "New",
+    "bodyBtCreateThee": "order"
+  },
+  "order": {
+    "name": "Name",
+    "count": "Count",
+    "price": "Unit price (MDL)",
+    "sum": "Amount (MDL)",
+    "stock": "Stock",
+    "total": "Total:"
   },
 
   "errors": {

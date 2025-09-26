@@ -79,6 +79,7 @@ Future<List<ModelDocumentDb>> getOrders() async{
     final isar = await DbProvider.instance();
     await isar.writeTxn(() => isar.modelLinesDbs.clear());
   }
+
   Future<Map<DateTime, List<int>>> loadOrdersGroupedByDate() async {
     final isar = await DbProvider.instance();
 
@@ -118,5 +119,11 @@ Future<List<ModelDocumentDb>> getOrders() async{
         .stateBetween(1, 2)
         .findAll();
   }
+  Future<List<ModelLinesDb>> loadOrdersLine(ModelDocumentDb order) async {
 
+    // нужно загрузить связи явно
+    await order.lines.load();
+
+    return order.lines.toList();
+  }
 }

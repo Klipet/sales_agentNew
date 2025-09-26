@@ -40,7 +40,17 @@
     "bodyBtAwait": "Посмотреть в ожидании",
     "bodySave": "Шаблоны",
     "bodyBtSave": "Посмотреть шаблоны",
-    "bodyBtCreate": "Новый заказ"
+    "bodyBtCreateOne": "Новый",
+    "bodyBtCreateThee": "заказ"
+  },
+
+  "order": {
+    "name": "Наименование",
+    "count": "Кол-во",
+    "price": "Цена за единицу (MDL)",
+    "sum": "Сумма (MDL)",
+    "stock": "Остаток",
+    "total": "Итого:"
   },
 
   "errors": {

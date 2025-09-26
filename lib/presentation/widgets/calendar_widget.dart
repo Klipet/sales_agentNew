@@ -108,8 +108,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         defaultBuilder: (context, day, focusedDay) {
           final dateKey = DateTime(day.year, day.month, day.day);
           final dayOrders = _ordersByDate[dateKey] ?? [];
-          final awaitingCount = dayOrders.where((s) => s == 2).length;
-          final workingCount = dayOrders.where((s) => s == 1).length;
+          final processingCount = dayOrders.where((s) => s == 2).length;
+          final queueCount = dayOrders.where((s) => s == 1).length;
           //  final events = _getEventsForDay(day);
 
           return GestureDetector(
@@ -155,19 +155,19 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     child: Row(
                       children: [
                         //  if (events.contains(2)) // например, статус 2 = "в работе"
-                        if(awaitingCount != 0)
+                        if(processingCount != 0)
                           Padding(
                             padding: EdgeInsets.only(left: 16.r),
                             child: oerderStatus(colorBtJob,
-                                awaitingCount),
+                                processingCount),
                           ),
                         const Spacer(),
                         //  if (events.contains(1)) // например, статус 1 = "в ожидании"
-                        if(workingCount != 0)
+                        if(queueCount != 0)
                           Padding(
                             padding: EdgeInsets.only(right: 16.r),
                             child: oerderStatus(colorBtAwait,
-                                workingCount),
+                                queueCount),
                           ),
                       ],
                     ),
