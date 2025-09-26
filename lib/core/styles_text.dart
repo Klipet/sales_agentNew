@@ -91,3 +91,64 @@ final textStyleBodyBtCreate = GoogleFonts.montserrat(
     fontSize: 23.sp,
     color: titleColorText
 );
+final textStyleTitleCalendar = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontStyle: FontStyle.normal,
+    fontSize: 18.sp,
+    color: textColor
+);
+final textStyleDayNamesCalendar = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontStyle: FontStyle.normal,
+    fontSize: 13.sp,
+    color: subTextColor
+);
+final textStyleDayCalendar = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: colorTextBlack
+);
+final textStyleDayNexCalendar = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: subTextColor
+);
+final textStyleCalendarOrder = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontStyle: FontStyle.normal,
+    fontSize: 14.sp,
+    color: subTextColor
+);
+final textStyleCalendarCount = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: titleColorText
+);
+final textStyleDialogday = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textStyleDialogInfoClient = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textStyleDialogInfoOrder = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 18.sp,
+    color: subTextColor
+);
+final textStyleDialogBt = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: titleColorText
+);
+

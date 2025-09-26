@@ -108,10 +108,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
               buttonBodyCard('home.bodyBtSave'.tr(), colorBtSave),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 20.h),
-            child: buttonNewComand(),
-          ),
+          buttonNewCommand(),
         ],
       ),
     );
@@ -175,35 +172,49 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
     );
   }
 
-  Widget buttonNewComand() {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ButtonStyle(
-        fixedSize: WidgetStateProperty.all<Size>(Size(200.w, 152.h)),
-        backgroundColor: WidgetStateProperty.all<Color>(buttonColor),
-        padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.only(top: 17.h, bottom: 24.h, left: 40.w, right: 40.w)),
-        iconSize: WidgetStateProperty.all<double>(48.r),
-        textStyle: WidgetStateProperty.all<TextStyle>(textStyleBodyBtCreate),
-        foregroundColor: WidgetStateProperty.all<Color>(titleColorText),
-        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-          RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(30.r),
-          ),
+  Widget buttonNewCommand() {
+    return Container(
+      width: 200.w,
+      //  height: 152.h,
+      margin: EdgeInsets.only(left: 20.h),
+      padding: EdgeInsets.only(top: 10.h, bottom: 22.h, left: 42.w, right: 42.w),
+      decoration: BoxDecoration(
+        color: buttonColor,
+        border: BoxBorder.all(color: borderColor, width: 1.w),
+        borderRadius: BorderRadius.all(
+          Radius.circular(30.r),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.add_rounded, color: titleColorText),
-          Center(
-            child: Text(
-              'home.bodyBtCreate'.tr(),
-              maxLines: 2,
-              textAlign: TextAlign.center,
-            ),
+      child: GestureDetector(
+        onTap: (){},
+        child: ButtonTheme(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                  child: Icon(Icons.add_rounded, color: titleColorText, size: 48.r,)),
+              SizedBox(
+                child: Text(
+                    'home.bodyBtCreateOne'.tr(),
+                    maxLines: 1,
+                    style: textStyleBodyBtCreate,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis
+                ),
+              ),
+              SizedBox(
+                //  padding: EdgeInsets.only(bottom: 24.w),
+                child: Text(
+                  'home.bodyBtCreateThee'.tr(),
+                  maxLines: 1,
+                  style: textStyleBodyBtCreate,
+                  textAlign: TextAlign.center,
+
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -11,6 +11,14 @@
   "passHint": "Password123",
   "saveAuth": "Remember me",
   "connect": "Connect",
+  "calendarComand": "Orders",
+
+  "dialog": {
+    "address": "Address: {address}",
+    "status": "Status: {status}",
+    "sum": "Order sum: {sum}",
+    "btText": "View order"
+  },
 
   "driver": {
     "home" : "Home",

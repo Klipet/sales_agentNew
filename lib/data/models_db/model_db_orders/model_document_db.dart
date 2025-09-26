@@ -1,5 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:sales_agent/data/models_db/model_db_orders/model_lines_db.dart';
+
+import '../../../core/utils/convert_data.dart';
 part 'model_document_db.g.dart';
 @collection
 class ModelDocumentDb {
@@ -10,7 +12,7 @@ class ModelDocumentDb {
   late String code;
   late String? comment;
   late String? dateProcessed;
-  late String dateValid;
+  late DateTime dateValid;
   late String? deliveryAddress;
   late int state;
   late String? stockName;
@@ -41,7 +43,7 @@ class ModelDocumentDb {
       code: json['Code'] as String,
       comment: json['Comment'] as String?,
       dateProcessed: json['DateProcessed'] as String?,
-      dateValid: json['DateValid'] as String,
+      dateValid: ConvertData().convertDate(json['DateValid'])?? DateTime.now(),
       deliveryAddress: json['DeliveryAddress'] as String?,
       state: (json['State'] as num).toInt(),
       stockName: json['StockName'] as String?,

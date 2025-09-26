@@ -20,6 +20,14 @@
     "history": "Istoric comenzi",
     "setting": "Setări"
   },
+  "calendarComand": "Comenzi",
+
+  "dialog": {
+    "address": "Adresă: {address}",
+    "status": "Status: {status}",
+    "sum": "Suma comenzii: {sum}",
+    "btText": "Vezi comanda"
+  },
 
   "home": {
     "titleName": "Consultant Vânzări",

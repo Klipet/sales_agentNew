@@ -11,6 +11,14 @@
   "passHint": "Пароль123",
   "saveAuth": "Запомнить данные",
   "connect": "Вход",
+  "calendarComand": "Заказы",
+
+  "dialog": {
+    "address": "Адрес: {address}",
+    "status": "Статус: {status}",
+    "summ": "Сумма заказа: {sum}",
+    "btText": "Посмотреть заказ"
+  },
 
   "driver": {
     "home" : "Главная",

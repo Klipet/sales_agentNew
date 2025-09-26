@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sales_agent/presentation/widgets/body_home_widget.dart';
 import 'package:sales_agent/presentation/widgets/title_home_widget.dart';
 
+import '../widgets/calendar_widget.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -23,7 +25,13 @@ class _HomeScreenState extends State<HomeScreen> {
               Padding(
                 padding: EdgeInsets.only(top: 17.h, left: 16.w),
                 child: BodyHomeWidget(),
-              )
+              ),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 17.h, left: 16.w),
+                  child: CalendarWidget(),
+                ),
+              ),
             ],
           ),
     );
