@@ -38,7 +38,6 @@ class ListDriver {
   SidebarXTheme dividerSidebarXThemeExpanded(double size) {
     return SidebarXTheme(
       width: size.w,
-      
       padding: EdgeInsets.only(left: 24.r, right: 24.r),
       itemTextPadding: EdgeInsets.only(left: 17.r),
       selectedItemTextPadding: EdgeInsets.only(left: 17.r),

@@ -7,7 +7,7 @@ part of 'model_lines.dart';
 // **************************************************************************
 
 ModelLines _$ModelLinesFromJson(Map<String, dynamic> json) => ModelLines(
-      assortimentBarcode: json['AssortimentBarcode'] as String,
+      assortimentBarcode: json['AssortimentBarcode'] as String?,
       assortimentCode: json['AssortimentCode'] as String,
       assortimentName: json['AssortimentName'] as String,
       assortimentUid: json['AssortimentUid'] as String,

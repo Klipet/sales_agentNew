@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
 
@@ -65,7 +66,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
             children: [
               titleBodyCard(
                 'home.bodyTotal'.tr(),
-                'assets/icons/home/total.png',
+                'assets/icons/home/total.svg',
                 totalCount,
               ),
               buttonBodyCard('home.bodyBtTotal'.tr(), colorBtTotal),
@@ -77,7 +78,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
             children: [
               titleBodyCard(
                 'home.bodyJob'.tr(),
-                'assets/icons/home/job.png',
+                'assets/icons/home/job.svg',
                 jobCount,
               ),
               buttonBodyCard('home.bodyBtJob'.tr(), colorBtJob),
@@ -89,7 +90,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
             children: [
               titleBodyCard(
                 'home.bodyAwait'.tr(),
-                'assets/icons/home/await.png',
+                'assets/icons/home/await.svg',
                 awaitCount,
               ),
               buttonBodyCard('home.bodyBtAwait'.tr(), colorBtAwait),
@@ -101,7 +102,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
             children: [
               titleBodyCard(
                 'home.bodySave'.tr(),
-                'assets/icons/home/save.png',
+                'assets/icons/home/save.svg',
                 saveCount,
               ),
               buttonBodyCard('home.bodyBtSave'.tr(), colorBtSave),
@@ -158,7 +159,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(img),
+              SvgPicture.asset(img),
               Padding(
                 padding: EdgeInsets.only(left: 8.h),
                 child: Text(title, style: textStyleBodyTitle),

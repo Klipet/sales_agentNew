@@ -12,9 +12,9 @@ class OrdersRepositori {
   Future<void> saveOrders(ModelDocuments modelDoc) async {
     final isar = await DbProvider.instance();
     final db = ModelDocumentDb(
-      clientName: modelDoc.clientName,
-      clientUid: modelDoc.clientUid,
-      code: modelDoc.code,
+      clientName: modelDoc.clientName ?? '',
+      clientUid: modelDoc.clientUid ?? '',
+      code: modelDoc.code ?? '',
       comment: modelDoc.comment,
       dateProcessed: modelDoc.dateProcessed,
       dateValid: modelDoc.dateValid,
@@ -27,8 +27,8 @@ class OrdersRepositori {
     );
     final linesDB = modelDoc.lines.map((lines) {
       return ModelLinesDb(
-        assortimentBarcode: lines.assortimentBarcode,
-        assortimentCode: lines.assortimentCode,
+        assortimentBarcode: lines.assortimentBarcode ?? '',
+        assortimentCode: lines.assortimentCode ?? '',
         assortimentName: lines.assortimentName,
         assortimentUid: lines.assortimentUid,
         count: lines.count,

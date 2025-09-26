@@ -3,11 +3,12 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/presentation/widgets/list_driver.dart';
 import 'package:sidebarx/sidebarx.dart';
 
-import 'home_screen.dart';
+import '../screens/home_screen.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer({super.key});
@@ -73,7 +74,7 @@ class _HomeDrawerState extends State<HomeDrawer>
       Container(
         child: SidebarX(
           controller: _controller,
-          theme: ListDriver().dividerSidebarXTheme(100),
+          theme: ListDriver().dividerSidebarXTheme(104),
           extendedTheme: ListDriver().dividerSidebarXThemeExpanded(239),
           showToggleButton: false,
           items: [
@@ -87,48 +88,48 @@ class _HomeDrawerState extends State<HomeDrawer>
               selectable: false,
             ),
             SidebarXItem(
-              iconWidget: Image.asset(
-                'assets/icons/drawers/home.png',
+              iconWidget: SvgPicture.asset(
+                'assets/icons/drawers/home.svg',
                 width: 24,
                 height: 24,
               ),
               label: 'driver.home'.tr(),
             ),
             SidebarXItem(
-              iconWidget: Image.asset(
-                'assets/icons/drawers/orders.png',
+              iconWidget: SvgPicture.asset(
+                'assets/icons/drawers/orders.svg',
                 width: 24,
                 height: 24,
               ),
               label: 'driver.orders'.tr(),
             ),
             SidebarXItem(
-              iconWidget: Image.asset(
-                'assets/icons/drawers/contragents.png',
+              iconWidget: SvgPicture.asset(
+                'assets/icons/drawers/contragents.svg',
                 width: 24,
                 height: 24,
               ),
               label: 'driver.client'.tr(),
             ),
             SidebarXItem(
-              iconWidget: Image.asset(
-                'assets/icons/drawers/assortiment.png',
+              iconWidget: SvgPicture.asset(
+                'assets/icons/drawers/assortiment.svg',
                 width: 24,
                 height: 24,
               ),
               label: 'driver.asl'.tr(),
             ),
             SidebarXItem(
-              iconWidget: Image.asset(
-                'assets/icons/drawers/history.png',
+              iconWidget: SvgPicture.asset(
+                'assets/icons/drawers/history.svg',
                 width: 24,
                 height: 24,
               ),
               label: 'driver.history'.tr(),
             ),
             SidebarXItem(
-              iconWidget: Image.asset(
-                'assets/icons/drawers/settings.png',
+              iconWidget: SvgPicture.asset(
+                'assets/icons/drawers/settings.svg',
                 width: 24,
                 height: 24,
               ),

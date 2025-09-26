@@ -5,7 +5,7 @@ part 'model_lines.g.dart';
 @JsonSerializable()
 class ModelLines {
   @JsonKey(name: 'AssortimentBarcode')
-  final String assortimentBarcode;
+  final String? assortimentBarcode;
 
   @JsonKey(name: 'AssortimentCode')
   final String assortimentCode;

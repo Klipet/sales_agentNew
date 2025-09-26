@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:isar/isar.dart';
 import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/core/utils/convert_data.dart';
@@ -91,7 +92,7 @@ class _TitleHomeWidgetState extends State<TitleHomeWidget> {
                // Padding(
                 //  padding: EdgeInsets.only(left: 8.h),
                 //  child:
-                  Image.asset('assets/icons/home/human.png', color: textColor,),
+                SvgPicture.asset('assets/icons/home/human.svg', color: textColor,),
               //  ),
                 Padding(
                   padding: EdgeInsets.only(left: 12.h),
