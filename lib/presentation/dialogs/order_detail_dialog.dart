@@ -10,6 +10,7 @@ import '../../core/colors_app.dart';
 import '../../core/constans.dart';
 import '../../core/styles_text.dart';
 import '../../core/utils/order_line_data_sours.dart';
+import '../../core/utils/pop_menu_util.dart';
 import '../../data/models_db/model_db_orders/model_document_db.dart';
 import '../../data/models_db/model_db_orders/model_lines_db.dart';
 import '../../data/repositories/orders_repositori.dart';
@@ -59,15 +60,33 @@ Future<void> showDetailOrder({
                         ),
                       ),
                       Spacer(),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
+                      PopupMenuButton<String>(
+                        constraints: BoxConstraints(
+                          minWidth: 314.w
+                        ),
+                        padding: EdgeInsetsGeometry.zero,
+                        menuPadding: EdgeInsets.zero,
+                        offset: Offset(-10.w, 44.h),
+                        color: containerColor,
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(color: borderColor, width: 0.5.w),
+                          borderRadius: BorderRadius.circular(15.r),
+                        ),
+                        onSelected: (value) {
+                          if (value == 'edit') {
+                            print('Редактировать');
+                          } else if (value == 'create') {
+                            print('Создать');
+                          } else if (value == 'delete') {
+                            print('Удалить');
+                          }
                         },
+                        itemBuilder: (context) => popMenuSetting(context),
                         child: Container(
-                          margin: EdgeInsets.only(right: 16.r),
                           width: 32.w,
                           height: 32.h,
-                          decoration: BoxDecoration(
+                          margin: EdgeInsets.only(right: 16.r),
+                          decoration:  BoxDecoration(
                             color: containerColor,
                             borderRadius: BorderRadius.all(
                               Radius.circular(10.r),
@@ -77,10 +96,7 @@ Future<void> showDetailOrder({
                               width: 1.w,
                             ),
                           ),
-                          child: Icon(
-                            Icons.more_vert_outlined,
-                            size: 24.r,
-                          ),
+                          child: Icon(Icons.more_vert),
                         ),
                       ),
                       GestureDetector(
@@ -178,98 +194,124 @@ Future<void> showDetailOrder({
                     ),
                   ),
                   Expanded(
-                    child:
-                        Container(
-                          decoration: BoxDecoration(
-                            color: containerColor,
-                            borderRadius: BorderRadius.vertical(bottom: Radius.circular(15.r)),
-                            border: Border(
-                                bottom: BorderSide(
-                                    color: borderColor,
-                                    width: 1.w
-                                ),
-                              left: BorderSide(
-                                  color: borderColor,
-                                  width: 1.w
-                              ),
-                              right: BorderSide(
-                                  color: borderColor,
-                                  width: 1.w
-                              ),
-
-                            )
-                          ),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SfDataGridTheme(
-                                data: SfDataGridThemeData(
-                                    headerColor: primariColor,
-                                    headerHoverColor: primariColor,
-                                    selectionColor: containerColor,
-                                    gridLineColor: containerColor,
-                                    rowHoverColor: containerColor
-                                ),
-                                   child: SfDataGrid(
-                                    source: OrderLinesDataSource(dataLines),
-                                     rowHeight: 48.h,
-                                     headerRowHeight: 32.h,
-                                    columnWidthMode: ColumnWidthMode.lastColumnFill,
-                                     gridLinesVisibility: GridLinesVisibility.none,
-                                     headerGridLinesVisibility: GridLinesVisibility.none,
-                                     columnWidthCalculationRange: ColumnWidthCalculationRange.visibleRows,
-                                     columns: [
-                                      GridColumn(
-                                        columnName: 'nr',
-                                        width: 46.w,
-                                        label: Center(child: Text('Nr.', style: textStyleDialogOrderTitle,)),
-                                      ),
-                                      GridColumn(
-                                        columnName: 'denumire',
-                                        width: 385.w,
-                                        label:  Center(child: Text('order.name'.tr(), style: textStyleDialogOrderTitle)),
-                                      ),
-                                      GridColumn(
-                                        columnName: 'cant',
-                                        width: 90.w,
-                                        label:  Center(child: Text('order.count'.tr(), style: textStyleDialogOrderTitle)),
-                                      ),
-                                      GridColumn(
-                                        columnName: 'pret',
-                                        width: 179.w,
-                                        label:  Center(
-                                          child: Text('order.price'.tr(), style: textStyleDialogOrderTitle),
-                                        ),
-                                      ),
-                                      GridColumn(
-                                        columnName: 'suma',
-                                        width: 90.w,
-                                        label:  Center(child: Text('order.sum'.tr(), style: textStyleDialogOrderTitle)),
-                                      ),
-                                      GridColumn(
-                                        columnName: 'stocuri',
-                                        label:  Center(child: Text('order.stock'.tr(), style: textStyleDialogOrderTitle)),
-                                      ),
-                                   
-                                    ],
-                                                                   ),
-                                 ),
-                              Spacer(),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 16.r, right: 32.r),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text('order.total'.tr(), style: textStyleDialogOrderTotal,),
-                                    SizedBox(width: 5.w,),
-                                    Text("${order.sum.toString()} MDL", style: textStyleDialogOrderSum,),
-                                  ],
-                                ),
-                              ),
-                              ]),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: containerColor,
+                        borderRadius: BorderRadius.vertical(
+                          bottom: Radius.circular(15.r),
                         ),
-
+                        border: Border(
+                          bottom: BorderSide(color: borderColor, width: 1.w),
+                          left: BorderSide(color: borderColor, width: 1.w),
+                          right: BorderSide(color: borderColor, width: 1.w),
+                        ),
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SfDataGridTheme(
+                            data: SfDataGridThemeData(
+                              headerColor: primariColor,
+                              headerHoverColor: primariColor,
+                              selectionColor: containerColor,
+                              gridLineColor: containerColor,
+                              rowHoverColor: containerColor,
+                            ),
+                            child: SfDataGrid(
+                              source: OrderLinesDataSource(dataLines),
+                              rowHeight: 48.h,
+                              headerRowHeight: 32.h,
+                              columnWidthMode: ColumnWidthMode.lastColumnFill,
+                              gridLinesVisibility: GridLinesVisibility.none,
+                              headerGridLinesVisibility:
+                                  GridLinesVisibility.none,
+                              columnWidthCalculationRange:
+                                  ColumnWidthCalculationRange.visibleRows,
+                              columns: [
+                                GridColumn(
+                                  columnName: 'nr',
+                                  width: 46.w,
+                                  label: Center(
+                                    child: Text(
+                                      'Nr.',
+                                      style: textStyleDialogOrderTitle,
+                                    ),
+                                  ),
+                                ),
+                                GridColumn(
+                                  columnName: 'denumire',
+                                  width: 385.w,
+                                  label: Center(
+                                    child: Text(
+                                      'order.name'.tr(),
+                                      style: textStyleDialogOrderTitle,
+                                    ),
+                                  ),
+                                ),
+                                GridColumn(
+                                  columnName: 'cant',
+                                  width: 90.w,
+                                  label: Center(
+                                    child: Text(
+                                      'order.count'.tr(),
+                                      style: textStyleDialogOrderTitle,
+                                    ),
+                                  ),
+                                ),
+                                GridColumn(
+                                  columnName: 'pret',
+                                  width: 179.w,
+                                  label: Center(
+                                    child: Text(
+                                      'order.price'.tr(),
+                                      style: textStyleDialogOrderTitle,
+                                    ),
+                                  ),
+                                ),
+                                GridColumn(
+                                  columnName: 'suma',
+                                  width: 90.w,
+                                  label: Center(
+                                    child: Text(
+                                      'order.sum'.tr(),
+                                      style: textStyleDialogOrderTitle,
+                                    ),
+                                  ),
+                                ),
+                                GridColumn(
+                                  columnName: 'stocuri',
+                                  label: Center(
+                                    child: Text(
+                                      'order.stock'.tr(),
+                                      style: textStyleDialogOrderTitle,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Spacer(),
+                          Container(
+                            margin: EdgeInsets.only(bottom: 16.r, right: 32.r),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  'order.total'.tr(),
+                                  style: textStyleDialogOrderTotal,
+                                ),
+                                SizedBox(width: 5.w),
+                                Text(
+                                  "${order.sum.toString()} MDL",
+                                  style: textStyleDialogOrderSum,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -277,6 +319,7 @@ Future<void> showDetailOrder({
           ),
         ),
       );
+
     },
   );
 }

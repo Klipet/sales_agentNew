@@ -79,6 +79,9 @@ flutter:
       - assets/icons/home/await.svg
       - assets/icons/home/job.svg
       - assets/icons/home/save.svg
+      - assets/icons/pop/trash.svg
+      - assets/icons/pop/dialog_sablon.svg
+      - assets/icons/pop/edit.svg
 
 
 

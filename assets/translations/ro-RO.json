@@ -51,6 +51,11 @@
     "stock": "Stocuri",
     "total": "Total:"
   },
+  "pop": {
+    "edit": "Editează",
+    "create": "Crează șablon",
+    "mark": "Marchează spre eliminare"
+  },
 
   "errors": {
     "incorrectLicense": "Codul licenței incorect",

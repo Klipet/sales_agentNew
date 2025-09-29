@@ -189,6 +189,12 @@ final textStyleDialogOrderSum = GoogleFonts.poppins(
     fontSize: 20.sp,
     color: textColor
 );
+final textStylePopMenu = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 17.sp,
+    color: textColor
+);
 
 
 

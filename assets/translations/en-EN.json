@@ -51,6 +51,11 @@
     "stock": "Stock",
     "total": "Total:"
   },
+  "pop": {
+    "edit": "Edit",
+    "create": "Create template",
+    "mark": "Mark for deletion"
+  },
 
   "errors": {
     "incorrectLicense": "Yor code is incorrect",
