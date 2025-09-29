@@ -11,6 +11,51 @@
   "passHint": "Password123",
   "saveAuth": "Remember me",
   "connect": "Connect",
+  "calendarComand": "Orders",
+
+  "dialog": {
+    "address": "Address: {address}",
+    "status": "Status: {status}",
+    "sum": "Order sum: {sum}",
+    "btText": "View order"
+  },
+
+  "driver": {
+    "home" : "Home",
+    "orders": "My orders",
+    "client": "Client",
+    "asl": "Assortment",
+    "history": "History orders",
+    "setting": "Settings"
+  },
+
+  "home": {
+    "titleName": "Sales Consultant",
+    "titleSesion": "Session expires in:",
+    "bodyTotal": "All orders",
+    "bodyBtTotal": "View all",
+    "bodyJob": "In progress",
+    "bodyBtJob": "View in progress",
+    "bodyAwait": "Pending",
+    "bodyBtAwait": "View pending",
+    "bodySave": "Templates",
+    "bodyBtSave": "View templates",
+    "bodyBtCreateOne": "New",
+    "bodyBtCreateThee": "order"
+  },
+  "order": {
+    "name": "Name",
+    "count": "Count",
+    "price": "Unit price (MDL)",
+    "sum": "Amount (MDL)",
+    "stock": "Stock",
+    "total": "Total:"
+  },
+  "pop": {
+    "edit": "Edit",
+    "create": "Create template",
+    "mark": "Mark for deletion"
+  },
 
   "errors": {
     "incorrectLicense": "Yor code is incorrect",

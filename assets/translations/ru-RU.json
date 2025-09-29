@@ -11,6 +11,53 @@
   "passHint": "Пароль123",
   "saveAuth": "Запомнить данные",
   "connect": "Вход",
+  "calendarComand": "Заказы",
+
+  "dialog": {
+    "address": "Адрес: {address}",
+    "status": "Статус: {status}",
+    "summ": "Сумма заказа: {sum}",
+    "btText": "Посмотреть заказ"
+  },
+
+  "driver": {
+    "home" : "Главная",
+    "orders": "Мои заказы",
+    "client": "Клиенты",
+    "asl": "Ассотримент",
+    "history": "История заказов",
+    "setting": "Настройки"
+  },
+
+  "home": {
+    "titleName": "Консультант по продажам",
+    "titleSesion": "Сессия истекает через:",
+    "bodyTotal": "Все заказы",
+    "bodyBtTotal": "Посмотреть все",
+    "bodyJob": "В работе",
+    "bodyBtJob": "Посмотреть в работе",
+    "bodyAwait": "В ожидании",
+    "bodyBtAwait": "Посмотреть в ожидании",
+    "bodySave": "Шаблоны",
+    "bodyBtSave": "Посмотреть шаблоны",
+    "bodyBtCreateOne": "Новый",
+    "bodyBtCreateThee": "заказ"
+  },
+
+  "order": {
+    "name": "Наименование",
+    "count": "Кол-во",
+    "price": "Цена за единицу (MDL)",
+    "sum": "Сумма (MDL)",
+    "stock": "Остаток",
+    "total": "Итого:"
+  },
+  "pop": {
+    "edit": "Редактировать",
+    "create": "Создать шаблон",
+    "mark": "Пометить для удаления"
+  },
+
 
   "errors": {
     "incorrectLicense": "Неверный код лицензий",

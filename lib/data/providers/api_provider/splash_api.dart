@@ -7,10 +7,11 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:sales_agent/core/constans.dart';
-import 'package:sales_agent/data/models_api/model_post_url.dart';
-import 'package:sales_agent/data/models_api/model_response_url.dart';
 
-import '../../models_api/model_reg_app.dart';
+import 'package:sales_agent/data/models_api/models_api_server/model_response_url.dart';
+
+
+import '../../models_api/models_api_server/model_post_url.dart';
 import '../../repositories/apikey_repositori.dart';
 
 class SplashApi{

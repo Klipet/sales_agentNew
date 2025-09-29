@@ -30,15 +30,22 @@ dependencies:
   network_info_plus: ^6.1.4
   equatable: ^2.0.7
   pinput: ^5.0.2
+  sidebarx: ^0.17.2
   number_pad_keyboard: ^0.0.6
   flutter_styled_toast: ^2.2.1
   animated_text_kit: ^4.2.3
+  json_annotation: ^4.9.0
+  flutter_svg: ^2.2.1
+  table_calendar: ^3.2.0
+  syncfusion_flutter_datagrid: ^30.1.38
+  syncfusion_flutter_core: ^30.1.38
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   isar_generator: ^3.1.0+1
+  json_serializable: ^6.8.0
   build_runner: any
 
   flutter_lints: ^5.0.0
@@ -61,6 +68,21 @@ flutter:
       - assets/icons/pass_hide.png
       - assets/icons/chec_unbox.png
       - assets/icons/chek_box.png
+      - assets/icons/drawers/assortiment.svg
+      - assets/icons/drawers/contragents.svg
+      - assets/icons/drawers/history.svg
+      - assets/icons/drawers/home.svg
+      - assets/icons/drawers/orders.svg
+      - assets/icons/drawers/settings.svg
+      - assets/icons/home/human.svg
+      - assets/icons/home/total.svg
+      - assets/icons/home/await.svg
+      - assets/icons/home/job.svg
+      - assets/icons/home/save.svg
+      - assets/icons/pop/trash.svg
+      - assets/icons/pop/dialog_sablon.svg
+      - assets/icons/pop/edit.svg
+
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

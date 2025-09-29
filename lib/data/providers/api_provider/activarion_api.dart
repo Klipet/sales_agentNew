@@ -5,10 +5,11 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
 import 'package:network_info_plus/network_info_plus.dart';
-import 'package:sales_agent/data/models_api/model_reg_app.dart';
-import 'package:sales_agent/data/models_api/model_response.dart';
+
+import 'package:sales_agent/data/models_api/models_api_server/model_response.dart';
 
 import '../../../core/constans.dart';
+import '../../models_api/models_api_server/model_reg_app.dart';
 import '../../repositories/apikey_repositori.dart';
 
 class ActivationApi {
