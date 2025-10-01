@@ -17,3 +17,4 @@ HexColor colorBtJob = HexColor('#28A4D9');
 HexColor colorBtAwait = HexColor('#50BFC6');
 HexColor colorBtSave = HexColor('#99EAD7');
 HexColor colorTextBlack = HexColor('#040D12');
+HexColor btSelectedColor = HexColor('#1D4F58');

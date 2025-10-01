@@ -12,6 +12,7 @@
   "saveAuth": "Remember me",
   "connect": "Connect",
   "calendarComand": "Orders",
+  "orders": "Orders:",
 
   "dialog": {
     "address": "Address: {address}",
@@ -56,6 +57,7 @@
     "create": "Create template",
     "mark": "Mark for deletion"
   },
+
 
   "errors": {
     "incorrectLicense": "Yor code is incorrect",

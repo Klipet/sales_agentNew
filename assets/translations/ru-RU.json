@@ -12,6 +12,7 @@
   "saveAuth": "Запомнить данные",
   "connect": "Вход",
   "calendarComand": "Заказы",
+  "orders": "Заказы",
 
   "dialog": {
     "address": "Адрес: {address}",

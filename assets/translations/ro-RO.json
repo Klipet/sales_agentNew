@@ -11,6 +11,7 @@
   "passHint": "Password123",
   "saveAuth": "Reține datele de autentificare",
   "connect": "Conectare",
+  "orders": "Comenzi:",
 
   "driver": {
     "home" : "Acasă",

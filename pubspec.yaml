@@ -82,6 +82,7 @@ flutter:
       - assets/icons/pop/trash.svg
       - assets/icons/pop/dialog_sablon.svg
       - assets/icons/pop/edit.svg
+      - assets/icons/orders/search.svg
 
 
 
