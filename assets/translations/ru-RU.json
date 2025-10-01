@@ -12,6 +12,7 @@
   "saveAuth": "Запомнить данные",
   "connect": "Вход",
   "calendarComand": "Заказы",
+  "orders": "Заказы",
 
   "dialog": {
     "address": "Адрес: {address}",
@@ -57,6 +58,20 @@
     "create": "Создать шаблон",
     "mark": "Пометить для удаления"
   },
+
+  "tableStatus": {
+    "save": "Шаблон",
+    "queue": "В ожидании",
+    "procces": "В работе",
+    "final": "Готово"
+  },
+  "orderButtons": {
+    "all": "Все заказы",
+    "process": "Заказы в работе",
+    "panding": "Заказы в ожидании",
+    "templates": "Шаблоны"
+  },
+
 
 
   "errors": {

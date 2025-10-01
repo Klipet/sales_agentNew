@@ -15,6 +15,15 @@ final primareFont = GoogleFonts.montserrat(
     Shadow(offset: Offset(0, 4.h), blurRadius: 4.r, color: Color(0x08000000)),
   ],
 );
+final primaFontOrders = GoogleFonts.poppins(
+  fontWeight: FontWeight.w700,
+  fontStyle: FontStyle.normal,
+  fontSize: 80.sp,
+  color: titleColorText,
+  shadows: [
+    Shadow(offset: Offset(0, 4.h), blurRadius: 4.r, color: Color(0x08000000)),
+  ],
+);
 final autentificare = GoogleFonts.montserrat(
   fontWeight: FontWeight.w600,
   fontStyle: FontStyle.normal,
@@ -193,6 +202,24 @@ final textStylePopMenu = GoogleFonts.poppins(
     fontWeight: FontWeight.w400,
     fontStyle: FontStyle.normal,
     fontSize: 17.sp,
+    color: textColor
+);
+final textStyleHintOrder = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontStyle: FontStyle.normal,
+    fontSize: 14.sp,
+    color: subTextColor
+);
+final textStyleBtCreateOrder = GoogleFonts.poppins(
+    fontWeight: FontWeight.w700,
+    fontStyle: FontStyle.normal,
+    fontSize: 23.sp,
+    color: containerColor
+);
+final textStyleBtOrderRow = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
     color: textColor
 );
 

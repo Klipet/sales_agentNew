@@ -4,6 +4,7 @@ import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dar
 import 'package:sales_agent/data/models_db/model_db_orders/model_lines_db.dart';
 
 import '../../core/utils/convert_data.dart';
+import '../../core/utils/order_data_source.dart';
 import '../models_api/models_documents/model_documents.dart';
 
 import 'db_provider.dart';
@@ -125,5 +126,15 @@ Future<List<ModelDocumentDb>> getOrders() async{
     await order.lines.load();
 
     return order.lines.toList();
+  }
+
+
+  Future<List<ModelDocumentDb>> filterOrders(int status) async {
+    final isar = await DbProvider.instance();
+    final orders = await isar.modelDocumentDbs
+        .filter()
+        .stateEqualTo(status) // тут твой фильтр
+        .findAll();
+    return orders;
   }
 }

@@ -12,6 +12,7 @@
   "saveAuth": "Remember me",
   "connect": "Connect",
   "calendarComand": "Orders",
+  "orders": "Orders:",
 
   "dialog": {
     "address": "Address: {address}",
@@ -55,6 +56,19 @@
     "edit": "Edit",
     "create": "Create template",
     "mark": "Mark for deletion"
+  },
+
+  "tableStatus": {
+    "save": "Template",
+    "queue": "Pending",
+    "procces": "In Progress",
+    "final": "Finalized"
+  },
+  "orderButtons": {
+    "all": "All orders",
+    "process": "Orders in progress",
+    "panding": "Pending orders",
+    "templates": "Templates"
   },
 
   "errors": {
