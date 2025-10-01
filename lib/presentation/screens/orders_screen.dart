@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/core/styles_text.dart';
 
+import '../widgets/table_order_widget.dart';
 import '../widgets/title_home_widget.dart';
 
 class OrdersScreen extends StatefulWidget {
@@ -25,68 +26,77 @@ class _OrdersScreenState extends State<OrdersScreen> {
     'assets/icons/home/save.svg',
   ];
   List<String> textBt = [
-    'Toate comenzile',
-    'Comenzi în lucru',
-    'Comenzi în așteptare',
-    'Șabloane',
+    'orderButtons.all'.tr(),
+    'orderButtons.process'.tr(),
+    'orderButtons.panding'.tr(),
+    'orderButtons.templates'.tr(),
   ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(width: 30.w),
-                SizedBox(
-                  width: 386.w,
-                  height: 100.h,
-                  child: Text(
-                    "orders".tr(),
-                    style: primaFontOrders,
-                    textAlign: TextAlign.center,
-                  ),
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(width: 30.w),
+              SizedBox(
+                width: 386.w,
+                height: 100.h,
+                child: Text(
+                  "orders".tr(),
+                  style: primaFontOrders,
+                  textAlign: TextAlign.center,
                 ),
-                Spacer(),
-                Padding(
-                  padding: EdgeInsets.only(top: 16.h),
-                  child: TitleHomeWidget(),
-                ),
-              ],
-            ),
-            SizedBox(height: 8.h),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                ediText(_editingController, 'Caută'),
-                SizedBox(width: 15.w),
-                btCreate(),
-              ],
-            ),
-            SizedBox(height: 14.h),
-            Padding(
-              padding: EdgeInsets.only(left: 10.h),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(4, (index) {
-                  final isSelected = selectedIndex == index;
-                  final icon = icons.elementAt(index);
-                  final text = textBt.elementAt(index);
-                  return Padding(
-                    padding: EdgeInsets.only(right: 14.w),
-                    child: btStatut(index: index,isSelected:  isSelected, assetName: icon, textBtHint: text)
-                  );
-                }),
               ),
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.only(top: 16.h),
+                child: TitleHomeWidget(),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ediText(_editingController, 'Caută'),
+              SizedBox(width: 15.w),
+              btCreate(),
+            ],
+          ),
+          SizedBox(height: 14.h),
+          Padding(
+            padding: EdgeInsets.only(left: 10.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(4, (index) {
+                final isSelected = selectedIndex == index;
+                final icon = icons.elementAt(index);
+                final text = textBt.elementAt(index);
+                return Padding(
+                  padding: EdgeInsets.only(right: 14.w), //надо вернуть 14
+                  child: btStatut(
+                    index: index,
+                    isSelected: isSelected,
+                    assetName: icon,
+                    textBtHint: text,
+                  ),
+                );
+              }),
             ),
-          ],
-        ),
+          ),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(left: 15.h, top: 16.w),
+              child: TableOrderWidget(status: selectedIndex),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -161,13 +171,14 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  Widget btStatut( {
+  Widget btStatut({
     required int index,
     required bool isSelected,
     required String assetName,
-  required String textBtHint}){
+    required String textBtHint,
+  }) {
     return GestureDetector(
-      onTap: (){
+      onTap: () {
         setState(() {
           selectedIndex = index;
         });
@@ -176,7 +187,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
         width: 273.w,
         height: 48.h,
         decoration: BoxDecoration(
-          color: isSelected ? btSelectedColor :containerColor,
+          color: isSelected ? btSelectedColor : containerColor,
           borderRadius: BorderRadius.all(Radius.circular(100.r)),
           border: BoxBorder.all(
             color: borderColor, // цвет границы
@@ -186,13 +197,19 @@ class _OrdersScreenState extends State<OrdersScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset(assetName, color: isSelected ? containerColor :textColor,),
-            SizedBox(width: 8.w,),
+            SvgPicture.asset(
+              assetName,
+              color: isSelected ? containerColor : textColor,
+            ),
+            SizedBox(width: 8.w),
             Container(
-              child: Text(textBtHint, style:  textStyleBtOrderRow.copyWith(
-                color: isSelected ? containerColor : textColor,
-              ),),
-            )
+              child: Text(
+                textBtHint,
+                style: textStyleBtOrderRow.copyWith(
+                  color: isSelected ? containerColor : textColor,
+                ),
+              ),
+            ),
           ],
         ),
       ),

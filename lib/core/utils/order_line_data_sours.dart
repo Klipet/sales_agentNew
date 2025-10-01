@@ -34,9 +34,6 @@ class OrderLinesDataSource extends DataGridSource {
 
   @override
   DataGridRowAdapter buildRow(DataGridRow row) {
-    final int rowIndex = rows.indexOf(row);
-    final bool isFirstRow = rowIndex == 0;
-    final bool isLastRow = rowIndex == _rows.length - 1;
     return DataGridRowAdapter(
       cells: row.getCells().map((cell) {
         return Container(
@@ -65,6 +62,4 @@ class OrderLinesDataSource extends DataGridSource {
       }).toList(),
     );
   }
-
-
 }

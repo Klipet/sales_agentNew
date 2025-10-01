@@ -58,6 +58,20 @@
     "mark": "Marchează spre eliminare"
   },
 
+  "tableStatus": {
+    "save": "Șablon",
+    "queue": "În așteptare",
+    "procces": "În lucru",
+    "final": "Pregatite"
+  },
+  "orderButtons": {
+    "all": "Toate comenzile",
+    "process": "Comenzi în lucru",
+    "panding": "Comenzi în așteptares",
+    "templates": "Șabloane"
+  },
+
+
   "errors": {
     "incorrectLicense": "Codul licenței incorect",
     "error500": "Eroare internă a serverului (500). Încercați din nou mai târziu.",

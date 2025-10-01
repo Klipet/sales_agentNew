@@ -59,6 +59,20 @@
     "mark": "Пометить для удаления"
   },
 
+  "tableStatus": {
+    "save": "Шаблон",
+    "queue": "В ожидании",
+    "procces": "В работе",
+    "final": "Готово"
+  },
+  "orderButtons": {
+    "all": "Все заказы",
+    "process": "Заказы в работе",
+    "panding": "Заказы в ожидании",
+    "templates": "Шаблоны"
+  },
+
+
 
   "errors": {
     "incorrectLicense": "Неверный код лицензий",
