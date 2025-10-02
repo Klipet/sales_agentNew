@@ -66,3 +66,79 @@ Text textContentTable(DataGridCell<dynamic> cell) {
   }
   return Text(cell.value.toString(), style: textStyleDialogOrderContent);
 }
+
+
+Widget clientAligment(DataGridCell<dynamic> cell){
+  if(cell.columnName == 'cod'){
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: textContentTable(cell),
+      // Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }else if(cell.columnName == 'idno'){
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: textContentTable(cell),
+      // Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }else if(cell.columnName == 'outlans'){
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: textContentTable(cell),
+      // Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  } else if(cell.columnName == 'balance'){
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 16.r),
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: textContentTable(cell),
+      // Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }else{
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: 16.r),
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: textContentTableClient(cell),
+      // Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }
+}
+
+Text textContentTableClient(DataGridCell<dynamic> cell) {
+  final constData = Constant();
+  if(cell.columnName == 'balance'){
+    if(cell.value < 0.0){
+      return Text(cell.value, style: textStyleDialogOrderContent.copyWith(
+        color: Colors.red
+      ));
+    }else if(cell.value > 0.0){
+      return Text(cell.value, style: textStyleDialogOrderContent.copyWith(
+          color: Colors.green
+      ));
+    }else{
+      return Text(cell.value, style: textStyleDialogOrderContent);
+    }
+  }else{
+    return Text(cell.value, style: textStyleDialogOrderContent);
+  }
+}

@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -17,6 +18,7 @@ class OrdersScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<OrdersScreen> {
   final TextEditingController _editingController = TextEditingController();
+  String _search = "";
   int selectedIndex = 0; // индекс активной кнопки
 
   List<String> icons = [
@@ -31,6 +33,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
     'orderButtons.panding'.tr(),
     'orderButtons.templates'.tr(),
   ];
+
+  @override
+  void dispose() {
+    _editingController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +101,9 @@ class _OrdersScreenState extends State<OrdersScreen> {
           Expanded(
             child: Container(
               margin: EdgeInsets.only(left: 15.h, top: 16.w),
-              child: TableOrderWidget(status: selectedIndex),
+              child: TableOrderWidget(
+                  key: ValueKey("table_${_editingController.text}"),
+                  status: selectedIndex, search: _search),
             ),
           ),
         ],
@@ -111,6 +121,12 @@ class _OrdersScreenState extends State<OrdersScreen> {
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: TextField(
+        onChanged: (value){
+          setState(() {
+            _search = value;
+            //   controller.text.trim(); // это обновит TableOrderWidget
+          });
+        },
         controller: controller,
         keyboardType: TextInputType.text,
         cursorWidth: 1.w,
@@ -120,10 +136,20 @@ class _OrdersScreenState extends State<OrdersScreen> {
           hintStyle: textStyleHintOrder,
           suffixIcon: Padding(
             padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 16.w),
-            child: SvgPicture.asset(
-              'assets/icons/orders/search.svg',
-              width: 24.w,
-              height: 24.h,
+            child: GestureDetector(
+              onTap: (){
+                setState(() {
+                  _search = controller.text;
+                  if (kDebugMode) {
+                    print('tap: $_search');
+                  }
+                });
+              },
+              child: SvgPicture.asset(
+                'assets/icons/orders/search.svg',
+                width: 24.w,
+                height: 24.h,
+              ),
             ),
           ),
           enabledBorder: OutlineInputBorder(

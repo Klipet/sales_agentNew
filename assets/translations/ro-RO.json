@@ -53,6 +53,10 @@
     "stock": "Stocuri",
     "total": "Total:"
   },
+  "client": {
+    "title": "Clienți:"
+  },
+
   "pop": {
     "edit": "Editează",
     "create": "Crează șablon",

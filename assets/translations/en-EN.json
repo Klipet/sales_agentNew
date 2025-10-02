@@ -29,6 +29,9 @@
     "history": "History orders",
     "setting": "Settings"
   },
+  "client": {
+    "title": "Clients:"
+  },
 
   "home": {
     "titleName": "Sales Consultant",

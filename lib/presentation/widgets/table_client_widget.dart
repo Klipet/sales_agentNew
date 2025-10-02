@@ -1,38 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:isar/isar.dart';
-import 'package:sales_agent/core/constans.dart';
-import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
-import 'package:sales_agent/data/repositories/orders_repositori.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sales_agent/core/utils/client_data_source.dart';
+import 'package:sales_agent/data/repositories/client_repositori.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
-import '../../core/utils/order_data_source.dart';
-import '../../data/repositories/db_provider.dart';
-import '../dialogs/order_detail_dialog.dart';
 
-class TableOrderWidget extends StatefulWidget {
-  final int status;
+class TableClientWidget extends StatefulWidget {
   final String search;
 
-  const TableOrderWidget({super.key, required this.status, required this.search});
+  const TableClientWidget({super.key, required this.search});
 
   @override
-  State<TableOrderWidget> createState() => _TableOrderWidgetState();
+  State<TableClientWidget> createState() => _TableClientWidgetState();
 }
 
-class _TableOrderWidgetState extends State<TableOrderWidget> {
-  late OrderDataSource _dataSource;
+class _TableClientWidgetState extends State<TableClientWidget> {
+  late ClientDataSource _dataSource;
   bool _isLoading = true;
-  final repo = OrdersRepositori();
+  final repo = ClientRepositori();
 
   @override
   void initState() {
     super.initState();
-    _dataSource = OrderDataSource();
+    _dataSource = ClientDataSource();
     if (widget.search.isEmpty) {
       _loadOrders(); // при старте — показать все
     } else {
@@ -41,19 +35,9 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
   }
 
   @override
-  void didUpdateWidget(covariant TableOrderWidget oldWidget) {
+  void didUpdateWidget(covariant TableClientWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.status != widget.status) {
-      if (widget.status == 0) {
-        _loadOrders();
-      } else if (widget.status == 1) {
-        _loadOrdersFilter(Constant().INLUCRU);
-      } else if (widget.status == 2) {
-        _loadOrdersFilter(Constant().GATA);
-      } else if (widget.status == 3) {
-        _loadOrdersFilter(Constant().SABLON);
-      }
-    }
+
     if (oldWidget.search != widget.search) {
       if (widget.search.isEmpty) {
         _loadOrders(); // если строка пустая — показать все
@@ -68,18 +52,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
     setState(() {
       _isLoading = true;
     });
-    final orders = await repo.getOrders();
-    setState(() {
-      _dataSource.updateData(orders);
-      _isLoading = false;
-    });
-  }
-
-  Future<void> _loadOrdersFilter(int? status) async {
-    setState(() {
-      _isLoading = true;
-    });
-    final orders = await repo.filterOrders(status!);
+    final orders = await repo.getAllClients();
     setState(() {
       _dataSource.updateData(orders);
       _isLoading = false;
@@ -91,14 +64,14 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
     });
     if (search == null || search.isEmpty) {
       // если строка пустая → показываем все заказы
-      final orders = await repo.getOrders();
+      final orders = await repo.getAllClients();
       setState(() {
         _dataSource.updateData(orders);
         _isLoading = false;
       });
     } else {
       // иначе ищем
-      final orders = await repo.filterOrdersCount(search);
+      final orders = await repo.filterClient(search);
       setState(() {
         _dataSource.updateData(orders);
         _isLoading = false;
@@ -113,7 +86,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
       return Center(child: CircularProgressIndicator());
     }
 
-    if (_dataSource.orderList.isEmpty) {
+    if (_dataSource.clientList.isEmpty) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -146,15 +119,15 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
 
             // Пропускаем заголовок
             if (rowIndex > 0) {
-              final tappedRow = _dataSource.orderList[rowIndex - 1];
+              final tappedRow = _dataSource.clientList[rowIndex - 1];
 
               if (tappedRow != null) {
-                showDetailOrder(context: context, order: tappedRow);
+             //  showDetailOrder(context: context, order: tappedRow);
               } else {
                 print('Объект заказа не найден в строке!');
               }
               // Открываем окно с деталями
-            //  showDetailOrder(context: context, order: order);
+              //  showDetailOrder(context: context, order: order);
             }
           },
           source: _dataSource,
@@ -165,21 +138,21 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
           headerGridLinesVisibility: GridLinesVisibility.none,
           columns: [
             GridColumn(
-              columnName: 'nr',
-              width: 103.w,
+              columnName: 'cod',
+              width: 104.w,
               label: Container(
                 decoration: BoxDecoration(
                   border: Border(right: BorderSide(color: borderColor, width:  1.w),
                     bottom: BorderSide(color: borderColor, width:  0.5.w),),
                 ),
                 child: Center(
-                  child: Text("Nr.", style: textStyleDialogOrderTitle),
+                  child: Text("Cod", style: textStyleDialogOrderTitle),
                 ),
               ),
             ),
             GridColumn(
-              columnName: 'data',
-              width: 137.w,
+              columnName: 'name',
+              width: 556.w,
               label: Container(
                 decoration: BoxDecoration(
                   border: Border(right: BorderSide(color: borderColor, width:  1.w),
@@ -187,68 +160,50 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
                 ),
                 child: Center(
                   child: Text(
-                    "Data înregistrării",
+                    "Denumire juridică",
                     style: textStyleDialogOrderTitle,
                   ),
                 ),
               ),
             ),
             GridColumn(
-              columnName: 'client',
-              width: 291.w,
+              columnName: 'idno',
+              width: 163.w,
               label: Container(
                 decoration: BoxDecoration(
                   border: Border(right: BorderSide(color: borderColor, width:  1.w),
                     bottom: BorderSide(color: borderColor, width:  0.5.w),),
                 ),
                 child: Center(
-                  child: Text("Client", style: textStyleDialogOrderTitle),
+                  child: Text("IDNO", style: textStyleDialogOrderTitle),
                 ),
               ),
             ),
             GridColumn(
-              columnName: 'address',
-              width: 294.w,
+              columnName: 'outlans',
+              width: 193.w,
               label: Container(
                 decoration: BoxDecoration(
                   border: Border(right: BorderSide(color: borderColor, width:  1.w),
                     bottom: BorderSide(color: borderColor, width:  0.5.w),),
                 ),
                 child: Center(
-                  child: Text("Adresa", style: textStyleDialogOrderTitle),
+                  child: Text("Locații", style: textStyleDialogOrderTitle),
                 ),
               ),
             ),
             GridColumn(
-              columnName: 'status',
-              width: 157.w,
+              columnName: 'balance',
               label: Container(
                 decoration: BoxDecoration(
                   border: Border(
-                      right: BorderSide(color: borderColor, width:  1.w),
+                    right: BorderSide(color: borderColor, width:  1.w),
                     bottom: BorderSide(color: borderColor, width:  0.5.w),
                   ),
                 ),
-                child: Center(
-                  child: Text(
-                    "Statut comandă",
-                    style: textStyleDialogOrderTitle,
-                  ),
-                ),
-              ),
-            ),
-            GridColumn(
-              columnName: 'sum',
-              label: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-
-                    bottom: BorderSide(color: borderColor, width:  0.5.w),
-                  ),
-                ), child: Center(
-                child: Text("Suma", style: textStyleDialogOrderTitle),
-              ),)
-            ),
+                child: Center(child: Text("Sold (MDL)", style: textStyleDialogOrderTitle)),
+              )
+            )
           ],
         ),
       ),

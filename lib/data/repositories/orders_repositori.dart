@@ -120,6 +120,7 @@ Future<List<ModelDocumentDb>> getOrders() async{
         .stateBetween(1, 2)
         .findAll();
   }
+
   Future<List<ModelLinesDb>> loadOrdersLine(ModelDocumentDb order) async {
 
     // нужно загрузить связи явно
@@ -135,6 +136,26 @@ Future<List<ModelDocumentDb>> getOrders() async{
         .filter()
         .stateEqualTo(status) // тут твой фильтр
         .findAll();
+    return orders;
+  }
+
+
+  Future<List<ModelDocumentDb>> filterOrdersCount( String searchQuery,) async {
+    final isar = await DbProvider.instance();
+
+    List<ModelDocumentDb> orders;
+      // Получить все заказы
+      orders = await isar.modelDocumentDbs.where().findAll();
+    // Поиск по тексту в памяти
+    if (searchQuery.isNotEmpty) {
+      final query = searchQuery.toLowerCase();
+      orders = orders.where((order) {
+        return (order.code.toLowerCase().contains(query) ?? false) ||
+            (order.clientName?.toLowerCase().contains(query) ?? false) ||
+            (order.comment?.toLowerCase().contains(query) ?? false);
+      }).toList();
+    }
+
     return orders;
   }
 }

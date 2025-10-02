@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sales_agent/core/colors_app.dart';
+import 'package:sales_agent/presentation/screens/clients_screen.dart';
 import 'package:sales_agent/presentation/widgets/list_driver.dart';
 import 'package:sidebarx/sidebarx.dart';
 
@@ -71,7 +72,6 @@ class _HomeDrawerState extends State<HomeDrawer> with SingleTickerProviderStateM
               controller: _pageController,
               physics: NeverScrollableScrollPhysics(),
               onPageChanged: (index){
-
               },
               children: [
                 Padding(
@@ -82,7 +82,10 @@ class _HomeDrawerState extends State<HomeDrawer> with SingleTickerProviderStateM
                   padding: EdgeInsets.only(right: 24.w, left: 100.w),
                   child: OrdersScreen(),
                 ),
-                HomeScreen(),
+                Padding(
+                  padding: EdgeInsets.only(right: 24.w, left: 100.w),
+                  child: ClientsScreen(),
+                ),
                 HomeScreen(),
                 HomeScreen(),
                 HomeScreen(),

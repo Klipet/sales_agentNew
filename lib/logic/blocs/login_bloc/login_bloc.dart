@@ -1,7 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:sales_agent/data/providers/api_provider/client_api.dart';
 import 'package:sales_agent/data/providers/api_provider/login_api.dart';
 import 'package:sales_agent/data/providers/api_provider/orders_api.dart';
+import 'package:sales_agent/data/repositories/client_repositori.dart';
 import 'package:sales_agent/data/repositories/login_repositori.dart';
 
 import '../../../data/repositories/orders_repositori.dart';
@@ -11,10 +13,12 @@ import 'login_state.dart';
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository repository;
   final OrdersRepositori ordersRepositori;
+  final ClientRepositori clientRepositori;
   final LoginApi actualizationUser;
   final OrdersApi ordersApi;
+  final ClientApi clientApi;
 
-  LoginBloc(this.repository, this.actualizationUser, this.ordersApi, this.ordersRepositori) : super(LoginInitial()) {
+  LoginBloc(this.repository, this.actualizationUser, this.ordersApi, this.ordersRepositori, this.clientRepositori, this.clientApi) : super(LoginInitial()) {
     on<CheckSavedLogin>(_onCheckSavedLogin);
     on<FetchLoginData>(_onFetchActivationData);
   }
@@ -48,6 +52,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         final orders = await ordersApi.getOrders();
         for(var modelDoc in orders!){
           await ordersRepositori.saveOrders(modelDoc);
+        }
+        await clientRepositori.deleteClient();
+        await clientRepositori.deleteOutlens();
+        final client = await clientApi.getClient();
+        
+        for(var clientDB in client!){
+          if(clientDB.outlets == null ){
+            emit(LoginFailure("Список адресов пустой или null"));
+          }
+          await clientRepositori.saveClient(clientDB);
         }
         emit(LoginSuccess());
       }else{

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:sales_agent/data/providers/api_provider/client_api.dart';
 import 'package:sales_agent/data/providers/api_provider/login_api.dart';
 import 'package:sales_agent/data/providers/api_provider/orders_api.dart';
+import 'package:sales_agent/data/repositories/client_repositori.dart';
 import 'package:sales_agent/data/repositories/login_repositori.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
 import 'package:sales_agent/logic/blocs/login_bloc/login_bloc.dart';
@@ -22,7 +24,7 @@ class AuthLoginWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-        create: (_) => LoginBloc(LoginRepository(), LoginApi(), OrdersApi(), OrdersRepositori()),
+        create: (_) => LoginBloc(LoginRepository(), LoginApi(), OrdersApi(), OrdersRepositori(), ClientRepositori(), ClientApi()),
       child: AuthLoginWidgetUI(),
     );
   }
