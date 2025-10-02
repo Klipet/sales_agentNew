@@ -43,13 +43,13 @@ Border borderSideTable(DataGridCell<dynamic> cell) {
 Text textContentTable(DataGridCell<dynamic> cell) {
   final constData = Constant();
   if (cell.columnName == 'status') {
-    if (cell.value == constData.SAVE.toString()) {
+    if (cell.value == constData.SABLON.toString()) {
       return Text('tableStatus.save'.tr(), style: textStyleDialogOrderContent);
 
-    } else if (cell.value == constData.QUEUE.toString()) {
+    } else if (cell.value == constData.ASTEPTARE.toString()) {
       return Text('tableStatus.queue'.tr(), style: textStyleDialogOrderContent);
 
-    } else if (cell.value == constData.PROCESSING.toString()) {
+    } else if (cell.value == constData.INLUCRU.toString()) {
       return Text('tableStatus.procces'.tr(), style: textStyleDialogOrderContent);
 
     }

@@ -39,11 +39,11 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
       if (widget.status == 0) {
         _loadOrders();
       } else if (widget.status == 1) {
-        _loadOrdersFilter(Constant().PROCESSING);
+        _loadOrdersFilter(Constant().INLUCRU);
       } else if (widget.status == 2) {
-        _loadOrdersFilter(Constant().READY);
+        _loadOrdersFilter(Constant().GATA);
       } else if (widget.status == 3) {
-        _loadOrdersFilter(Constant().SAVE);
+        _loadOrdersFilter(Constant().SABLON);
       }
     }
   }

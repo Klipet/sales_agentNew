@@ -10,6 +10,7 @@ import '../../core/colors_app.dart';
 import '../../core/constans.dart';
 import '../../core/styles_text.dart';
 import '../../core/utils/order_line_data_sours.dart';
+import '../../core/utils/orders_urils.dart';
 import '../../core/utils/pop_menu_util.dart';
 import '../../data/models_db/model_db_orders/model_document_db.dart';
 import '../../data/models_db/model_db_orders/model_lines_db.dart';
@@ -160,33 +161,10 @@ Future<void> showDetailOrder({
                         Expanded(
                           child: Row(
                             children: [
-                              Text(
-                                order.state == Constant().QUEUE
-                                    ? 'dialog.status'.tr(
-                                        namedArgs: {
-                                          'status': 'home.bodyJob'.tr(),
-                                        },
-                                      )
-                                    : 'dialog.status'.tr(
-                                        namedArgs: {
-                                          'status': 'home.bodyAwait'.tr(),
-                                        },
-                                      ),
-                                style: textStyleDialogOrderSub.copyWith(
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
+                              textStatut(order),
+
                               Spacer(),
-                              Text(
-                                'dialog.address'.tr(
-                                  namedArgs: {
-                                    'address': order.comment.toString(),
-                                  },
-                                ),
-                                style: textStyleDialogOrderSub.copyWith(
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
+                              adressDialog(order)
                             ],
                           ),
                         ),
@@ -319,7 +297,6 @@ Future<void> showDetailOrder({
           ),
         ),
       );
-
     },
   );
 }

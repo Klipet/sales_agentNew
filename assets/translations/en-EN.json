@@ -40,6 +40,7 @@
     "bodyAwait": "Pending",
     "bodyBtAwait": "View pending",
     "bodySave": "Templates",
+    "bodyComplete": "Complete",
     "bodyBtSave": "View templates",
     "bodyBtCreateOne": "New",
     "bodyBtCreateThee": "order"
