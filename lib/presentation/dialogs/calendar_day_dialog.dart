@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 
 import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
@@ -11,7 +12,11 @@ import '../../core/utils/convert_data.dart';
 import '../../data/models_db/model_db_orders/model_document_db.dart';
 import 'order_detail_dialog.dart';
 
-void showBlurDialogCalendar(BuildContext context, DateTime day, List<int> orders) {
+void showBlurDialogCalendar(
+  BuildContext context,
+  DateTime day,
+  List<int> orders,
+) {
   final formatDay = DateFormat('dd.MM.yyyy').format(day);
   showGeneralDialog(
     context: context,
@@ -21,8 +26,25 @@ void showBlurDialogCalendar(BuildContext context, DateTime day, List<int> orders
     barrierColor: Colors.black.withOpacity(0.2),
     // полупрозрачный фон
     pageBuilder: (context, anim1, anim2) {
-      return BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5), // блюр фона
+      return GlassmorphicContainer(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        borderRadius: 0,
+        blur: 2,
+        alignment: Alignment.center,
+        border: 0,
+        linearGradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.1),
+            Colors.white.withOpacity(0.05),
+          ],
+        ),
+        borderGradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.5),
+            Colors.white.withOpacity(0.5),
+          ],
+        ),
         child: Center(
           child: Container(
             width: 612.w,
@@ -37,9 +59,12 @@ void showBlurDialogCalendar(BuildContext context, DateTime day, List<int> orders
               children: [
                 Row(
                   children: [
-                    Text(formatDay.toString(), style: textStyleDialogday.copyWith(
-                      decoration: TextDecoration.none,
-                    ),),
+                    Text(
+                      formatDay.toString(),
+                      style: textStyleDialogday.copyWith(
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
                     Spacer(),
                     GestureDetector(
                       onTap: () {
@@ -117,16 +142,18 @@ void showBlurDialogCalendar(BuildContext context, DateTime day, List<int> orders
                                       children: [
                                         Text(
                                           order.code,
-                                          style: textStyleDialogInfoClient.copyWith(
-                                            decoration: TextDecoration.none,
-                                          ),
+                                          style: textStyleDialogInfoClient
+                                              .copyWith(
+                                                decoration: TextDecoration.none,
+                                              ),
                                         ),
                                         Spacer(),
                                         Text(
                                           order.clientName.toString(),
-                                          style: textStyleDialogInfoClient.copyWith(
-                                            decoration: TextDecoration.none,
-                                          ),
+                                          style: textStyleDialogInfoClient
+                                              .copyWith(
+                                                decoration: TextDecoration.none,
+                                              ),
                                         ),
                                       ],
                                     ),
@@ -137,9 +164,9 @@ void showBlurDialogCalendar(BuildContext context, DateTime day, List<int> orders
                                     children: [
                                       Column(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.end,
+                                            MainAxisAlignment.end,
                                         crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             'dialog.address'.tr(
@@ -148,23 +175,31 @@ void showBlurDialogCalendar(BuildContext context, DateTime day, List<int> orders
                                                     .toString(),
                                               },
                                             ),
-                                            style: textStyleDialogInfoOrder.copyWith(
-                                              decoration: TextDecoration.none,
-                                            ),
+                                            style: textStyleDialogInfoOrder
+                                                .copyWith(
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                ),
                                           ),
                                           Text(
-                                            order.state == 1?
-                                            'dialog.status'.tr(
-                                              namedArgs: {
-                                                'status': 'home.bodyJob'.tr(),
-                                              },
-                                            ) : 'dialog.status'.tr(
-                                              namedArgs: {
-                                                'status': 'home.bodyAwait'.tr(),
-                                              },),
-                                            style: textStyleDialogInfoOrder.copyWith(
-                                              decoration: TextDecoration.none,
-                                            ),
+                                            order.state == 1
+                                                ? 'dialog.status'.tr(
+                                                    namedArgs: {
+                                                      'status': 'home.bodyJob'
+                                                          .tr(),
+                                                    },
+                                                  )
+                                                : 'dialog.status'.tr(
+                                                    namedArgs: {
+                                                      'status': 'home.bodyAwait'
+                                                          .tr(),
+                                                    },
+                                                  ),
+                                            style: textStyleDialogInfoOrder
+                                                .copyWith(
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                ),
                                           ),
                                           Text(
                                             'dialog.sum'.tr(
@@ -172,22 +207,29 @@ void showBlurDialogCalendar(BuildContext context, DateTime day, List<int> orders
                                                 'sum': order.sum.toString(),
                                               },
                                             ),
-                                            style: textStyleDialogInfoOrder.copyWith(
-                                              decoration: TextDecoration.none,
-                                            ),
+                                            style: textStyleDialogInfoOrder
+                                                .copyWith(
+                                                  decoration:
+                                                      TextDecoration.none,
+                                                ),
                                           ),
                                         ],
                                       ),
                                       Spacer(),
                                       GestureDetector(
-                                        onTap: (){
-                                          showDetailOrder(context: context, order: order);
+                                        onTap: () {
+                                          showDetailOrder(
+                                            context: context,
+                                            order: order,
+                                          );
                                         },
                                         child: Container(
                                           height: 48.h,
                                           width: 155.w,
                                           decoration: BoxDecoration(
-                                            color: order.state == 1 ? colorBtAwait : colorBtJob,
+                                            color: order.state == 1
+                                                ? colorBtAwait
+                                                : colorBtJob,
                                             border: Border.all(
                                               color: borderColor,
                                               width: 1,
@@ -196,10 +238,14 @@ void showBlurDialogCalendar(BuildContext context, DateTime day, List<int> orders
                                               Radius.circular(100.r),
                                             ),
                                           ),
-                                          child:
-                                          Center(child: Text('dialog.btText'.tr(), style: textStyleDialogBt.copyWith(
-                                            decoration: TextDecoration.none,
-                                          ),)),
+                                          child: Center(
+                                            child: Text(
+                                              'dialog.btText'.tr(),
+                                              style: textStyleDialogBt.copyWith(
+                                                decoration: TextDecoration.none,
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ],

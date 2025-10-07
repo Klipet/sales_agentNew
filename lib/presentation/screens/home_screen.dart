@@ -22,9 +22,9 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               TitleHomeWidget(),
-              Padding(
-                padding: EdgeInsets.only(top: 17.h, left: 16.w),
-                child: BodyHomeWidget(),
+               Padding(
+                  padding: EdgeInsets.only(top: 17.h, left: 16.w),
+                  child: BodyHomeWidget(),
               ),
               Expanded(
                 child: Padding(

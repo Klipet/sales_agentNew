@@ -64,7 +64,7 @@ class _SplashScreenUIState extends State<SplashScreenUI> {
                 (Route<dynamic> route) => false,
               );
             } else if (state is SplashError) {
-              print(state.errorMessage);
+            //  print(state.errorMessage);
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const ActivationScreen()),

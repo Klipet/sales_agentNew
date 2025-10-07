@@ -7,18 +7,18 @@ part of 'model_lines.dart';
 // **************************************************************************
 
 ModelLines _$ModelLinesFromJson(Map<String, dynamic> json) => ModelLines(
-      assortimentBarcode: json['AssortimentBarcode'] as String?,
-      assortimentCode: json['AssortimentCode'] as String,
-      assortimentName: json['AssortimentName'] as String,
-      assortimentUid: json['AssortimentUid'] as String,
-      count: (json['Count'] as num).toDouble(),
-      lineNumber: (json['LineNumber'] as num).toInt(),
-      price: (json['Price'] as num).toDouble(),
-      processedCount: (json['ProcessedCount'] as num).toDouble(),
-      sum: (json['Sum'] as num).toDouble(),
-      uid: json['Uid'] as String,
-      unitName: json['UnitName'] as String,
-      unitUid: json['UnitUid'] as String,
+      assortimentBarcode: json['AssortimentBarcode'] as String? ?? '',
+      assortimentCode: json['AssortimentCode'] as String? ?? '',
+      assortimentName: json['AssortimentName'] as String? ?? '',
+      assortimentUid: json['AssortimentUid'] as String? ?? '',
+      count: (json['Count'] as num?)?.toDouble() ?? 0.0,
+      lineNumber: (json['LineNumber'] as num?)?.toInt() ?? 0,
+      price: (json['Price'] as num?)?.toDouble() ?? 0.0,
+      processedCount: (json['ProcessedCount'] as num?)?.toDouble() ?? 0.0,
+      sum: (json['Sum'] as num?)?.toDouble() ?? 0.0,
+      uid: json['Uid'] as String? ?? '',
+      unitName: json['UnitName'] as String? ?? '',
+      unitUid: json['UnitUid'] as String? ?? '',
     );
 
 Map<String, dynamic> _$ModelLinesToJson(ModelLines instance) =>

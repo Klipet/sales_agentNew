@@ -27,7 +27,7 @@ class ModelDocuments {
   @JsonKey(name: 'DeliveryAddress')
   final String? deliveryAddress;
 
-  @JsonKey(name: 'Lines')
+  @JsonKey(name: 'Lines', defaultValue: [])
   final List<ModelLines> lines;
 
   @JsonKey(name: 'State')

@@ -20,8 +20,9 @@ class ClientDataSource extends DataGridSource{
         DataGridCell<String>(columnName: 'cod', value: client.code ?? '----'),
         DataGridCell<String>(columnName: 'name', value: client.name ?? '----'),
         DataGridCell<String>(columnName: 'idno', value: client.idnp ?? '----'),
+        DataGridCell<String>(columnName: 'tva', value: client.tvaCode?? '----'),
         DataGridCell<int>(columnName: 'outlans', value: client.outlets.length ?? 0),
-        DataGridCell<double>(columnName: 'balance', value: client.balance),
+
       ]);
     }).toList();
 

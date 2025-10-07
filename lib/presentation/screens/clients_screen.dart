@@ -50,7 +50,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
                   ),
                 ],
               ),
-              SizedBox(height: 16.h),
+              SizedBox(height: 8.h),
               ediTextClient(_editingController, 'Caută'),
               SizedBox(height: 16.h),
               Expanded(child: Padding(
@@ -67,6 +67,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
   Widget ediTextClient(TextEditingController controller, String hint) {
     return Container(
     //  width: 1134.w,
+      height: 48.h,
       margin: EdgeInsets.only(left: 10.h),
       alignment: Alignment.centerRight,
       decoration: BoxDecoration(
@@ -94,7 +95,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
                 setState(() {
                   _search = controller.text;
                   if (kDebugMode) {
-                    print('tap Client: $_search');
+                //    print('tap Client: $_search');
                   }
                 });
               },

@@ -43,7 +43,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
         _loadOrders(); // если строка пустая — показать все
       } else {
         _loadOrdersFilterSearch(widget.search);
-        print(widget.search);
+      //  print(widget.search);
       }
     }
   }
@@ -180,8 +180,20 @@ class _TableClientWidgetState extends State<TableClientWidget> {
               ),
             ),
             GridColumn(
+                columnName: 'tva',
+                width: 193.w,
+                label: Container(
+                  decoration: BoxDecoration(
+                    border: Border(
+                      right: BorderSide(color: borderColor, width:  1.w),
+                      bottom: BorderSide(color: borderColor, width:  0.5.w),
+                    ),
+                  ),
+                  child: Center(child: Text("TVA code", style: textStyleDialogOrderTitle)),
+                )
+            ),
+            GridColumn(
               columnName: 'outlans',
-              width: 193.w,
               label: Container(
                 decoration: BoxDecoration(
                   border: Border(right: BorderSide(color: borderColor, width:  1.w),
@@ -192,18 +204,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
                 ),
               ),
             ),
-            GridColumn(
-              columnName: 'balance',
-              label: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: borderColor, width:  1.w),
-                    bottom: BorderSide(color: borderColor, width:  0.5.w),
-                  ),
-                ),
-                child: Center(child: Text("Sold (MDL)", style: textStyleDialogOrderTitle)),
-              )
-            )
+
           ],
         ),
       ),

@@ -47,6 +47,7 @@ final buttonTextStyle = GoogleFonts.montserrat(
   fontWeight: FontWeight.w600,
   fontStyle: FontStyle.normal,
   fontSize: 20.sp,
+  height: 1,
   color: titleColorText,
 );
 
@@ -86,12 +87,14 @@ final textStyleBodyTitleCount = GoogleFonts.poppins(
     fontWeight: FontWeight.w600,
     fontStyle: FontStyle.normal,
     fontSize: 32.sp,
+    height: 1,
     color: subTextColor
 );
 final textStyleBodyBt = GoogleFonts.poppins(
     fontWeight: FontWeight.w500,
     fontStyle: FontStyle.normal,
     fontSize: 18.sp,
+    height: 1,
     color: titleColorText
 );
 final textStyleBodyBtCreate = GoogleFonts.montserrat(

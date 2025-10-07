@@ -9,6 +9,9 @@ import 'package:sales_agent/data/providers/api_provider/orders_api.dart';
 import 'package:sales_agent/data/repositories/client_repositori.dart';
 import 'package:sales_agent/data/repositories/login_repositori.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
+import 'package:sales_agent/logic/blocs/clients_bloc/clients_state.dart';
+import 'package:sales_agent/logic/blocs/document_bloc/documants_state.dart';
+import 'package:sales_agent/logic/blocs/document_bloc/documents_cubit.dart';
 import 'package:sales_agent/logic/blocs/login_bloc/login_bloc.dart';
 import 'package:sales_agent/logic/blocs/login_bloc/login_event.dart';
 import 'package:sales_agent/logic/blocs/login_bloc/login_state.dart';
@@ -17,14 +20,25 @@ import 'package:sales_agent/presentation/widgets/home_drawer.dart';
 import '../../core/colors_app.dart';
 import '../../core/errors/error_toast.dart';
 import '../../core/styles_text.dart';
+import '../../logic/blocs/clients_bloc/clients_cubit.dart';
 
 class AuthLoginWidget extends StatelessWidget {
   const AuthLoginWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: (_) => LoginBloc(LoginRepository(), LoginApi(), OrdersApi(), OrdersRepositori(), ClientRepositori(), ClientApi()),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<LoginBloc>(
+          create: (_) => LoginBloc(LoginRepository(), LoginApi()),
+        ),
+        BlocProvider<DocumentsCubit>(
+          create: (_) => DocumentsCubit(OrdersApi(), OrdersRepositori()),
+        ),
+        BlocProvider<ClientsCubit>(
+          create: (_) => ClientsCubit(ClientApi(), ClientRepositori()),
+        ),
+      ],
       child: AuthLoginWidgetUI(),
     );
   }
@@ -37,155 +51,234 @@ class AuthLoginWidgetUI extends StatefulWidget {
   State<AuthLoginWidgetUI> createState() => _AuthLoginWidgetUIState();
 }
 
-class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> {
+class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> with TickerProviderStateMixin {
   bool hidePassword = true;
   bool savePass = false;
   final TextEditingController _controllerLogin = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  late AnimationController _controller1;
+  late AnimationController _controller2;
 
   @override
   void initState() {
     super.initState();
-    context.read<LoginBloc>().add(CheckSavedLogin()); // проверка сохранённых данных
+    context.read<LoginBloc>().add(
+      CheckSavedLogin(),
+    ); // проверка сохранённых данных
+    _controller1 = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    )..repeat();
+
+    // Второй круг — против часовой стрелки
+    _controller2 = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+  }
+
+  Future<void> documant(BuildContext context) async {
+    return await context.read<DocumentsCubit>().fetchOrders();
+  }
+  @override
+  void dispose() {
+    _controller1.dispose();
+    _controller2.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<LoginBloc, LoginState>(
-      listener: (BuildContext context, LoginState state) {
-        if(state is LoginFailure){
-          showMesageError(state.message, context);
-        }else if(state is LoginSuccess){
-          Navigator.pushAndRemoveUntil(context,
-              MaterialPageRoute(builder: (_) => HomeDrawer()),
-              (Route<dynamic> route) => false
-          );
-          _controllerPassword.clear();
-          _controllerLogin.clear();
-        }else if(state is LoginLoading){
-          Container(
-            width: 448.w,
-            height: 464.h,
-            child: CircularProgressIndicator(color: textColor,),
-          );
-        }
-      },
-      builder: (BuildContext context, LoginState state) {
-        return Container(
-          width: 448.w,
-          height: 464.h,
-          decoration: BoxDecoration(
-            color: containerColor,
-            borderRadius: BorderRadius.all(Radius.circular(30.r)),
-            border: Border.all(color: HexColor('#E5E5E5'), width: 1.r),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-
-            children: [
-              Padding(
-                padding: EdgeInsets.only(top: 48.r),
-                child: Center(child: Text('auth'.tr(), style: autentificare)),
-              ),
-              Container(
-                width: 328.w,
-
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<LoginBloc, LoginState>(
+          listener: (context, state) {
+            if (state is LoginFailure) {
+              showMesageError(state.message, context);
+            } else if (state is LoginSuccess) {
+              documant(context);
+              context.read<ClientsCubit>().fetchClients();
+              _controllerPassword.clear();
+              _controllerLogin.clear();
+            }
+          },
+        ),
+        BlocListener<ClientsCubit, ClientsState>(
+          listener: (context, state) {
+            if (state is ClientsLoaded) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (_) => HomeDrawer()),
+                (route) => false,
+              );
+            } else if (state is ClientsError) {
+              showMesageError(state.message, context);
+            }
+          },
+        ),
+      ],
+      child: BlocBuilder<LoginBloc, LoginState>(
+        builder: (context, loginState) {
+          final clientsState = context.watch<ClientsCubit>().state;
+          // Показ загрузки
+          if (loginState is LoginLoading || clientsState is ClientsLoading) {
+            return Center(
+              child: Container(
+                height: 464.h,
+                width: 448.w,
+                decoration: BoxDecoration(
+                  color: containerColor,
+                  borderRadius: BorderRadius.circular(30.r),
+                  border: Border.all(color: HexColor('#E5E5E5'), width: 1.r),
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.only(left: 15.r, top: 32.r, bottom: 8.r),
-                      child: Text('user'.tr(), style: titleCardInfo),
-                    ),
-                    Center(
-                      child: ediTextAut(
-                        _controllerLogin,
-                        'userHint'.tr(),
-                        keyboardType: TextInputType.text,
+                    RotationTransition(
+                      turns: _controller1,
+                      child: SizedBox(
+                        height: 90.h,
+                        width: 90.w,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 6.w,
+                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.grey),
+                        ),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 15.r, top: 16.r, bottom: 8.r),
-                      child: Text('pass'.tr(), style: titleCardInfo),
-                    ),
-                    Center(
-                      child: ediTextAut(
-                        _controllerPassword,
-                        'passHint'.tr(),
-                        obscureText: hidePassword,
-                        suffixIcon: true,
-                        keyboardType: TextInputType.text,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16.r, left: 15.r),
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                savePass = !savePass;
-                              });
-                            },
-                            child: Image.asset(
-                              savePass
-                                  ? 'assets/icons/chek_box.png'
-                                  : 'assets/icons/chec_unbox.png',
-                            ),
-                          ),
-                          SizedBox(
-                            width: 250.w,
-                            child: Padding(
-                              padding: EdgeInsets.only(left: 8.0),
-                              child: Text('saveAuth'.tr(),
-                                  style: titleCardInfo,
-                                maxLines: 2,
-                                  overflow: TextOverflow.ellipsis
-                              ),
-                            ),
-                          ),
-                        ],
+                    RotationTransition(
+                      turns: Tween(begin: 1.0, end: 0.0).animate(_controller2), // обратное вращение
+                      child: SizedBox(
+                        height: 60.h,
+                        width: 60.w,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 4.w,
+                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.black),
+                        ),
                       ),
                     ),
                   ],
                 ),
               ),
-
-              Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 48.r),
-                  child: ElevatedButton(
+            );
+          }
+          return ConstrainedBox(
+            constraints: BoxConstraints(maxHeight: 464.h, maxWidth: 448.w),
+            child: Container(
+              decoration: BoxDecoration(
+                color: containerColor,
+                borderRadius: BorderRadius.circular(30.r),
+                border: Border.all(color: HexColor('#E5E5E5'), width: 1.r),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 48.r),
+                    child: Center(
+                      child: Text('auth'.tr(), style: autentificare),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 328.w,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 15.r,
+                            top: 32.r,
+                            bottom: 8.r,
+                          ),
+                          child: Text('user'.tr(), style: titleCardInfo),
+                        ),
+                        Center(
+                          child: ediTextAut(_controllerLogin, 'userHint'.tr()),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            left: 15.r,
+                            top: 16.r,
+                            bottom: 8.r,
+                          ),
+                          child: Text('pass'.tr(), style: titleCardInfo),
+                        ),
+                        Center(
+                          child: ediTextAut(
+                            _controllerPassword,
+                            'passHint'.tr(),
+                            obscureText: hidePassword,
+                            suffixIcon: true,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 16.r, left: 15.r),
+                          child: GestureDetector(
+                            onTap: () => setState(() => savePass = !savePass),
+                            child: Row(
+                              children: [
+                                Image.asset(
+                                  savePass
+                                      ? 'assets/icons/chek_box.png'
+                                      : 'assets/icons/chec_unbox.png',
+                                ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      'saveAuth'.tr(),
+                                      style: titleCardInfo,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 48.r),
+                    child: ElevatedButton(
                       onPressed: () {
                         context.read<LoginBloc>().add(
                           FetchLoginData(
-                              _controllerLogin.text,
-                              _controllerPassword.text,
-                              savePass)
+                            _controllerLogin.text,
+                            _controllerPassword.text,
+                            savePass,
+                          ),
                         );
                       },
                       style: ButtonStyle(
-                          fixedSize: WidgetStateProperty.all(Size(175.w, 48.h)),
-                          backgroundColor: WidgetStateProperty.all(buttonColor),
-                          shape: WidgetStateProperty.all(
-                              RoundedRectangleBorder(
-                                  borderRadius: BorderRadiusGeometry.circular(100.r)
-                              )
-                          )
+                        minimumSize: WidgetStateProperty.all(Size(175.w, 48.h)),
+                        backgroundColor: WidgetStateProperty.all(buttonColor),
+                        shape: WidgetStateProperty.all(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(100.r),
+                          ),
+                        ),
                       ),
-                      child: Text('connect'.tr(),
+                      child: Text(
+                        'connect'.tr(),
                         style: buttonTextStyle,
-                          maxLines: 2,
+                        maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-
-                      )
+                        textScaler: TextScaler.linear(
+                          MediaQuery.of(
+                            context,
+                          ).textScaleFactor.clamp(1.0, 1.3),
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
-          ),
-        );
-      }
+            ),
+          );
+        },
+      ),
     );
   }
 

@@ -35,7 +35,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
     final data = await reposetoryOrder.loadOrdersGroupedByDate();
     setState(() {
       _ordersByDate = data;
-      print(data);
+    //  print(data);
     });
   }
 
@@ -116,7 +116,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             onTap: (){
               _ordersByDate[dateKey] != null?
               showBlurDialogCalendar(context, dateKey, dayOrders): false;
-              print('Нажали на дату defaultBuilder $dateKey → заказы: $dayOrders');
+          //    print('Нажали на дату defaultBuilder $dateKey → заказы: $dayOrders');
             },
             child: Container(
               decoration: BoxDecoration(
@@ -185,7 +185,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           //  final events = _getEventsForDay(day);
           return GestureDetector(
             onTap: (){
-              print('Нажали на дату $dateKey → заказы: $dayOrders');
+         //     print('Нажали на дату $dateKey → заказы: $dayOrders');
             },
             child: Container(
               decoration: BoxDecoration(
@@ -254,7 +254,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
           //  final events = _getEventsForDay(day);
           return GestureDetector(
             onTap: (){
-              print('Нажали на дату $dateKey → заказы: $dayOrders');
+              _ordersByDate[dateKey] != null?
+              showBlurDialogCalendar(context, dateKey, dayOrders): false;
+          //    print('Нажали на дату $dateKey → заказы: $dayOrders');
             },
             child: Container(
               decoration: BoxDecoration(

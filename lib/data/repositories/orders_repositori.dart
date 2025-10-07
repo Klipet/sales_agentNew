@@ -102,13 +102,13 @@ Future<List<ModelDocumentDb>> getOrders() async{
       grouped[date]!.add(doc.state);
     }
 
-    print('loadOrdersGroupedByDate: $grouped');
+  //  print('loadOrdersGroupedByDate: $grouped');
     return grouped;
   }
 
   Future<List<ModelDocumentDb>> loadOrdersForDay(DateTime day) async {
     final isar = await DbProvider.instance();
-    print(day);
+  //  print(day);
     final start = day;
 
     final end = day.add(Duration(days: 1));

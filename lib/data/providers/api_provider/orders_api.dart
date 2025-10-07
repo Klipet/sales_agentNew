@@ -20,9 +20,19 @@ class OrdersApi {
           .resolve('json/GetRequestList?tokenUid=$token&startDate=2021-01-01&endDate=$data');
       final ordersResponse = await http.get(urlPars).timeout(Duration(seconds: 5));
       if(ordersResponse.statusCode == 200){
+      //  print("4");
         final response = jsonDecode(ordersResponse.body);
-        final dataResponse = ModelGetOrders.fromJson(response);
-        return dataResponse.documents;
+        try{
+          final dataResponse = ModelGetOrders.fromJson(response);
+        //  print("5,1");
+          return dataResponse.documents;
+
+        }catch(e,s){
+        //  print("5, $e,$s");
+        }
+
+      //  print("5");
+
       }else{
         throw Exception("Ошибка Orders: ${ordersResponse.statusCode}");
       }

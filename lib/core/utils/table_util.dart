@@ -58,12 +58,18 @@ Text textContentTable(DataGridCell<dynamic> cell) {
   if(cell.columnName == 'address'){
     if(cell.value == null){
       return Text('----------', style: textStyleDialogOrderContent);
+    }else{
+      return Text(cell.value, style: textStyleDialogOrderContent, overflow: TextOverflow.ellipsis, maxLines: 1,);
     }
   }
   if(cell.columnName == 'data'){
     final formatDay = DateFormat('dd.MM.yyyy').format(cell.value);
     return Text(formatDay, style: textStyleDialogOrderContent);
   }
+  if(cell.columnName == 'client'){
+    return Text(cell.value, style: textStyleDialogOrderContent, overflow: TextOverflow.ellipsis, maxLines: 1,);
+  }
+
   return Text(cell.value.toString(), style: textStyleDialogOrderContent);
 }
 
@@ -99,9 +105,9 @@ Widget clientAligment(DataGridCell<dynamic> cell){
       child: textContentTable(cell),
       // Text(cell.value.toString(),style: textStyleDialogOrderContent),
     );
-  } else if(cell.columnName == 'balance'){
+  } else if(cell.columnName == 'tva'){
     return Container(
-      alignment: Alignment.centerRight,
+      alignment: Alignment.center,
       padding: EdgeInsets.only(right: 16.r),
       decoration: BoxDecoration(
           color: containerColor,

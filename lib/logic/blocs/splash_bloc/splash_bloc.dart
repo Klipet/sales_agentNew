@@ -13,7 +13,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       emit(SplashLoad());
       try {
         final repoApikey = await repository.getApiKey();
-        print('SplashBloc: repoApikey = $repoApikey');
+      //  print('SplashBloc: repoApikey = $repoApikey');
 
         if(repoApikey != null){
           final apiResponse = await service.registerUrl();

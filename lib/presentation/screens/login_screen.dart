@@ -12,22 +12,17 @@ class LoginScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: EdgeInsets.only(top: 72.w),
-            child: Center(
-              child: Text('SALES AGENT',
-                  style: primareFont),
-            ),
-          ),
-          SizedBox(height: 26.h), // отступ перед формой
-          Center(
-            child: AuthLoginWidget(), // используем полноценный UI виджет
-          ),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text('SALES AGENT',
+                style: primareFont),
+            SizedBox(height: 26.h), // отступ перед формой
+            AuthLoginWidget(),
+          ],
+        ),
       ),
     );
   }

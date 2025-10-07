@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:glassmorphism/glassmorphism.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -26,11 +27,28 @@ Future<void> showDetailOrder({
     context: context,
     barrierDismissible: true,
     barrierLabel: "OrderDialog",
-    barrierColor: Colors.black.withOpacity(0.2),
+  //  barrierColor:   Colors.black.withOpacity(0.4),
     pageBuilder: (context, anim1, anim2) {
-      return BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-        child: Center(
+      return  GlassmorphicContainer(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        borderRadius: 0,
+        blur: 2,
+        alignment: Alignment.center,
+        border: 0,
+        linearGradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.1),
+            Colors.white.withOpacity(0.05),
+          ],
+        ),
+        borderGradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.5),
+            Colors.white.withOpacity(0.5),
+          ],
+        ),
+        child:Center(
           child: Material(
             color: Colors.transparent,
             child: Container(
@@ -187,88 +205,90 @@ Future<void> showDetailOrder({
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SfDataGridTheme(
-                            data: SfDataGridThemeData(
-                              headerColor: primariColor,
-                              headerHoverColor: primariColor,
-                              selectionColor: containerColor,
-                              gridLineColor: containerColor,
-                              rowHoverColor: containerColor,
-                            ),
-                            child: SfDataGrid(
-                              source: OrderLinesDataSource(dataLines),
-                              rowHeight: 48.h,
-                              headerRowHeight: 32.h,
-                              columnWidthMode: ColumnWidthMode.lastColumnFill,
-                              gridLinesVisibility: GridLinesVisibility.none,
-                              headerGridLinesVisibility:
-                                  GridLinesVisibility.none,
-                              columnWidthCalculationRange:
-                                  ColumnWidthCalculationRange.visibleRows,
-                              columns: [
-                                GridColumn(
-                                  columnName: 'nr',
-                                  width: 46.w,
-                                  label: Center(
-                                    child: Text(
-                                      'Nr.',
-                                      style: textStyleDialogOrderTitle,
+                          Expanded(
+                            child: SfDataGridTheme(
+                              data: SfDataGridThemeData(
+                                headerColor: primariColor,
+                                headerHoverColor: primariColor,
+                                selectionColor: containerColor,
+                                gridLineColor: containerColor,
+                                rowHoverColor: containerColor,
+                              ),
+                              child: SfDataGrid(
+                                source: OrderLinesDataSource(dataLines),
+                                rowHeight: 48.h,
+                                headerRowHeight: 32.h,
+                                columnWidthMode: ColumnWidthMode.lastColumnFill,
+                                gridLinesVisibility: GridLinesVisibility.none,
+                                headerGridLinesVisibility:
+                                    GridLinesVisibility.none,
+                                columnWidthCalculationRange:
+                                    ColumnWidthCalculationRange.visibleRows,
+                                columns: [
+                                  GridColumn(
+                                    columnName: 'nr',
+                                    width: 46.w,
+                                    label: Center(
+                                      child: Text(
+                                        'Nr.',
+                                        style: textStyleDialogOrderTitle,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                GridColumn(
-                                  columnName: 'denumire',
-                                  width: 385.w,
-                                  label: Center(
-                                    child: Text(
-                                      'order.name'.tr(),
-                                      style: textStyleDialogOrderTitle,
+                                  GridColumn(
+                                    columnName: 'denumire',
+                                    width: 385.w,
+                                    label: Center(
+                                      child: Text(
+                                        'order.name'.tr(),
+                                        style: textStyleDialogOrderTitle,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                GridColumn(
-                                  columnName: 'cant',
-                                  width: 90.w,
-                                  label: Center(
-                                    child: Text(
-                                      'order.count'.tr(),
-                                      style: textStyleDialogOrderTitle,
+                                  GridColumn(
+                                    columnName: 'cant',
+                                    width: 90.w,
+                                    label: Center(
+                                      child: Text(
+                                        'order.count'.tr(),
+                                        style: textStyleDialogOrderTitle,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                GridColumn(
-                                  columnName: 'pret',
-                                  width: 179.w,
-                                  label: Center(
-                                    child: Text(
-                                      'order.price'.tr(),
-                                      style: textStyleDialogOrderTitle,
+                                  GridColumn(
+                                    columnName: 'pret',
+                                    width: 179.w,
+                                    label: Center(
+                                      child: Text(
+                                        'order.price'.tr(),
+                                        style: textStyleDialogOrderTitle,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                GridColumn(
-                                  columnName: 'suma',
-                                  width: 90.w,
-                                  label: Center(
-                                    child: Text(
-                                      'order.sum'.tr(),
-                                      style: textStyleDialogOrderTitle,
+                                  GridColumn(
+                                    columnName: 'suma',
+                                    width: 90.w,
+                                    label: Center(
+                                      child: Text(
+                                        'order.sum'.tr(),
+                                        style: textStyleDialogOrderTitle,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                GridColumn(
-                                  columnName: 'stocuri',
-                                  label: Center(
-                                    child: Text(
-                                      'order.stock'.tr(),
-                                      style: textStyleDialogOrderTitle,
+                                  GridColumn(
+                                    columnName: 'stocuri',
+                                    label: Center(
+                                      child: Text(
+                                        'order.stock'.tr(),
+                                        style: textStyleDialogOrderTitle,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
-                          Spacer(),
+                        //  Spacer(),
                           Container(
                             margin: EdgeInsets.only(bottom: 16.r, right: 32.r),
                             child: Row(

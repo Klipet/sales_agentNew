@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 import 'package:number_pad_keyboard/number_pad_keyboard.dart';
 import 'package:pinput/pinput.dart';
@@ -39,10 +40,10 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
   String code = '';
   bool isHeid = false;
   final defaultPinTheme = PinTheme(
-    width: 56,
-    height: 56,
-    textStyle: const TextStyle(
-      fontSize: 20,
+    width: 56.w,
+    height: 56.h,
+    textStyle:  TextStyle(
+      fontSize: 20.sp,
       color: Color.fromRGBO(30, 60, 87, 1),
       fontWeight: FontWeight.w600,
     ),
@@ -53,10 +54,10 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
   );
 
   final putTheme = PinTheme(
-    width: 56,
-    height: 56,
-    textStyle: const TextStyle(
-      fontSize: 20,
+    width: 56.w,
+    height: 56.h,
+    textStyle:  TextStyle(
+      fontSize: 20.sp,
       color: Color.fromRGBO(30, 60, 87, 1),
       fontWeight: FontWeight.w600,
     ),
@@ -77,7 +78,7 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
             MaterialPageRoute(builder: (_) => const LoginScreen()),
           );
         } else if (state is ActivationFailure) {
-          print("Error: ${state.message}");
+        //  print("Error: ${state.message}");
           _showMesageError(state.message);
         }
       },
@@ -99,24 +100,24 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
                       //const SizedBox(height: 64),
                       Text(
                         'licenseCode'.tr(),
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontFamily: 'RobotoBlack',
-                          fontSize: 48,
+                          fontSize: 48.sp,
                           color: Colors.black,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                      const SizedBox(height: 24),
+                       SizedBox(height: 24.h),
                       Text(
                         'codeDigits'.tr(),
-                        style: const TextStyle(
+                        style:  TextStyle(
                           fontFamily: 'RobotoRegular',
-                          fontSize: 32,
+                          fontSize: 32.sp,
                           color: Colors.black,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      const SizedBox(height: 32),
+                       SizedBox(height: 32.h),
                       Pinput(
                         closeKeyboardWhenCompleted: true,
                         keyboardAppearance: Brightness.dark,
@@ -129,7 +130,7 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
                         readOnly: true,
                         submittedPinTheme: putTheme,
                       ),
-                      //const SizedBox(height: 10),
+                       SizedBox(height: 10.h),
                       _keybord(),
                       if (errorText != null) ...[],
                     ],
@@ -144,21 +145,23 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
   }
 
   Widget _keybord() {
-    return SizedBox(
-      width: 450,
-      height: 300,
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+          maxWidth: 450.w,
+          maxHeight:300.h,
+      ),
       child: NumberPadKeyboard(
         backgroundColor: Colors.transparent,
-        deleteIconSize: 50,
-        numberStyle: const TextStyle(
+        deleteIconSize: 50.r,
+        numberStyle:  TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 30,
+          fontSize: 30.sp,
         ),
-        enterButtonTextStyle: const TextStyle(
+        enterButtonTextStyle:  TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
-          fontSize: 25,
+          fontSize: 25.sp,
         ),
         enterButtonText: 'enter'.tr(),
         addDigit: (int cod) {
@@ -179,7 +182,7 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
           context.read<ActivationBloc>().add(
             FetchActivationData(_controller.text),
           );
-          print(_controller.text.toString());
+        //  print(_controller.text.toString());
         },
       ),
     );

@@ -135,7 +135,7 @@ class ActivationApi {
         throw Exception('Failed to get public IP');
       }
     } catch (e) {
-      print('Error fetching public IP: $e');
+    //  print('Error fetching public IP: $e');
       return 'Unknown';
     }
   }

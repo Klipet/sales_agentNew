@@ -114,7 +114,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   Widget ediText(TextEditingController controller, String hint) {
     return Container(
       width: 850.w, // ширина
-      //  height: 48.h,
+      height: 48.h,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: containerColor,
@@ -127,21 +127,24 @@ class _OrdersScreenState extends State<OrdersScreen> {
             //   controller.text.trim(); // это обновит TableOrderWidget
           });
         },
+        textAlign: TextAlign.left,
+        textAlignVertical: TextAlignVertical.center,
         controller: controller,
         keyboardType: TextInputType.text,
         cursorWidth: 1.w,
         cursorColor: borderColor,
         decoration: InputDecoration(
           hintText: hint,
+
           hintStyle: textStyleHintOrder,
           suffixIcon: Padding(
-            padding: EdgeInsets.only(top: 12.h, bottom: 12.h, right: 16.w),
+            padding: EdgeInsets.only(bottom: 10.h, top: 10.h ,right: 5.w),
             child: GestureDetector(
               onTap: (){
                 setState(() {
                   _search = controller.text;
                   if (kDebugMode) {
-                    print('tap: $_search');
+                //    print('tap: $_search');
                   }
                 });
               },
@@ -188,7 +191,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(Icons.add_rounded, size: 32.sp, color: containerColor),
+            Icon(Icons.add_rounded, size: 32.r, color: containerColor),
             SizedBox(height: 4.h),
             Text("Comandă nouă", style: textStyleBtCreateOrder),
           ],

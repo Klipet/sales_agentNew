@@ -19,18 +19,18 @@ Future<void> main() async {
   await DbProvider.instance();
   await EasyLocalization.ensureInitialized();
   runApp(
-    EasyLocalization(
-      supportedLocales: [
-        Locale('en', 'EN'),
-        Locale('ru', 'RU'),
-        Locale('ro', 'RO'),
-      ],
-      path: 'assets/translations',
-      startLocale: Locale('ro', 'RO'),
-      fallbackLocale: Locale('ro', 'RO'),
-      child: MyApp(),
-    ),
-  );
+        EasyLocalization(
+          supportedLocales: [
+            Locale('en', 'EN'),
+            Locale('ru', 'RU'),
+            Locale('ro', 'RO'),
+          ],
+          path: 'assets/translations',
+          startLocale: Locale('ro', 'RO'),
+          fallbackLocale: Locale('ro', 'RO'),
+          child: MyApp(),
+        )
+    );
 }
 
 class MyApp extends StatelessWidget {
@@ -45,6 +45,11 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          builder: (context, widget) => MediaQuery(
+            data: MediaQuery.of(context).copyWith(
+              textScaler: const TextScaler.linear(1.0)
+            ), child: widget!,
+          ),
           theme: ThemeData(
             scaffoldBackgroundColor: primariColor,
           ),

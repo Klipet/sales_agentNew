@@ -49,7 +49,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
       } else if (widget.status == 1) {
         _loadOrdersFilter(Constant().INLUCRU);
       } else if (widget.status == 2) {
-        _loadOrdersFilter(Constant().GATA);
+        _loadOrdersFilter(Constant().ASTEPTARE);
       } else if (widget.status == 3) {
         _loadOrdersFilter(Constant().SABLON);
       }
@@ -59,7 +59,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
         _loadOrders(); // если строка пустая — показать все
       } else {
         _loadOrdersFilterSearch(widget.search);
-        print(widget.search);
+      //  print(widget.search);
       }
     }
   }
@@ -195,20 +195,20 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
             ),
             GridColumn(
               columnName: 'client',
-              width: 291.w,
+              width: 350.w,
               label: Container(
                 decoration: BoxDecoration(
                   border: Border(right: BorderSide(color: borderColor, width:  1.w),
                     bottom: BorderSide(color: borderColor, width:  0.5.w),),
                 ),
                 child: Center(
-                  child: Text("Client", style: textStyleDialogOrderTitle),
+                  child: Text("Client", style: textStyleDialogOrderTitle, maxLines: 1,overflow: TextOverflow.ellipsis,),
                 ),
               ),
             ),
             GridColumn(
               columnName: 'address',
-              width: 294.w,
+              width: 230.w,
               label: Container(
                 decoration: BoxDecoration(
                   border: Border(right: BorderSide(color: borderColor, width:  1.w),
