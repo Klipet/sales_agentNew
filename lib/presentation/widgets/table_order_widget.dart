@@ -5,6 +5,7 @@ import 'package:isar/isar.dart';
 import 'package:sales_agent/core/constans.dart';
 import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
+import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -110,7 +111,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return LoadingWidget(width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height);
     }
 
     if (_dataSource.orderList.isEmpty) {

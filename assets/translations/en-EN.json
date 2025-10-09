@@ -74,6 +74,9 @@
     "panding": "Pending orders",
     "templates": "Templates"
   },
+  "asl": {
+    "title": "Assortment:"
+  },
 
   "errors": {
     "incorrectLicense": "Yor code is incorrect",

@@ -228,8 +228,8 @@ void showBlurDialogCalendar(
                                           width: 155.w,
                                           decoration: BoxDecoration(
                                             color: order.state == 1
-                                                ? colorBtAwait
-                                                : colorBtJob,
+                                                ? colorBtJob
+                                                : colorBtAwait,
                                             border: Border.all(
                                               color: borderColor,
                                               width: 1,

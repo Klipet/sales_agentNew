@@ -75,7 +75,9 @@
     "panding": "Comenzi în așteptares",
     "templates": "Șabloane"
   },
-
+  "asl": {
+    "title": "Nomenclatură:"
+  },
 
   "errors": {
     "incorrectLicense": "Codul licenței incorect",

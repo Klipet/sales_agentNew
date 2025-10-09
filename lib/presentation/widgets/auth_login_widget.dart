@@ -16,6 +16,7 @@ import 'package:sales_agent/logic/blocs/login_bloc/login_bloc.dart';
 import 'package:sales_agent/logic/blocs/login_bloc/login_event.dart';
 import 'package:sales_agent/logic/blocs/login_bloc/login_state.dart';
 import 'package:sales_agent/presentation/widgets/home_drawer.dart';
+import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 
 import '../../core/colors_app.dart';
 import '../../core/errors/error_toast.dart';
@@ -122,44 +123,8 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> with TickerProvid
           final clientsState = context.watch<ClientsCubit>().state;
           // Показ загрузки
           if (loginState is LoginLoading || clientsState is ClientsLoading) {
-            return Center(
-              child: Container(
-                height: 464.h,
-                width: 448.w,
-                decoration: BoxDecoration(
-                  color: containerColor,
-                  borderRadius: BorderRadius.circular(30.r),
-                  border: Border.all(color: HexColor('#E5E5E5'), width: 1.r),
-                ),
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    RotationTransition(
-                      turns: _controller1,
-                      child: SizedBox(
-                        height: 90.h,
-                        width: 90.w,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 6.w,
-                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.grey),
-                        ),
-                      ),
-                    ),
-                    RotationTransition(
-                      turns: Tween(begin: 1.0, end: 0.0).animate(_controller2), // обратное вращение
-                      child: SizedBox(
-                        height: 60.h,
-                        width: 60.w,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 4.w,
-                          valueColor: const AlwaysStoppedAnimation<Color>(Colors.black),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
+            return
+              LoadingWidget(width: 464.w, height: 448.h);
           }
           return ConstrainedBox(
             constraints: BoxConstraints(maxHeight: 464.h, maxWidth: 448.w),

@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(top: 17.h, left: 16.w),
+                  padding: EdgeInsets.only(top: 17.h, left: 16.w, bottom: 5.w),
                   child: CalendarWidget(),
                 ),
               ),

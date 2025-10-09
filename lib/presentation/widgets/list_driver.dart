@@ -8,7 +8,6 @@ import '../../core/styles_text.dart';
 
 class ListDriver {
 
-
   SidebarXTheme dividerSidebarXTheme(double size) {
     return SidebarXTheme(
       width: size.w,

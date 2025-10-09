@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sales_agent/core/utils/client_data_source.dart';
 import 'package:sales_agent/data/repositories/client_repositori.dart';
+import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -83,7 +84,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return Center(child: CircularProgressIndicator());
+      return LoadingWidget(width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height);
     }
 
     if (_dataSource.clientList.isEmpty) {
