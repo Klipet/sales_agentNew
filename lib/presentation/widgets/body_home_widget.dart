@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
 
 import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
+import '../../data/providers/navigator_provider.dart';
 
 class BodyHomeWidget extends StatefulWidget {
   const BodyHomeWidget({super.key});
@@ -227,7 +229,9 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
         ),
       ),
       child: GestureDetector(
-        onTap: (){},
+        onTap: (){
+          Provider.of<NavigationProvider>(context, listen: false).goToPage(6);
+        },
         child: ButtonTheme(
           child: Column(
             mainAxisSize: MainAxisSize.min,

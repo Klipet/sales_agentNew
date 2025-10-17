@@ -225,6 +225,31 @@ final textStyleBtOrderRow = GoogleFonts.poppins(
     fontSize: 16.sp,
     color: textColor
 );
+final textStyleAslTitle = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: subTextColor
+);
+final textStyleAslContent = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textStyleAslContentSub = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textStyleAslContentPriceSub = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+
 
 
 

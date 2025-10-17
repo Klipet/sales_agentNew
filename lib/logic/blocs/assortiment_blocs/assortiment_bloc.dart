@@ -15,15 +15,8 @@ class AssortimentBloc extends Cubit<AssortimentState>{
     try{
       await assortimentRepositori.deleteAssortiment();
       final asl = await assortimentApi.getAssortiment();
-      if(asl.isNotEmpty || asl != null){
-        for(var aslItem in asl){
-          await assortimentRepositori.saveAssortiment(aslItem);
-
-        }
+      await assortimentRepositori.saveAssortiment(asl);
         emit(AssortimentSuccess(asl));
-      }else{
-        emit(AssortimentFailure("я не смог загрузить ассортимент"));
-      }
     }catch(e){
       emit(AssortimentFailure("я не смог загрузить и сохранить ассортимент"));
     }

@@ -41,6 +41,8 @@ dependencies:
   syncfusion_flutter_datagrid: ^30.1.38
   syncfusion_flutter_core: ^30.1.38
   glassmorphism: ^3.0.0
+  animated_tree_view: ^2.3.0
+  provider: ^6.1.5+1
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -86,6 +88,8 @@ flutter:
       - assets/icons/pop/edit.svg
       - assets/icons/orders/search.svg
       - assets/icons/empti.svg
+      - assets/icons/assortiment/box_asl.svg
+      - assets/icons/assortiment/folder_open.svg
 
 
 

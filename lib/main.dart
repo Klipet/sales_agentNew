@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:provider/provider.dart';
 import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/presentation/screens/activation_screen.dart';
 import 'package:sales_agent/presentation/screens/splash_screen.dart';
+import 'package:sales_agent/routes/app_pouts.dart';
 
+import 'data/providers/navigator_provider.dart';
 import 'data/repositories/db_provider.dart';
 
 Future<void> main() async {
@@ -28,7 +31,10 @@ Future<void> main() async {
           path: 'assets/translations',
           startLocale: Locale('ro', 'RO'),
           fallbackLocale: Locale('ro', 'RO'),
-          child: MyApp(),
+          child: ChangeNotifierProvider(
+            create: (_) => NavigationProvider(),
+            child: MyApp(),
+          ),
         )
     );
 }
@@ -45,6 +51,8 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          initialRoute: AppRoutes.home,
+          onGenerateRoute: AppRoutes.onGenerateRoute,
           builder: (context, widget) => MediaQuery(
             data: MediaQuery.of(context).copyWith(
               textScaler: const TextScaler.linear(1.0)

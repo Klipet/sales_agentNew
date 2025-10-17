@@ -38,6 +38,9 @@ class _ClientsScreenState extends State<ClientsScreen> {
                     width: 386.w,
                     height: 100.h,
                     child: Text(
+                      textHeightBehavior: TextHeightBehavior(
+                          applyHeightToFirstAscent: false
+                      ),
                       "client.title".tr(),
                       style: primaFontOrders,
                       textAlign: TextAlign.left,

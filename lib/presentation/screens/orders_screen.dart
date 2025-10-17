@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/core/styles_text.dart';
 
+import '../widgets/button_widget.dart';
 import '../widgets/table_order_widget.dart';
 import '../widgets/title_home_widget.dart';
 
@@ -45,19 +46,24 @@ class _OrdersScreenState extends State<OrdersScreen> {
     return Container(
       child: Column(
         mainAxisSize: MainAxisSize.min,
+
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+           crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(width: 30.w),
-              SizedBox(
+              Container(
+              //  alignment: Alignment.topLeft,
                 width: 386.w,
                 height: 100.h,
                 child: Text(
+                    textHeightBehavior: TextHeightBehavior(
+                        applyHeightToFirstAscent: false
+                    ),
                   "orders".tr(),
                   style: primaFontOrders,
-                  textAlign: TextAlign.center,
+               //  textAlign: TextAlign.center,
                 ),
               ),
               Spacer(),
@@ -74,7 +80,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             children: [
               ediText(_editingController, 'Caută'),
               SizedBox(width: 15.w),
-              btCreate(),
+              btCreate(context: context),
             ],
           ),
           SizedBox(height: 14.h),
@@ -174,31 +180,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
     );
   }
 
-  Widget btCreate() {
-    return GestureDetector(
-      onTap: () {
-        print("create");
-      },
-      child: Container(
-        width: 272.w,
-        height: 48.h,
-        //  padding: EdgeInsets.only(top: 8.h, bottom: 7.h),
-        decoration: BoxDecoration(
-          color: buttonColor,
-          borderRadius: BorderRadius.all(Radius.circular(100.r)),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Icon(Icons.add_rounded, size: 32.r, color: containerColor),
-            SizedBox(height: 4.h),
-            Text("Comandă nouă", style: textStyleBtCreateOrder),
-          ],
-        ),
-      ),
-    );
-  }
+
 
   Widget btStatut({
     required int index,

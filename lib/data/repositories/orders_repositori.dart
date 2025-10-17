@@ -140,7 +140,7 @@ Future<List<ModelDocumentDb>> getOrders() async{
   }
 
 
-  Future<List<ModelDocumentDb>> filterOrdersCount( String searchQuery,) async {
+  Future<List<ModelDocumentDb>> filterOrdersCount( String searchQuery) async {
     final isar = await DbProvider.instance();
 
     List<ModelDocumentDb> orders;
