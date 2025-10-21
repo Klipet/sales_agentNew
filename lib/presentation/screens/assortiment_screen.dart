@@ -109,7 +109,7 @@ class _AssortimentUIState extends State<AssortimentUI> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(child: ediTextClient(_editingController, 'Caută')),
+                  Expanded(child: ediTextClient(_editingController, 'asl.search'.tr())),
                   SizedBox(width: 15.w),
                   btCreate(context: context),
                 ],

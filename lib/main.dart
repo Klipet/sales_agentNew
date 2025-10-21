@@ -8,6 +8,7 @@ import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/presentation/screens/activation_screen.dart';
 import 'package:sales_agent/presentation/screens/splash_screen.dart';
 import 'package:sales_agent/routes/app_pouts.dart';
+import 'dart:io';
 
 import 'data/providers/navigator_provider.dart';
 import 'data/repositories/db_provider.dart';
@@ -21,6 +22,7 @@ Future<void> main() async {
   ]);
   await DbProvider.instance();
   await EasyLocalization.ensureInitialized();
+
   runApp(
         EasyLocalization(
           supportedLocales: [

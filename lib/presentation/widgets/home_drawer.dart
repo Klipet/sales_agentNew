@@ -97,12 +97,13 @@ class _HomeDrawerState extends State<HomeDrawer>
             // обязательно для BackdropFilter
             child: Stack(
               children: [
-                PageView(
-                  controller: navigationProvider.pageController,
-                  physics: NeverScrollableScrollPhysics(),
-                  onPageChanged: (index) {
+                IndexedStack(
+            index: navigationProvider.currentPageIndex,
+               //  controller: navigationProvider.pageController,
+               //   physics: NeverScrollableScrollPhysics(),
+               //   onPageChanged: (index) {
 
-                  },
+              //    },
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
@@ -126,7 +127,6 @@ class _HomeDrawerState extends State<HomeDrawer>
                     ),
                     HomeScreen(),
                     HomeScreen(),
-
                     Padding(
                       padding: EdgeInsets.only(right: 24.w, left: 100.w),
                       child: FirstStepCreate(),

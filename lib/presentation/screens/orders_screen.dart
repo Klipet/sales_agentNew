@@ -78,7 +78,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ediText(_editingController, 'Caută'),
+              ediText(_editingController, 'asl.search'.tr()),
               SizedBox(width: 15.w),
               btCreate(context: context),
             ],

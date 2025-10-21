@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -95,7 +96,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
             SvgPicture.asset('assets/icons/empti.svg', width: 446.w, height: 259.h,),
             SizedBox(height: 16),
             Text(
-              widget.search.isNotEmpty ? 'Nu am găsit nimic...' : 'Nu am găsit nimic...',
+              widget.search.isNotEmpty ? 'errors.notFound'.tr() : 'errors.notFound'.tr(),
               style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
           ],
@@ -147,7 +148,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
                     bottom: BorderSide(color: borderColor, width:  0.5.w),),
                 ),
                 child: Center(
-                  child: Text("Cod", style: textStyleDialogOrderTitle),
+                  child: Text('gridColumn.cod'.tr(), style: textStyleDialogOrderTitle),
                 ),
               ),
             ),
@@ -161,7 +162,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
                 ),
                 child: Center(
                   child: Text(
-                    "Denumire juridică",
+                    'gridColumn.name'.tr(),
                     style: textStyleDialogOrderTitle,
                   ),
                 ),
@@ -176,7 +177,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
                     bottom: BorderSide(color: borderColor, width:  0.5.w),),
                 ),
                 child: Center(
-                  child: Text("IDNO", style: textStyleDialogOrderTitle),
+                  child: Text('gridColumn.idno'.tr(), style: textStyleDialogOrderTitle),
                 ),
               ),
             ),
@@ -190,7 +191,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
                       bottom: BorderSide(color: borderColor, width:  0.5.w),
                     ),
                   ),
-                  child: Center(child: Text("TVA code", style: textStyleDialogOrderTitle)),
+                  child: Center(child: Text('gridColumn.tva'.tr(), style: textStyleDialogOrderTitle)),
                 )
             ),
             GridColumn(
@@ -201,7 +202,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
                     bottom: BorderSide(color: borderColor, width:  0.5.w),),
                 ),
                 child: Center(
-                  child: Text("Locații", style: textStyleDialogOrderTitle),
+                  child: Text('gridColumn.outlans'.tr(), style: textStyleDialogOrderTitle),
                 ),
               ),
             ),

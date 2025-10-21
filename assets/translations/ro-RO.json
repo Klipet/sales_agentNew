@@ -76,7 +76,28 @@
     "templates": "Șabloane"
   },
   "asl": {
-    "title": "Nomenclatură:"
+    "title": "Nomenclatură:",
+    "search": "Caută",
+    "command": "Comandă nouă"
+  },
+
+  "newComand": {
+    "titleComand": "Comandă nouă"
+  },
+
+  "gridColumn": {
+    "cod": "Cod",
+    "name": "Denumire juridică",
+    "idno": "IDNO",
+    "tva": "Cod TVA",
+    "outlans": "Locații",
+    "data": "Data înregistrării",
+    "client": "Client",
+    "address": "Adresă",
+    "status": "Stare comandă",
+    "sum": "Sum",
+    "price": "Preț",
+    "remain": "Stocuri"
   },
 
   "errors": {
@@ -90,6 +111,7 @@
     "error520": "Eroare necunoscută a serverului (520). Încercați din nou mai târziu.",
     "error521": "Serverul este deconectat (521). Încercați din nou mai târziu.",
     "error524": "Timpul de așteptare al conexiunii a expirat (524). Încercați din nou mai târziu.",
-    "error525": "Eroare de certificat SSL (525). Încercați din nou mai târziu."
+    "error525": "Eroare de certificat SSL (525). Încercați din nou mai târziu.",
+    "notFound": "Nu am găsit nimic..."
   }
 }

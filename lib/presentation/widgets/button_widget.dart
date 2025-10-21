@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +29,7 @@ Widget btCreate({required BuildContext context}) {
         children: [
           Icon(Icons.add_rounded, size: 32.r, color: containerColor),
           SizedBox(height: 4.h),
-          Text("Comandă nouă", style: textStyleBtCreateOrder),
+          Text('asl.command'.tr(), style: textStyleBtCreateOrder),
         ],
       ),
     ),

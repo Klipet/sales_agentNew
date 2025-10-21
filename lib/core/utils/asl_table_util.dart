@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -97,7 +98,7 @@ Widget selectedFolder({
                     right: BorderSide(color: borderColor, width: 1.w),
                   ),
                 ),
-                child: Text('Preț unitar', style: textStyleAslTitle),
+                child: Text('gridColumn.price'.tr(), style: textStyleAslTitle),
               ),
               Container(
                 width: 133.w,
@@ -110,7 +111,7 @@ Widget selectedFolder({
                     right: BorderSide(color: borderColor, width: 1.w),
                   ),
                 ),
-                child: Text('Stocuri', style: textStyleAslTitle),
+                child: Text('gridColumn.remain'.tr(), style: textStyleAslTitle),
               ),
             ],
           ),

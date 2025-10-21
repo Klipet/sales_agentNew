@@ -54,7 +54,7 @@ class _ClientsScreenState extends State<ClientsScreen> {
                 ],
               ),
               SizedBox(height: 8.h),
-              ediTextClient(_editingController, 'Caută'),
+              ediTextClient(_editingController, 'asl.search'.tr()),
               SizedBox(height: 16.h),
               Expanded(child: Padding(
                 padding: EdgeInsets.only(left: 10.h,),

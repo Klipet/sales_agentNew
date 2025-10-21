@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -122,7 +123,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
             SvgPicture.asset('assets/icons/empti.svg', width: 446.w, height: 259.h,),
             SizedBox(height: 16),
             Text(
-              widget.search.isNotEmpty ? 'Nu am găsit nimic...' : 'Nu am găsit nimic...',
+              widget.search.isNotEmpty ? 'errors.notFound'.tr() : 'errors.notFound'.tr(),
               style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
           ],
@@ -188,7 +189,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
                 ),
                 child: Center(
                   child: Text(
-                    "Data înregistrării",
+                    'gridColumn.data'.tr(),
                     style: textStyleDialogOrderTitle,
                   ),
                 ),
@@ -203,7 +204,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
                     bottom: BorderSide(color: borderColor, width:  0.5.w),),
                 ),
                 child: Center(
-                  child: Text("Client", style: textStyleDialogOrderTitle, maxLines: 1,overflow: TextOverflow.ellipsis,),
+                  child: Text('gridColumn.client'.tr(), style: textStyleDialogOrderTitle, maxLines: 1,overflow: TextOverflow.ellipsis,),
                 ),
               ),
             ),
@@ -216,7 +217,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
                     bottom: BorderSide(color: borderColor, width:  0.5.w),),
                 ),
                 child: Center(
-                  child: Text("Adresa", style: textStyleDialogOrderTitle),
+                  child: Text('gridColumn.address'.tr(), style: textStyleDialogOrderTitle),
                 ),
               ),
             ),
@@ -232,7 +233,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
                 ),
                 child: Center(
                   child: Text(
-                    "Statut comandă",
+                    'gridColumn.status'.tr(),
                     style: textStyleDialogOrderTitle,
                   ),
                 ),
@@ -247,7 +248,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
                     bottom: BorderSide(color: borderColor, width:  0.5.w),
                   ),
                 ), child: Center(
-                child: Text("Suma", style: textStyleDialogOrderTitle),
+                child: Text('gridColumn.sum'.tr() , style: textStyleDialogOrderTitle),
               ),)
             ),
           ],

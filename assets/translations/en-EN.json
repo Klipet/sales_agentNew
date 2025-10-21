@@ -75,10 +75,27 @@
     "templates": "Templates"
   },
   "asl": {
-    "title": "Assortment:"
+    "title": "Assortment:",
+    "search": "Search",
+    "command": "New command"
   },
-  "gridColumn": {
 
+  "gridColumn": {
+    "cod": "Code",
+    "name": "Display name",
+    "idno": "IDNO",
+    "tva": "TVA cod",
+    "outlans": "Outlans",
+    "data": "Data create",
+    "client": "Client",
+    "address": "Address",
+    "status": "State command",
+    "sum": "Sum",
+    "price": "Price",
+    "remain": "Remains"
+  },
+  "newComand": {
+    "titleComand": "New Command"
   },
 
   "errors": {
@@ -92,6 +109,7 @@
     "error520": "Unknown server error (520). Please try again later.",
     "error521": "Server is offline (521). Please try again later.",
     "error524": "Connection timeout expired (524). Please try again later.",
-    "error525": "SSL certificate error (525). Please try again later."
+    "error525": "SSL certificate error (525). Please try again later.",
+    "notFound": "I found nothing..."
   }
 }

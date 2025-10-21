@@ -249,7 +249,24 @@ final textStyleAslContentPriceSub = GoogleFonts.poppins(
     fontSize: 16.sp,
     color: textColor
 );
+final textStyleSearchClient = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textHintSearchClient = GoogleFonts.nunitoSans(
+  fontWeight: FontWeight.w500,
+  fontStyle: FontStyle.normal,
+  fontSize: 18.sp,
+  color: subTextColor,
+);
 
+final textStyleSerachTitle = GoogleFonts.montserrat(
+    fontWeight: FontWeight.w800,
+    fontSize: 18.sp,
+    color: textColor
+);
 
 
 
