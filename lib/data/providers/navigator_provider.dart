@@ -1,57 +1,91 @@
-
-
 import 'package:flutter/material.dart';
+import 'package:sales_agent/data/models_db/model_db_clients/model_client_db.dart';
 
 class NavigationProvider extends ChangeNotifier {
   int _currentPageIndex = 0;
-  final Set<int> _builtPages = {0}; // Страницы, которые построены в памяти
+  Map<String, dynamic> _pageData = {};
+  PageController? _pageController;
 
   int get currentPageIndex => _currentPageIndex;
 
-  /// Переход на страницу с сохранением текущей в памяти
+  // Установить PageController
+  void setPageController(PageController controller) {
+    _pageController = controller;
+  }
+
+  /// Переход на страницу
   void goToPage(int index) {
     if (_currentPageIndex != index) {
-      print('Переход на страницу $index (текущая $_currentPageIndex остается в памяти)');
+      print('🔄 Переход на страницу $index');
       _currentPageIndex = index;
-      _builtPages.add(index);
-      notifyListeners();
+      _pageController!.jumpToPage(index);
     }
-  }
 
-  /// Переход на страницу с удалением текущей из памяти
-  void goToPageAndDestroy(int index) {
-    if (_currentPageIndex != index) {
-      print('Переход на страницу $index (страница $_currentPageIndex удаляется из памяти)');
-      final oldIndex = _currentPageIndex;
-      _currentPageIndex = index;
-      _builtPages.remove(oldIndex); // Удаляем старую страницу из памяти
-      _builtPages.add(index);
-      notifyListeners();
-    }
-  }
-
-  /// Удалить конкретную страницу из памяти
-  void destroyPage(int index) {
-    if (index != _currentPageIndex) {
-      print('Удаление страницы $index из памяти');
-      _builtPages.remove(index);
-      notifyListeners();
-    }
-  }
-
-  /// Очистить все страницы кроме текущей
-  void clearAllExceptCurrent() {
-    print('Очистка всех страниц кроме $_currentPageIndex');
-    _builtPages.clear();
-    _builtPages.add(_currentPageIndex);
     notifyListeners();
   }
 
-  /// Проверка, построена ли страница
-  bool shouldBuildPage(int index) {
-    return _builtPages.contains(index);
+  /// Переход на страницу с передачей данных
+  void goToPageAndDestroy(int index, {Map<String, dynamic>? data}) {
+    print('📤 Переход на страницу $index с данными: $data');
+
+    if (data != null) {
+      _pageData = data;
+    }
+
+    _currentPageIndex = index;
+
+    if (_pageController != null && _pageController!.hasClients) {
+
+        _pageController!.jumpToPage(index);
+
+    }
+
+    notifyListeners();
   }
 
-  /// Получить список построенных страниц (для отладки)
-  Set<int> get builtPages => Set.unmodifiable(_builtPages);
+
+  /// Переход на страницу с передачей данных
+  void goToPageAndSave(int index, {Map<String, dynamic>? data}) {
+    print('📤 Переход на страницу $index с данными: $data');
+
+    if (data != null) {
+      _pageData = data;
+    }
+
+    _currentPageIndex = index;
+
+    if (_pageController != null && _pageController!.hasClients) {
+
+      _pageController!.jumpToPage(index);
+
+    }
+
+    notifyListeners();
+  }
+
+  /// Обновить текущий индекс (вызывается из onPageChanged)
+  void updatePageIndex(int index) {
+    if (_currentPageIndex != index) {
+      print('📍 Обновление индекса: $index');
+      _currentPageIndex = index;
+      notifyListeners();
+    }
+  }
+
+  /// Получить данные страницы
+  T? getPageData<T>(String key) {
+    final value = _pageData[key];
+    return value as T?;
+  }
+
+  /// Очистить данные страницы
+  void clearPageData() {
+    _pageData.clear();
+  }
+
+  @override
+  void dispose() {
+    _pageController = null;
+    super.dispose();
+  }
 }

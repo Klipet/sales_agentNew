@@ -22,7 +22,6 @@ Future<void> main() async {
   ]);
   await DbProvider.instance();
   await EasyLocalization.ensureInitialized();
-
   runApp(
         EasyLocalization(
           supportedLocales: [

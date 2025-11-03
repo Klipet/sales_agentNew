@@ -121,10 +121,11 @@ Widget selectedFolder({
   );
 }
 
-Widget aslContentWidget({
+Widget aslContentWidget(String speciaPrice, {
   required bool isSelected,
   required CustomTreeNode<ModelAssortimentDB> node,
 }) {
+ // print(speciaPrice);
   return Expanded(
     child: Row(
       children: [
@@ -169,14 +170,20 @@ Widget aslContentWidget({
                 alignment: Alignment.centerLeft,
                 height: double.maxFinite,
                 width: 155.w,
-                padding: EdgeInsets.only(left: 16.w),
+                padding: EdgeInsets.only(left: 10.w, right: 5.w),
                 decoration: BoxDecoration(
                   color: isSelected ? selectedColor : containerColor,
                   border: Border(
                     right: BorderSide(color: borderColor, width: 1.w),
                   ),
                 ),
-                child: Text(node.nodeData!.price!.toStringAsFixed(2), style: textStyleAslContentPriceSub),
+                child: Row(
+                  children: [
+                    Text(node.nodeData!.price!.toStringAsFixed(2), style: textStyleAslContentPriceSub),
+                    Spacer(),
+                    Text(speciaPrice, style: textStyleAslContentPriceSub.copyWith(color: priceColor)),
+                  ],
+                ),
               ),
               Container(
                 width: 133.w,

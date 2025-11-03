@@ -198,18 +198,14 @@ class _CustomSearchWidgetState<T> extends State<CustomSearchWidget<T>> {
   }
 
   void _onFocusChanged() {
-    print("_onFocusChanged: ${_focusNode.hasFocus}");
-    if (_focusNode.hasFocus) {
       if (_controller.text.isNotEmpty && _filteredItems.isNotEmpty) {
         _updateOverlay();
-      }
     } else {
       _hideOverlay();
     }
   }
 
   void _showOverlay() {
-    print("_showOverlay: ${_focusNode.hasFocus}");
     if (_overlayEntry != null) return;
 
     _overlayEntry = _createOverlayEntry();
@@ -218,7 +214,6 @@ class _CustomSearchWidgetState<T> extends State<CustomSearchWidget<T>> {
   }
 
   void _updateOverlay() {
-    print("_updateOverlay: ${_focusNode.hasPrimaryFocus}");
     if (_overlayEntry != null) {
       _overlayEntry!.markNeedsBuild();
     } else {
@@ -228,7 +223,6 @@ class _CustomSearchWidgetState<T> extends State<CustomSearchWidget<T>> {
   }
 
   void _hideOverlay() {
-    print("_hideOverlay: ${_focusNode.hasFocus}");
     _overlayEntry?.remove();
     _overlayEntry?.dispose();
     _overlayEntry = null;
@@ -255,19 +249,11 @@ class _CustomSearchWidgetState<T> extends State<CustomSearchWidget<T>> {
         _controller.text = widget.displayStringForOption(item);
       }
 
-      // 4. Скрываем оверлей и убираем фокус.
-      // Примечание: Это не требует WidgetsBinding.
       _hideOverlay();
-      //  _focusNode.unfocus();
     }
   }
 
   String _getHintText() {
-    // Если выбран элемент и поле пустое (или clearAfterSelection), показываем выбранное значение
-    //  if (widget.showSelectedAsHint && _selectedItem != null) {
-    //    print('widget.onSelected completed : $_selectedItem');
-    //   return widget.displayStringForOption(_selectedItem!);
-    //  }
     return widget.hintText ?? 'Поиск...';
   }
 
@@ -278,7 +264,6 @@ class _CustomSearchWidgetState<T> extends State<CustomSearchWidget<T>> {
       builder: (context) => Positioned(
         width: size.width,
         child: CompositedTransformFollower(
-          showWhenUnlinked: false,
           link: _layerLink,
           offset: Offset(0.0, size.height + 5.0),
           child: Material(
@@ -329,9 +314,6 @@ class _CustomSearchWidgetState<T> extends State<CustomSearchWidget<T>> {
                         // Стандартный вид
                         return InkWell(
                           onTap: () {
-                            print(
-                              "DEBUG: InkWell onTap (стандартный) - вызван для: ${widget.displayStringForOption(item)}",
-                            );
                             _selectItem(item);
                           },
 
@@ -413,13 +395,10 @@ class _CustomSearchWidgetState<T> extends State<CustomSearchWidget<T>> {
         height: widget.textFieldHeight,
         child: TextField(
           keyboardType: TextInputType.text,
-          key: ValueKey(_selectedItem),
-          onEditingComplete: () {
-            _focusNode.unfocus();
-          },
+        //  key: ValueKey(_selectedItem),
           controller: _controller,
           focusNode: _focusNode,
-          autofocus: widget.autofocus,
+          autofocus: true, //widget.autofocus,
           style: widget.textStyle ?? TextStyle(fontSize: 14.sp),
           decoration: InputDecoration(
             hintText: _getHintText(),
@@ -492,7 +471,6 @@ class _CustomSearchWidgetState<T> extends State<CustomSearchWidget<T>> {
 
   @override
   void dispose() {
-    _controller.clear();
     _controller.removeListener(_onSearchChanged);
     _focusNode.removeListener(_onFocusChanged);
     _controller.dispose();

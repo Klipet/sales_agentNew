@@ -267,6 +267,27 @@ final textStyleSerachTitle = GoogleFonts.montserrat(
     fontSize: 18.sp,
     color: textColor
 );
+final textStyleSerachTitleIDNO = GoogleFonts.montserrat(
+    fontWeight: FontWeight.w400,
+    fontSize: 16.sp,
+    color: subTextColor
+);
+final textStyleOutlandsText = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontSize: 15.sp,
+    color: textColor
+);
+final textStyleBtAslAdd = GoogleFonts.montserrat(
+    fontWeight: FontWeight.w700,
+    fontSize: 23.sp,
+    color: containerColor
+);
+final textStyleTitleAslAdd = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontSize: 16.sp,
+    color: textColor
+);
+
 
 
 

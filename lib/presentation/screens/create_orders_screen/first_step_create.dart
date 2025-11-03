@@ -15,6 +15,7 @@ import 'package:sales_agent/packages/advance_search_widget.dart';
 
 import '../../../core/styles_text.dart';
 import '../../../data/providers/navigator_provider.dart';
+import '../../widgets/new_order_title_widget.dart';
 import '../../widgets/title_home_widget.dart';
 
 class FirstStepCreate extends StatefulWidget {
@@ -48,29 +49,7 @@ class _FirstStepCreateState extends State<FirstStepCreate> {
     return Scaffold(
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SizedBox(width: 15.w),
-              SizedBox(
-                height: 100.h,
-                child: Text(
-                  textHeightBehavior: TextHeightBehavior(
-                    applyHeightToFirstAscent: false,
-                  ),
-                  "newComand.titleComand".tr(),
-                  style: primaFontOrders,
-                  textAlign: TextAlign.left,
-                ),
-              ),
-              Spacer(),
-              Padding(
-                padding: EdgeInsets.only(top: 16.h),
-                child: TitleHomeWidget(),
-              ),
-            ],
-          ),
+          NewOrderTitleWidget(),
           SizedBox(height: 15.h),
           Container(
             constraints: BoxConstraints(maxHeight: 127.h),
@@ -114,14 +93,9 @@ class _FirstStepCreateState extends State<FirstStepCreate> {
         showSelectedAsHint: true,
         clearAfterSelection: true,
         onSelected: (client) {
-          print('Выбран: ${client}');
-          Provider.of<NavigationProvider>(contextEdit, listen: false).goToPageAndDestroy(7);
+          print('Выбран: ${client.uid}');
+          Provider.of<NavigationProvider>(contextEdit, listen: false).goToPageAndDestroy(7, data: {'client': client});
         },
-        onSearchChanged: (query) {
-          print('Search query: $query');
-        },
-
-
         // ============ КАСТОМИЗАЦИЯ ТЕКСТОВОГО ПОЛЯ ============
         hintText: hint,
         hintStyle: textHintSearchClient,
@@ -153,5 +127,11 @@ class _FirstStepCreateState extends State<FirstStepCreate> {
         //    final double? textFieldHeight;
       ),
     );
+  }
+  @override
+  void dispose() {
+    FocusManager.instance.primaryFocus?.unfocus();
+    debugPrint('DISPOSE: CustomSearchWidget');
+    super.dispose();
   }
 }

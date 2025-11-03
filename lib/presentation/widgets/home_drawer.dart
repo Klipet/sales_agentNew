@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/presentation/screens/assortiment_screen.dart';
 import 'package:sales_agent/presentation/screens/clients_screen.dart';
+import 'package:sales_agent/presentation/screens/create_orders_screen/add_asl_to_order.dart';
 import 'package:sales_agent/presentation/widgets/list_driver.dart'
     hide ListDriver;
 import 'package:sidebarx/sidebarx.dart';
@@ -15,6 +16,7 @@ import 'package:sidebarx/sidebarx.dart';
 import '../../core/utils/costom_sidebar.dart';
 import '../../data/providers/navigator_provider.dart';
 import '../screens/create_orders_screen/first_step_create.dart';
+import '../screens/create_orders_screen/free_step_create.dart';
 import '../screens/create_orders_screen/two_step_create.dart';
 import '../screens/home_screen.dart';
 import '../screens/orders_screen.dart';
@@ -29,59 +31,74 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer>
     with SingleTickerProviderStateMixin {
   late CustomSidebarController _controller;
-  final PageController _pageController = PageController(initialPage: 0);
+  late PageController _pageController;
   late NavigationProvider _navigationProvider;
+
+  bool _isInitialized = false;
 
   @override
   void initState() {
     super.initState();
     _controller = CustomSidebarController();
-    // Слушаем изменения в SidebarX
-//    _controller.addListener(() {
-//      if (_controller.selectedIndex >= 1) {
-//        // Игнорируем первую кнопку (шеврон)
-//        int pageIndex = _controller.selectedIndex - 1;
-//        if (pageIndex != _pageController.page?.round()) {
-//          _pageController.jumpToPage(pageIndex);
-//        }
-//      }
-//      setState(() {});
-//    });
-//
-//    // Слушаем изменения в PageView (если нужно синхронизировать обратно)
-//    _pageController.addListener(() {
-//      final page = _pageController.page?.round() ?? 0;
-//      if (_controller.selectedIndex != page + 1) {
-//        _controller.selectIndex(page + 1);
-//      }
-//    });
+    _pageController = PageController(initialPage: 0);
 
     // Инициализируем после построения виджета
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _navigationProvider = Provider.of<NavigationProvider>(context, listen: false);
+      if (!mounted) return;
+
+      _navigationProvider = Provider.of<NavigationProvider>(
+        context,
+        listen: false,
+      );
+
+      // Передаем PageController в NavigationProvider
+      _navigationProvider.setPageController(_pageController);
 
       // Слушаем изменения в Sidebar
-      _controller.addListener(() {
-        if (_controller.selectedIndex >= 1) {
-          // Игнорируем первую кнопку (шеврон)
-          int pageIndex = _controller.selectedIndex - 1;
-          _navigationProvider.goToPage(pageIndex);
-        }
-        if (mounted) setState(() {});
-      });
+      _controller.addListener(_onSidebarChanged);
 
       // Слушаем изменения в NavigationProvider
-      _navigationProvider.addListener(() {
-        final page = _navigationProvider.currentPageIndex;
-        if (_controller.selectedIndex != page + 1) {
-          _controller.selectIndex(page + 1);
-        }
-      });
+      _navigationProvider.addListener(_onNavigationChanged);
+
+      _isInitialized = true;
     });
+  }
+
+  void _onSidebarChanged() {
+    if (!_isInitialized || !mounted) return;
+
+    if (_controller.selectedIndex >= 1) {
+      // Игнорируем первую кнопку (шеврон)
+      int pageIndex = _controller.selectedIndex - 1;
+
+      // Используем NavigationProvider для перехода
+      if (pageIndex != _navigationProvider.currentPageIndex) {
+        _navigationProvider.goToPage(pageIndex);
+      }
+    }
+
+    if (mounted) setState(() {});
+  }
+
+  void _onNavigationChanged() {
+    if (!_isInitialized || !mounted) return;
+
+    final page = _navigationProvider.currentPageIndex;
+
+    // Синхронизируем Sidebar с текущей страницей
+    if (_controller.selectedIndex != page + 1) {
+      _controller.selectIndex(page + 1);
+    }
+
+    if (mounted) setState(() {});
   }
 
   @override
   void dispose() {
+    _controller.removeListener(_onSidebarChanged);
+    if (_isInitialized) {
+      _navigationProvider.removeListener(_onNavigationChanged);
+    }
     _controller.dispose();
     _pageController.dispose();
     super.dispose();
@@ -97,13 +114,16 @@ class _HomeDrawerState extends State<HomeDrawer>
             // обязательно для BackdropFilter
             child: Stack(
               children: [
-                IndexedStack(
-            index: navigationProvider.currentPageIndex,
-               //  controller: navigationProvider.pageController,
-               //   physics: NeverScrollableScrollPhysics(),
-               //   onPageChanged: (index) {
-
-              //    },
+                PageView(
+                  //  IndexedStack(
+                  //  index: navigationProvider.currentPageIndex,
+                  controller: _pageController,
+                  //.pageController,
+                  physics: NeverScrollableScrollPhysics(),
+                  onPageChanged: (index) {
+                    // Обновляем индекс в Provider
+                    navigationProvider.updatePageIndex(index);
+                  },
                   children: [
                     Padding(
                       padding: EdgeInsets.only(
@@ -134,6 +154,14 @@ class _HomeDrawerState extends State<HomeDrawer>
                     Padding(
                       padding: EdgeInsets.only(right: 24.w, left: 100.w),
                       child: TwoStepCreate(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 24.w, left: 100.w),
+                      child: FreeStepCreate(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 24.w, left: 100.w),
+                      child: AddAslToOrder(),
                     ),
 
                     // HistoryScreen(),

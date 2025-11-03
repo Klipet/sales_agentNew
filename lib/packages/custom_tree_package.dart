@@ -44,6 +44,7 @@ class CustomTreeStyle {
   final bool showConnectingLines;
   final Color? connectingLineColor;
 
+
   const CustomTreeStyle({
     this.levelIndent = 24.0,
     this.itemHeight = 48.0,
@@ -62,6 +63,7 @@ class CustomTreeStyle {
     this.collapseIcon,
     this.showConnectingLines = false,
     this.connectingLineColor,
+
   });
 }
 
@@ -205,6 +207,12 @@ class CustomTreeWidget<T> extends StatelessWidget {
   final List<CustomTreeNode<T>> rootNodes;
   final CustomTreeManager manager;
   final CustomTreeStyle? style;
+
+  final BorderRadius? borderRadius;
+  final BoxDecoration? containerDecoration;
+  final EdgeInsets? containerPadding;
+  final EdgeInsets? containerMargin;
+
   final Widget Function(
       BuildContext context,
       CustomTreeNode<T> node,
@@ -233,6 +241,12 @@ class CustomTreeWidget<T> extends StatelessWidget {
     this.enableMultiSelect = false,
     this.scrollController,
     this.emptyWidget,
+
+    this.borderRadius,
+    this.containerDecoration,
+    this.containerPadding,
+    this.containerMargin,
+
   }) : super(key: key);
 
   @override
@@ -270,8 +284,7 @@ class CustomTreeWidget<T> extends StatelessWidget {
       expandIcon: const Icon(Icons.chevron_right, size: 20),
       collapseIcon: const Icon(Icons.expand_more, size: 20),
     );
-
-    return AnimatedBuilder(
+    final listView = AnimatedBuilder(
       animation: manager,
       builder: (context, _) {
         return ListView.builder(
@@ -280,7 +293,6 @@ class CustomTreeWidget<T> extends StatelessWidget {
           itemBuilder: (context, index) {
             final nodeInfo = _getNodeAtIndex(rootNodes, index);
             if (nodeInfo == null) return const SizedBox.shrink();
-
             return _CustomTreeNodeWidget<T>(
               node: nodeInfo.node,
               level: nodeInfo.level,
@@ -296,6 +308,26 @@ class CustomTreeWidget<T> extends StatelessWidget {
           },
         );
       },
+    );
+    // Если нет кастомизации, возвращаем просто ListView
+    if (borderRadius == null && containerDecoration == null) {
+      return listView;
+    }
+
+    // Оборачиваем в Container с округлением
+    return Container(
+      margin: containerMargin,
+      padding: containerPadding,
+      decoration: containerDecoration ??
+          BoxDecoration(
+            borderRadius: borderRadius ?? BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey.shade300),
+            color: Colors.white,
+          ),
+      child: ClipRRect(
+        borderRadius: borderRadius ?? BorderRadius.circular(12),
+        child: listView,
+      ),
     );
   }
 

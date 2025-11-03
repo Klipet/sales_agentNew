@@ -1,20 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'contragent_response.dart';
+part of 'client_detail.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-ContragentResponse _$ContragentResponseFromJson(Map<String, dynamic> json) =>
-    ContragentResponse(
+ClientDetail _$ClientDetailFromJson(Map<String, dynamic> json) => ClientDetail(
       balance: (json['Balance'] as num?)?.toDouble() ?? 0,
       code: json['Code'] as String? ?? '',
       idnp: json['IDNP'] as String? ?? '----',
       image: json['Image'] as String? ?? '',
       name: json['Name'] as String? ?? '',
       outlets: (json['Outlets'] as List<dynamic>?)
-              ?.map((e) => OutletsResponse.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => DetailOutlands.fromJson(e as Map<String, dynamic>))
               .toList() ??
           [],
       pricelistUid: json['PricelistUid'] as String? ?? '',
@@ -22,7 +21,7 @@ ContragentResponse _$ContragentResponseFromJson(Map<String, dynamic> json) =>
       uid: json['Uid'] as String? ?? '',
     );
 
-Map<String, dynamic> _$ContragentResponseToJson(ContragentResponse instance) =>
+Map<String, dynamic> _$ClientDetailToJson(ClientDetail instance) =>
     <String, dynamic>{
       'Balance': instance.balance,
       'Code': instance.code,

@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:sales_agent/data/models_api/models_client/ourlets_response.dart';
+import 'package:sales_agent/data/models_api/models_client_detail/detail_outlands.dart';
+part 'client_detail.g.dart';
 
-part 'contragent_response.g.dart';
 @JsonSerializable()
-class ContragentResponse{
+class ClientDetail{
   @JsonKey(name: 'Balance', defaultValue: 0)
   final double balance;
 
@@ -20,7 +20,7 @@ class ContragentResponse{
   final String name;
 
   @JsonKey(name: 'Outlets', defaultValue: [])
-  final List<OutletsResponse> outlets;
+  final List<DetailOutlands> outlets;
 
   @JsonKey(name: 'PricelistUid',defaultValue: '')
   final String pricelistUid;
@@ -31,7 +31,7 @@ class ContragentResponse{
   @JsonKey(name: 'Uid',defaultValue: '')
   final String uid;
 
-  ContragentResponse({
+  ClientDetail({
     required this.balance,
     required this.code,
     required this.idnp,
@@ -42,8 +42,8 @@ class ContragentResponse{
     required this.tvaCode,
     required this.uid,
   });
-  factory ContragentResponse.fromJson(Map<String, dynamic> json) =>
-      _$ContragentResponseFromJson(json);
+  factory ClientDetail.fromJson(Map<String, dynamic> json) =>
+      _$ClientDetailFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ContragentResponseToJson(this);
+  Map<String, dynamic> toJson() => _$ClientDetailToJson(this);
 }
