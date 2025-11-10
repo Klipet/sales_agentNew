@@ -1,8 +1,12 @@
 
+import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'prices.g.dart';
 @JsonSerializable()
+@collection
 class Prices{
+  @JsonKey(ignore: true)
+  Id id = Isar.autoIncrement;
   @JsonKey(name: 'AssortimentUid', defaultValue: '')
   final String assortimentUid;
   @JsonKey(name: 'Price', defaultValue: 0.0)

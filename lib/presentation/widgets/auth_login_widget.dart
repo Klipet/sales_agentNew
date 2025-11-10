@@ -9,18 +9,21 @@ import 'package:sales_agent/data/providers/api_provider/orders_api.dart';
 import 'package:sales_agent/data/repositories/client_repositori.dart';
 import 'package:sales_agent/data/repositories/login_repositori.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
+import 'package:sales_agent/data/repositories/price_repositori.dart';
 import 'package:sales_agent/logic/blocs/clients_bloc/clients_state.dart';
 import 'package:sales_agent/logic/blocs/document_bloc/documants_state.dart';
 import 'package:sales_agent/logic/blocs/document_bloc/documents_cubit.dart';
 import 'package:sales_agent/logic/blocs/login_bloc/login_bloc.dart';
 import 'package:sales_agent/logic/blocs/login_bloc/login_event.dart';
 import 'package:sales_agent/logic/blocs/login_bloc/login_state.dart';
+import 'package:sales_agent/logic/blocs/price_blocs/price_cubit.dart';
 import 'package:sales_agent/presentation/widgets/home_drawer.dart';
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 
 import '../../core/colors_app.dart';
 import '../../core/errors/error_toast.dart';
 import '../../core/styles_text.dart';
+import '../../data/providers/api_provider/price_list_client_api.dart';
 import '../../logic/blocs/clients_bloc/clients_cubit.dart';
 
 class AuthLoginWidget extends StatelessWidget {
@@ -39,6 +42,8 @@ class AuthLoginWidget extends StatelessWidget {
         BlocProvider<ClientsCubit>(
           create: (_) => ClientsCubit(ClientApi(), ClientRepositori()),
         ),
+        BlocProvider<PriceCubit>(
+            create:(_) => PriceCubit(PriceListClientApi(), PriceRepositori()))
       ],
       child: AuthLoginWidgetUI(),
     );
@@ -98,6 +103,7 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> with TickerProvid
               showMesageError(state.message, context);
             } else if (state is LoginSuccess) {
               documant(context);
+              context.read<PriceCubit>().fetchPriceList();
               context.read<ClientsCubit>().fetchClients();
               _controllerPassword.clear();
               _controllerLogin.clear();

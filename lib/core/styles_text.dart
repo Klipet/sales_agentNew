@@ -287,6 +287,40 @@ final textStyleTitleAslAdd = GoogleFonts.poppins(
     fontSize: 16.sp,
     color: textColor
 );
+final textStyleTitleAddAssotrimentOrder = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontSize: 23.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+final textStyleRemainAddAssotrimentOrder = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontSize: 16.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+
+final textStyleDialogAddAssortimentTotal = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontSize: 23.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+final textStyleDialogAddAssortimentTotalNegative = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontSize: 23.sp,
+    color: subTextColor,
+    decoration: TextDecoration.none
+);
+final textStyleDialogAddAssortimentTotalInfo = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontSize: 13.sp,
+    color: primariColor,
+    decoration: TextDecoration.none
+);
+
+
+
 
 
 

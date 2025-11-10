@@ -75,6 +75,7 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
               idnp: '',
               page: 7,
             ),
+
           Spacer(),
           GestureDetector(
             onTap: () {

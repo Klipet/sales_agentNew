@@ -48,33 +48,38 @@ const NewOrderLineModelDbSchema = CollectionSchema(
       name: r'lineNumber',
       type: IsarType.long,
     ),
-    r'price': PropertySchema(
+    r'orderId': PropertySchema(
       id: 6,
+      name: r'orderId',
+      type: IsarType.long,
+    ),
+    r'price': PropertySchema(
+      id: 7,
       name: r'price',
       type: IsarType.double,
     ),
     r'processedCount': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'processedCount',
       type: IsarType.double,
     ),
     r'sum': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'sum',
       type: IsarType.double,
     ),
     r'uid': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'uid',
       type: IsarType.string,
     ),
     r'unitName': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'unitName',
       type: IsarType.string,
     ),
     r'unitUid': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'unitUid',
       type: IsarType.string,
     )
@@ -84,7 +89,21 @@ const NewOrderLineModelDbSchema = CollectionSchema(
   deserialize: _newOrderLineModelDbDeserialize,
   deserializeProp: _newOrderLineModelDbDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'orderId': IndexSchema(
+      id: -6176610178429382285,
+      name: r'orderId',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'orderId',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {},
   embeddedSchemas: {},
   getId: _newOrderLineModelDbGetId,
@@ -121,12 +140,13 @@ void _newOrderLineModelDbSerialize(
   writer.writeString(offsets[3], object.assortimentUid);
   writer.writeDouble(offsets[4], object.count);
   writer.writeLong(offsets[5], object.lineNumber);
-  writer.writeDouble(offsets[6], object.price);
-  writer.writeDouble(offsets[7], object.processedCount);
-  writer.writeDouble(offsets[8], object.sum);
-  writer.writeString(offsets[9], object.uid);
-  writer.writeString(offsets[10], object.unitName);
-  writer.writeString(offsets[11], object.unitUid);
+  writer.writeLong(offsets[6], object.orderId);
+  writer.writeDouble(offsets[7], object.price);
+  writer.writeDouble(offsets[8], object.processedCount);
+  writer.writeDouble(offsets[9], object.sum);
+  writer.writeString(offsets[10], object.uid);
+  writer.writeString(offsets[11], object.unitName);
+  writer.writeString(offsets[12], object.unitUid);
 }
 
 NewOrderLineModelDb _newOrderLineModelDbDeserialize(
@@ -135,21 +155,21 @@ NewOrderLineModelDb _newOrderLineModelDbDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = NewOrderLineModelDb(
-    assortimentBarcode: reader.readString(offsets[0]),
-    assortimentCode: reader.readString(offsets[1]),
-    assortimentName: reader.readString(offsets[2]),
-    assortimentUid: reader.readString(offsets[3]),
-    count: reader.readDouble(offsets[4]),
-    lineNumber: reader.readLong(offsets[5]),
-    price: reader.readDouble(offsets[6]),
-    processedCount: reader.readDouble(offsets[7]),
-    sum: reader.readDouble(offsets[8]),
-    uid: reader.readString(offsets[9]),
-    unitName: reader.readString(offsets[10]),
-    unitUid: reader.readString(offsets[11]),
-  );
+  final object = NewOrderLineModelDb();
+  object.assortimentBarcode = reader.readString(offsets[0]);
+  object.assortimentCode = reader.readString(offsets[1]);
+  object.assortimentName = reader.readString(offsets[2]);
+  object.assortimentUid = reader.readString(offsets[3]);
+  object.count = reader.readDouble(offsets[4]);
   object.id = id;
+  object.lineNumber = reader.readLong(offsets[5]);
+  object.orderId = reader.readLong(offsets[6]);
+  object.price = reader.readDouble(offsets[7]);
+  object.processedCount = reader.readDouble(offsets[8]);
+  object.sum = reader.readDouble(offsets[9]);
+  object.uid = reader.readString(offsets[10]);
+  object.unitName = reader.readString(offsets[11]);
+  object.unitUid = reader.readString(offsets[12]);
   return object;
 }
 
@@ -173,16 +193,18 @@ P _newOrderLineModelDbDeserializeProp<P>(
     case 5:
       return (reader.readLong(offset)) as P;
     case 6:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 7:
       return (reader.readDouble(offset)) as P;
     case 8:
       return (reader.readDouble(offset)) as P;
     case 9:
-      return (reader.readString(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 10:
       return (reader.readString(offset)) as P;
     case 11:
+      return (reader.readString(offset)) as P;
+    case 12:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -208,6 +230,15 @@ extension NewOrderLineModelDbQueryWhereSort
   QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterWhere>
+      anyOrderId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'orderId'),
+      );
     });
   }
 }
@@ -277,6 +308,99 @@ extension NewOrderLineModelDbQueryWhere
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterWhereClause>
+      orderIdEqualTo(int orderId) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'orderId',
+        value: [orderId],
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterWhereClause>
+      orderIdNotEqualTo(int orderId) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'orderId',
+              lower: [],
+              upper: [orderId],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'orderId',
+              lower: [orderId],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'orderId',
+              lower: [orderId],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'orderId',
+              lower: [],
+              upper: [orderId],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterWhereClause>
+      orderIdGreaterThan(
+    int orderId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'orderId',
+        lower: [orderId],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterWhereClause>
+      orderIdLessThan(
+    int orderId, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'orderId',
+        lower: [],
+        upper: [orderId],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterWhereClause>
+      orderIdBetween(
+    int lowerOrderId,
+    int upperOrderId, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'orderId',
+        lower: [lowerOrderId],
+        includeLower: includeLower,
+        upper: [upperOrderId],
         includeUpper: includeUpper,
       ));
     });
@@ -1008,6 +1132,62 @@ extension NewOrderLineModelDbQueryFilter on QueryBuilder<NewOrderLineModelDb,
   }
 
   QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterFilterCondition>
+      orderIdEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'orderId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterFilterCondition>
+      orderIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'orderId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterFilterCondition>
+      orderIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'orderId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterFilterCondition>
+      orderIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'orderId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterFilterCondition>
       priceEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -1707,6 +1887,20 @@ extension NewOrderLineModelDbQuerySortBy
   }
 
   QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterSortBy>
+      sortByOrderId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'orderId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterSortBy>
+      sortByOrderIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'orderId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterSortBy>
       sortByPrice() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'price', Sort.asc);
@@ -1892,6 +2086,20 @@ extension NewOrderLineModelDbQuerySortThenBy
   }
 
   QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterSortBy>
+      thenByOrderId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'orderId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterSortBy>
+      thenByOrderIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'orderId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QAfterSortBy>
       thenByPrice() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'price', Sort.asc);
@@ -2025,6 +2233,13 @@ extension NewOrderLineModelDbQueryWhereDistinct
   }
 
   QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QDistinct>
+      distinctByOrderId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'orderId');
+    });
+  }
+
+  QueryBuilder<NewOrderLineModelDb, NewOrderLineModelDb, QDistinct>
       distinctByPrice() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'price');
@@ -2116,6 +2331,12 @@ extension NewOrderLineModelDbQueryProperty
     });
   }
 
+  QueryBuilder<NewOrderLineModelDb, int, QQueryOperations> orderIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'orderId');
+    });
+  }
+
   QueryBuilder<NewOrderLineModelDb, double, QQueryOperations> priceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'price');
@@ -2155,41 +2376,3 @@ extension NewOrderLineModelDbQueryProperty
     });
   }
 }
-
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-NewOrderLineModelDb _$NewOrderLineModelDbFromJson(Map<String, dynamic> json) =>
-    NewOrderLineModelDb(
-      assortimentBarcode: json['AssortimentBarcode'] as String? ?? '',
-      assortimentCode: json['AssortimentCode'] as String? ?? '',
-      assortimentName: json['AssortimentName'] as String? ?? '',
-      assortimentUid: json['AssortimentUid'] as String? ?? '',
-      count: (json['Count'] as num?)?.toDouble() ?? 0.0,
-      lineNumber: (json['LineNumber'] as num?)?.toInt() ?? 0,
-      price: (json['Price'] as num?)?.toDouble() ?? 0.0,
-      processedCount: (json['ProcessedCount'] as num?)?.toDouble() ?? 0.0,
-      sum: (json['Sum'] as num?)?.toDouble() ?? 0.0,
-      uid: json['Uid'] as String? ?? '',
-      unitName: json['UnitName'] as String? ?? '',
-      unitUid: json['UnitUid'] as String? ?? '',
-    )..id = (json['id'] as num).toInt();
-
-Map<String, dynamic> _$NewOrderLineModelDbToJson(
-        NewOrderLineModelDb instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'AssortimentBarcode': instance.assortimentBarcode,
-      'AssortimentCode': instance.assortimentCode,
-      'AssortimentName': instance.assortimentName,
-      'AssortimentUid': instance.assortimentUid,
-      'Count': instance.count,
-      'LineNumber': instance.lineNumber,
-      'Price': instance.price,
-      'ProcessedCount': instance.processedCount,
-      'Sum': instance.sum,
-      'Uid': instance.uid,
-      'UnitName': instance.unitName,
-      'UnitUid': instance.unitUid,
-    };

@@ -272,14 +272,13 @@ class _TableAssortimentWidghetState extends State<TableAssortimentWidghet> {
 
   String? _getSpecialPrice(ModelAssortimentDB item) {
     try {
+
       // Проходим по каждому PriceListModel
       for (final priceList in widget.clientPrices!) {
-
         // Ищем внутри него нужный AssortimentUid
-        final entry = priceList.prices.firstWhere(
+        final entry = priceList.lines.firstWhere(
               (p) => p.assortimentUid == item.uid,
         );
-     //   print(entry);
         if (entry.price != 0) {
           return entry.price.toStringAsFixed(2);
         }
@@ -290,13 +289,14 @@ class _TableAssortimentWidghetState extends State<TableAssortimentWidghet> {
     return null;
   }
 
-  Prices _getSpecialPriceSelect(ModelAssortimentDB item) {
+  Prices? _getSpecialPriceSelect(ModelAssortimentDB item) {
     try {
       // Проходим по каждому PriceListModel
       for (final priceList in widget.clientPrices!) {
 
+
         // Ищем внутри него нужный AssortimentUid
-        final entry = priceList.prices.firstWhere(
+        final entry = priceList.lines.firstWhere(
               (p) => p.assortimentUid == item.uid,
         );
      //   print(entry);
@@ -307,6 +307,6 @@ class _TableAssortimentWidghetState extends State<TableAssortimentWidghet> {
     } catch (_) {
       // Игнорируем ошибки
     }
-    return Prices(assortimentUid: '', price: 0.00, priceLineUid: '');
+    return null;
   }
 }

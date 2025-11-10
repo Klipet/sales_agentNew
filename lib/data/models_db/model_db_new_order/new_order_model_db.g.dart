@@ -72,8 +72,13 @@ const NewOrderModelDbSchema = CollectionSchema(
       name: r'sum',
       type: IsarType.double,
     ),
-    r'uid': PropertySchema(
+    r'tranmit': PropertySchema(
       id: 11,
+      name: r'tranmit',
+      type: IsarType.bool,
+    ),
+    r'uid': PropertySchema(
+      id: 12,
       name: r'uid',
       type: IsarType.string,
     )
@@ -83,7 +88,21 @@ const NewOrderModelDbSchema = CollectionSchema(
   deserialize: _newOrderModelDbDeserialize,
   deserializeProp: _newOrderModelDbDeserializeProp,
   idName: r'id',
-  indexes: {},
+  indexes: {
+    r'sum': IndexSchema(
+      id: 8324731750180269936,
+      name: r'sum',
+      unique: false,
+      replace: false,
+      properties: [
+        IndexPropertySchema(
+          name: r'sum',
+          type: IndexType.value,
+          caseSensitive: false,
+        )
+      ],
+    )
+  },
   links: {
     r'lines': LinkSchema(
       id: -5334115082834927400,
@@ -135,7 +154,8 @@ void _newOrderModelDbSerialize(
   writer.writeString(offsets[8], object.stockName);
   writer.writeString(offsets[9], object.stockUid);
   writer.writeDouble(offsets[10], object.sum);
-  writer.writeString(offsets[11], object.uid);
+  writer.writeBool(offsets[11], object.tranmit);
+  writer.writeString(offsets[12], object.uid);
 }
 
 NewOrderModelDb _newOrderModelDbDeserialize(
@@ -144,21 +164,21 @@ NewOrderModelDb _newOrderModelDbDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = NewOrderModelDb(
-    clientName: reader.readString(offsets[0]),
-    clientUid: reader.readString(offsets[1]),
-    code: reader.readString(offsets[2]),
-    comment: reader.readString(offsets[3]),
-    dateProcessed: reader.readString(offsets[4]),
-    dateValid: reader.readString(offsets[5]),
-    deliveryAddress: reader.readString(offsets[6]),
-    state: reader.readLong(offsets[7]),
-    stockName: reader.readString(offsets[8]),
-    stockUid: reader.readString(offsets[9]),
-    sum: reader.readDouble(offsets[10]),
-    uid: reader.readString(offsets[11]),
-  );
+  final object = NewOrderModelDb();
+  object.clientName = reader.readString(offsets[0]);
+  object.clientUid = reader.readString(offsets[1]);
+  object.code = reader.readString(offsets[2]);
+  object.comment = reader.readString(offsets[3]);
+  object.dateProcessed = reader.readString(offsets[4]);
+  object.dateValid = reader.readString(offsets[5]);
+  object.deliveryAddress = reader.readString(offsets[6]);
   object.id = id;
+  object.state = reader.readLong(offsets[7]);
+  object.stockName = reader.readString(offsets[8]);
+  object.stockUid = reader.readString(offsets[9]);
+  object.sum = reader.readDouble(offsets[10]);
+  object.tranmit = reader.readBool(offsets[11]);
+  object.uid = reader.readString(offsets[12]);
   return object;
 }
 
@@ -192,6 +212,8 @@ P _newOrderModelDbDeserializeProp<P>(
     case 10:
       return (reader.readDouble(offset)) as P;
     case 11:
+      return (reader.readBool(offset)) as P;
+    case 12:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -218,6 +240,14 @@ extension NewOrderModelDbQueryWhereSort
   QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterWhere> anyId() {
     return QueryBuilder.apply(this, (query) {
       return query.addWhereClause(const IdWhereClause.any());
+    });
+  }
+
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterWhere> anySum() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(
+        const IndexWhereClause.any(indexName: r'sum'),
+      );
     });
   }
 }
@@ -287,6 +317,97 @@ extension NewOrderModelDbQueryWhere
         lower: lowerId,
         includeLower: includeLower,
         upper: upperId,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterWhereClause> sumEqualTo(
+      double sum) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.equalTo(
+        indexName: r'sum',
+        value: [sum],
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterWhereClause>
+      sumNotEqualTo(double sum) {
+    return QueryBuilder.apply(this, (query) {
+      if (query.whereSort == Sort.asc) {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sum',
+              lower: [],
+              upper: [sum],
+              includeUpper: false,
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sum',
+              lower: [sum],
+              includeLower: false,
+              upper: [],
+            ));
+      } else {
+        return query
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sum',
+              lower: [sum],
+              includeLower: false,
+              upper: [],
+            ))
+            .addWhereClause(IndexWhereClause.between(
+              indexName: r'sum',
+              lower: [],
+              upper: [sum],
+              includeUpper: false,
+            ));
+      }
+    });
+  }
+
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterWhereClause>
+      sumGreaterThan(
+    double sum, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'sum',
+        lower: [sum],
+        includeLower: include,
+        upper: [],
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterWhereClause> sumLessThan(
+    double sum, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'sum',
+        lower: [],
+        upper: [sum],
+        includeUpper: include,
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterWhereClause> sumBetween(
+    double lowerSum,
+    double upperSum, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addWhereClause(IndexWhereClause.between(
+        indexName: r'sum',
+        lower: [lowerSum],
+        includeLower: includeLower,
+        upper: [upperSum],
         includeUpper: includeUpper,
       ));
     });
@@ -1698,6 +1819,16 @@ extension NewOrderModelDbQueryFilter
   }
 
   QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterFilterCondition>
+      tranmitEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'tranmit',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterFilterCondition>
       uidEqualTo(
     String value, {
     bool caseSensitive = true,
@@ -2052,6 +2183,19 @@ extension NewOrderModelDbQuerySortBy
     });
   }
 
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterSortBy> sortByTranmit() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tranmit', Sort.asc);
+    });
+  }
+
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterSortBy>
+      sortByTranmitDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tranmit', Sort.desc);
+    });
+  }
+
   QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterSortBy> sortByUid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uid', Sort.asc);
@@ -2228,6 +2372,19 @@ extension NewOrderModelDbQuerySortThenBy
     });
   }
 
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterSortBy> thenByTranmit() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tranmit', Sort.asc);
+    });
+  }
+
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterSortBy>
+      thenByTranmitDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'tranmit', Sort.desc);
+    });
+  }
+
   QueryBuilder<NewOrderModelDb, NewOrderModelDb, QAfterSortBy> thenByUid() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uid', Sort.asc);
@@ -2320,6 +2477,13 @@ extension NewOrderModelDbQueryWhereDistinct
     });
   }
 
+  QueryBuilder<NewOrderModelDb, NewOrderModelDb, QDistinct>
+      distinctByTranmit() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'tranmit');
+    });
+  }
+
   QueryBuilder<NewOrderModelDb, NewOrderModelDb, QDistinct> distinctByUid(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2404,53 +2568,15 @@ extension NewOrderModelDbQueryProperty
     });
   }
 
+  QueryBuilder<NewOrderModelDb, bool, QQueryOperations> tranmitProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'tranmit');
+    });
+  }
+
   QueryBuilder<NewOrderModelDb, String, QQueryOperations> uidProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'uid');
     });
   }
 }
-
-// **************************************************************************
-// JsonSerializableGenerator
-// **************************************************************************
-
-NewOrderModelDb _$NewOrderModelDbFromJson(Map<String, dynamic> json) =>
-    NewOrderModelDb(
-      clientName: json['ClientName'] as String? ?? '',
-      clientUid: json['ClientUid'] as String? ?? '',
-      code: json['Code'] as String? ?? '',
-      comment: json['Comment'] as String? ?? '',
-      dateProcessed: json['DateProcessed'] as String? ?? '',
-      dateValid: json['DateValid'] as String? ?? '',
-      deliveryAddress: json['DeliveryAddress'] as String? ?? '',
-      state: (json['State'] as num?)?.toInt() ?? 0,
-      stockName: json['StockName'] as String? ?? '',
-      stockUid: json['StockUid'] as String? ?? '',
-      sum: (json['Sum'] as num?)?.toDouble() ?? 0.0,
-      uid: json['Uid'] as String? ?? '',
-    )
-      ..id = (json['id'] as num).toInt()
-      ..linesJson = (json['Lines'] as List<dynamic>?)
-              ?.map((e) =>
-                  NewOrderLineModelDb.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          [];
-
-Map<String, dynamic> _$NewOrderModelDbToJson(NewOrderModelDb instance) =>
-    <String, dynamic>{
-      'id': instance.id,
-      'ClientName': instance.clientName,
-      'ClientUid': instance.clientUid,
-      'Code': instance.code,
-      'Comment': instance.comment,
-      'DateProcessed': instance.dateProcessed,
-      'DateValid': instance.dateValid,
-      'DeliveryAddress': instance.deliveryAddress,
-      'State': instance.state,
-      'StockName': instance.stockName,
-      'StockUid': instance.stockUid,
-      'Sum': instance.sum,
-      'Uid': instance.uid,
-      'Lines': instance.linesJson,
-    };
