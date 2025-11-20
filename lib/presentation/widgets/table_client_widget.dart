@@ -118,7 +118,6 @@ class _TableClientWidgetState extends State<TableClientWidget> {
         child: SfDataGrid(
           onCellTap: (DataGridCellTapDetails details) {
             final rowIndex = details.rowColumnIndex.rowIndex;
-
             // Пропускаем заголовок
             if (rowIndex > 0) {
               final tappedRow = _dataSource.clientList[rowIndex - 1];

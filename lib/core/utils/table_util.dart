@@ -148,3 +148,77 @@ Text textContentTableClient(DataGridCell<dynamic> cell) {
     return Text(cell.value, style: textStyleDialogOrderContent);
   }
 }
+
+Widget newOrderTable(DataGridCell<dynamic> cell){
+  if(cell.columnName == 'cod'){
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }
+  if(cell.columnName == 'name'){
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: 16.r),
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }if(cell.columnName == 'code'){
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(left: 16.r),
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }if(cell.columnName == 'count'){
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 16.r),
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }if(cell.columnName == 'price'){
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 16.r),
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }if(cell.columnName == 'sum'){
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 16.r),
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }else{
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 16.r),
+      decoration: BoxDecoration(
+          color: containerColor,
+          border: borderSideTable(cell)
+      ),
+      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
+    );
+  }
+}

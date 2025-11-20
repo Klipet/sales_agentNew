@@ -1,16 +1,27 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:sales_agent/core/utils/new_order_asl_sours.dart';
 import 'package:sales_agent/data/models_api/models_client_detail/detail_outlands.dart';
-import 'package:sales_agent/data/models_db/model_db_clients/model_outlens_db.dart';
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
+import 'package:sales_agent/presentation/widgets/table_new_order_asl.dart';
+import 'package:syncfusion_flutter_core/theme.dart';
+import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../../core/colors_app.dart';
 import '../../../core/styles_text.dart';
 import '../../../data/models_db/model_db_clients/model_client_db.dart';
+import '../../../data/models_db/model_db_new_order/new_model_document_id.dart';
 import '../../../data/providers/navigator_provider.dart';
+import '../../../data/repositories/new_order_repositori.dart';
+import '../../../logic/blocs/new_order_bloc/new_order_bloc.dart';
+import '../../../logic/blocs/new_order_bloc/new_order_state.dart';
+import '../../widgets/buttons_new_order_widget.dart';
 import '../../widgets/new_order_title_widget.dart';
+
 
 class FreeStepCreate extends StatefulWidget {
   const FreeStepCreate({super.key});
@@ -22,6 +33,7 @@ class FreeStepCreate extends StatefulWidget {
 class _FreeStepCreateState extends State<FreeStepCreate> {
   late ModelClientDb? clientDb;
   late DetailOutlands? outlands;
+
   bool isLoaded = false;
 
   @override
@@ -55,8 +67,14 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
     if (!isLoaded) {
       return Center(
         child: LoadingWidget(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+          width: MediaQuery
+              .of(context)
+              .size
+              .width,
+          height: MediaQuery
+              .of(context)
+              .size
+              .height,
         ),
       );
     }
@@ -65,7 +83,8 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
         children: [
           NewOrderTitleWidget(),
           SizedBox(height: 15.w),
-          _infoClient(name: clientDb!.name!, idnp: clientDb!.idnp!, page: 6),
+          _infoClient(
+              name: clientDb!.name!, idnp: clientDb!.idnp!, page: 6),
           SizedBox(height: 15.w),
           if (outlands != null)
             _infoClient(
@@ -75,46 +94,17 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
               idnp: '',
               page: 7,
             ),
-
-          Spacer(),
-          GestureDetector(
-            onTap: () {
-              print("Tap_tap");
-              Provider.of<NavigationProvider>(
-                context,
-                listen: false,
-              ).goToPageAndSave(
-                9,
-                data: {'client': clientDb, 'outlet': outlands},
-              );
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Container(
-                  constraints: BoxConstraints(maxHeight: 50.h, maxWidth: 316.w),
-                  //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.only(bottom: 20.w),
-                  decoration: BoxDecoration(
-                    color: buttonColor,
-                    borderRadius: BorderRadius.all(Radius.circular(100.r)),
-                    border: Border.all(color: borderColor, width: 1.w),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.add_rounded, color: Colors.white, size: 32.r),
-                      SizedBox(width: 8.h),
-                      Text("Adaugă asortiment", style: textStyleBtAslAdd),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
+          if (outlands != null)
+          SizedBox(height: 15.w),
+          Expanded(child: TableNewOrderAsl()),
+          SizedBox(height: 15.w),
+          ButtonsNewOrderWidget(
+            clientDb: clientDb,
+            outlands: outlands,
+          )
         ],
       ),
+
     );
   }
 

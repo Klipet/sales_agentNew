@@ -77,11 +77,6 @@ class NewOrderRepository {
     final orderId = await isar.writeTxn(() async {
       return await isar.newOrderModelDbs.put(order);
     });
-
-    print('✅ Заказ создан: ${order.code}, ID: $orderId');
-    print('   Клиент: ${order.clientName}');
-    print('   Адрес: ${order.deliveryAddress}');
-
     return orderId;
   }
 
@@ -142,12 +137,6 @@ class NewOrderRepository {
       order.tranmit = false;
       // Сохраняем заказ
       await isar.newOrderModelDbs.put(order);
-
-      print('✅  Товар добавлен в заказ:');
-      print('   Товар: ${item.name}');
-      print('  Количество: $quantity ${item.unitName}');
-      print(' Сумма строки: ${sum.toStringAsFixed(2)}');
-      print('Общая сумма заказа: ${order.sum.toStringAsFixed(2)}');
     });
   }
 
@@ -284,6 +273,35 @@ class NewOrderRepository {
     });
   }
 
+  Future<void> deleteOrderByTransmit(bool isTransmit) async {
+    final isar = await DbProvider.instance();
+
+    await isar.writeTxn(() async {
+      // Получаем ВСЕ заказы с tranmit == isTransmit
+      final orders = await isar.newOrderModelDbs
+          .filter()
+          .tranmitEqualTo(isTransmit)
+          .findAll();
+
+      if (orders.isEmpty) {
+        print('⚠️ Нет заказов с tranmit = $isTransmit');
+        return;
+      }
+      for (var order in orders) {
+        // Загружаем строки заказа
+        await order.lines.load();
+        // Удаляем все строки
+        for (var line in order.lines) {
+          await isar.newOrderLineModelDbs.delete(line.id);
+        }
+        // Удаляем сам заказ
+        await isar.newOrderModelDbs.delete(order.id);
+        print('🗑 Заказ удалён: ID ${order.id}');
+      }
+    });
+    print('✅ Удаление завершено');
+  }
+
   /// Пометить заказ как отправленный
   Future<void> markOrderAsTransmitted(Id orderId) async {
     final isar = await DbProvider.instance();
@@ -311,6 +329,33 @@ class NewOrderRepository {
 
     for (var order in orders) {
       await order.lines.load();
+    }
+
+    return orders;
+  }
+  Future<List<NewOrderModelDb>> filterOrders(int status) async {
+    final isar = await DbProvider.instance();
+    final orders = await isar.newOrderModelDbs
+        .filter()
+        .stateEqualTo(status) // тут твой фильтр
+        .findAll();
+    return orders;
+  }
+
+  Future<List<NewOrderModelDb>> filterOrdersNewCount( String searchQuery) async {
+    final isar = await DbProvider.instance();
+
+    List<NewOrderModelDb> orders;
+    // Получить все заказы
+    orders = await isar.newOrderModelDbs.where().findAll();
+    // Поиск по тексту в памяти
+    if (searchQuery.isNotEmpty) {
+      final query = searchQuery.toLowerCase();
+      orders = orders.where((order) {
+        return (order.code.toLowerCase().contains(query) ?? false) ||
+            (order.clientName.toLowerCase().contains(query) ?? false) ||
+            (order.comment.toLowerCase().contains(query) ?? false);
+      }).toList();
     }
 
     return orders;

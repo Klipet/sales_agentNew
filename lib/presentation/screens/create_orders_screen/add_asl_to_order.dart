@@ -227,15 +227,10 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
     return BlocBuilder<NewOrderBloc, NewOrderState>(
       builder: (context, state) {
         int itemCount = 0;
-
-        print('🔄 State: $state'); // Для отладки
-
         if (state is NewOrderLoaded) {
           itemCount = state.order.lines.length;
-          print('📦 Item count (Loaded): $itemCount');
         } else if (state is NewOrderUpdated) {
           itemCount = state.order.lines.length;
-          print('📦 Item count (Updated): $itemCount');
         }
 
         if (itemCount == 0) {

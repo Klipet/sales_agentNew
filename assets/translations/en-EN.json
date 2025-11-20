@@ -54,6 +54,7 @@
     "price": "Unit price (MDL)",
     "sum": "Amount (MDL)",
     "stock": "Stock",
+    "code": "Cod",
     "total": "Total:"
   },
   "pop": {

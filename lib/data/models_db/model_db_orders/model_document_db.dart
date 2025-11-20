@@ -5,8 +5,8 @@ import '../../../core/utils/convert_data.dart';
 part 'model_document_db.g.dart';
 @collection
 class ModelDocumentDb {
-  Id id = Isar.autoIncrement;
 
+  Id id = Isar.autoIncrement;
   late String? clientName;
   late String clientUid;
   late String code;

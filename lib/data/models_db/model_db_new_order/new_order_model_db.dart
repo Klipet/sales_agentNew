@@ -19,7 +19,6 @@ class NewOrderModelDb{
   late int state;
   late String stockName;
   late String stockUid;
-  @Index()
   late double sum;
   late String uid;
   /// 👇 Это реальное поле для Isar (связи)

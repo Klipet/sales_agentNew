@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:isar/isar.dart';
 import 'package:sales_agent/core/constans.dart';
 import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
+import 'package:sales_agent/data/repositories/new_order_repositori.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
@@ -30,6 +31,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
   late OrderDataSource _dataSource;
   bool _isLoading = true;
   final repo = OrdersRepositori();
+  final repoNewOrder = NewOrderRepository();
 
   @override
   void initState() {
@@ -71,8 +73,10 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
       _isLoading = true;
     });
     final orders = await repo.getOrders();
+    final localOrder = await repoNewOrder.getAllOrders();
+
     setState(() {
-      _dataSource.updateData(orders);
+      _dataSource.updateData(orders, localOrders:localOrder);
       _isLoading = false;
     });
   }
@@ -82,8 +86,9 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
       _isLoading = true;
     });
     final orders = await repo.filterOrders(status!);
+    final newOrders = await repoNewOrder.filterOrders(status);
     setState(() {
-      _dataSource.updateData(orders);
+      _dataSource.updateData(orders,localOrders:newOrders);
       _isLoading = false;
     });
   }
@@ -94,15 +99,17 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
     if (search == null || search.isEmpty) {
       // если строка пустая → показываем все заказы
       final orders = await repo.getOrders();
+      final newOrders = await repoNewOrder.getAllOrders();
       setState(() {
-        _dataSource.updateData(orders);
+        _dataSource.updateData(orders, localOrders: newOrders);
         _isLoading = false;
       });
     } else {
       // иначе ищем
       final orders = await repo.filterOrdersCount(search);
+      final newOrders = await repoNewOrder.filterOrdersNewCount(search);
       setState(() {
-        _dataSource.updateData(orders);
+        _dataSource.updateData(orders, localOrders: newOrders);
         _isLoading = false;
       });
     }
@@ -160,6 +167,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
             }
           },
           source: _dataSource,
+        //  allowSorting: true,
           rowHeight: 48.h,
           headerRowHeight: 32.h,
           columnWidthMode: ColumnWidthMode.fill,
@@ -181,6 +189,7 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
             ),
             GridColumn(
               columnName: 'data',
+              allowSorting: true,
               width: 137.w,
               label: Container(
                 decoration: BoxDecoration(

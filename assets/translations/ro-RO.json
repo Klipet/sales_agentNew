@@ -51,6 +51,7 @@
     "price": "Preț unitar (MDL)",
     "sum": "Suma (MDL)",
     "stock": "Stocuri",
+    "code": "Cod",
     "total": "Total:"
   },
   "client": {

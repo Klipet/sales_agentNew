@@ -51,7 +51,7 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     for(var order in newOrderId){
       orderId = order.dicumentId;
     }
-    print('❌ Ошибка добавления товара: $orderId');
+   // print('❌ Ошибка добавления товара: $orderId');
   //  if (currentState is NewOrderCreated) {
   //    orderId = currentState.orderId;
   //  } else if (currentState is NewOrderLoaded) {
@@ -65,7 +65,6 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
 
     try {
       emit(NewOrderUpdating(orderId!));
-
       await repository.addLineToOrder(
         orderId: orderId,
         item: event.item,
