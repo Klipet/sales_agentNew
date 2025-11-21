@@ -18,6 +18,7 @@ Future<bool?> showAssortimentInfoOrder({
   required BuildContext context,
   required ModelAssortimentDB asl,
   required Prices? prices,
+  required int idDocument,
 }) async {
   final orderBloc = context.read<NewOrderBloc>();
 
@@ -157,6 +158,7 @@ Future<bool?> showAssortimentInfoOrder({
                             item: asl,
                             quantity: quantity,
                             priceSelected: prices,
+                            id: idDocument
                           ),
                         );
                         // Закрываем диалог с успехом

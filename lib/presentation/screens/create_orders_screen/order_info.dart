@@ -12,6 +12,7 @@ import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../../core/colors_app.dart';
+import '../../../core/constans.dart';
 import '../../../core/styles_text.dart';
 import '../../../data/models_db/model_db_clients/model_client_db.dart';
 import '../../../data/models_db/model_db_new_order/new_model_document_id.dart';
@@ -33,6 +34,7 @@ class FreeStepCreate extends StatefulWidget {
 class _FreeStepCreateState extends State<FreeStepCreate> {
   late ModelClientDb? clientDb;
   late DetailOutlands? outlands;
+  late int? idDocument;
 
   bool isLoaded = false;
 
@@ -48,13 +50,17 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
         context,
         listen: false,
       );
-      final client = await navProvider.getPageData<ModelClientDb>('client');
-      final outlet = await navProvider.getPageData<DetailOutlands>('outlet');
+      final client = await navProvider.getPageData<ModelClientDb>(Constant().modelDB);
+      final outlet = await navProvider.getPageData<DetailOutlands>(Constant().outlet);
+      final id = await navProvider.getPageData(Constant().id);
+
+
 
       if (client != null) {
         setState(() {
           clientDb = client;
           outlands = outlet;
+          idDocument = id;
           isLoaded = true;
         });
         // navProvider.clearPageData();
@@ -85,6 +91,7 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
           SizedBox(height: 15.w),
           _infoClient(
               name: clientDb!.name!, idnp: clientDb!.idnp!, page: 6),
+          if (outlands != null)
           SizedBox(height: 15.w),
           if (outlands != null)
             _infoClient(
@@ -94,13 +101,12 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
               idnp: '',
               page: 7,
             ),
-          if (outlands != null)
-          SizedBox(height: 15.w),
-          Expanded(child: TableNewOrderAsl()),
+          Expanded(child: TableNewOrderAsl(orderId: idDocument ?? 0,)),
           SizedBox(height: 15.w),
           ButtonsNewOrderWidget(
             clientDb: clientDb,
             outlands: outlands,
+            id: idDocument,
           )
         ],
       ),

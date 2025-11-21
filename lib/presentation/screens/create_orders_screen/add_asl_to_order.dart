@@ -15,6 +15,7 @@ import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_bloc.dart';
 import 'package:sales_agent/logic/blocs/price_blocs/price_state.dart';
 import 'package:sales_agent/presentation/widgets/table_assortiment_widghet.dart';
 
+import '../../../core/constans.dart';
 import '../../../core/styles_text.dart';
 import '../../../data/models_api/models_client_detail/detail_outlands.dart';
 import '../../../data/models_db/model_db_clients/model_client_db.dart';
@@ -32,13 +33,14 @@ class AddAslToOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => NewOrderBloc(NewOrderRepository(), NewModelDocumentId()),
+      create: (_) => NewOrderBloc(NewOrderRepository(), NewModelDocumentId(), context),
       child: AddAslToOrderUI(),
     );
   }
 }
 
 class AddAslToOrderUI extends StatefulWidget {
+
   const AddAslToOrderUI({super.key});
 
   @override
@@ -49,6 +51,7 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
   late ModelClientDb clientDb;
   late DetailOutlands? outlands;
   late List<PriceLists>? priceLists;
+  late int id;
   bool isLoaded = false;
   String _search = '';
   TextEditingController controller = TextEditingController();
@@ -71,15 +74,17 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
         context,
         listen: false,
       );
-      final client = navProvider.getPageData<ModelClientDb>('client');
-      final outlet = navProvider.getPageData<DetailOutlands>('outlet');
+      final client = navProvider.getPageData<ModelClientDb>( Constant().modelDB);
+      final outlet = navProvider.getPageData<DetailOutlands>( Constant().outlet);
+      final idDoc = navProvider.getPageData( Constant().id);
       final price = await PriceRepositori().getPriceListsFromIsar(
-        client!.pricelistUid! ?? '',
+        client!.pricelistUid ?? '',
       );
 
       if (client != null) {
         setState(() {
           clientDb = client;
+          id = idDoc;
           outlands = outlet ?? DetailOutlands(address: '', comment: '');
           priceLists = price;
           print('price: Order $priceLists');
@@ -123,6 +128,7 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
                     asl: item,
                     prices: priceSelected,
                     context: context,
+                    idDocument: id
                   );
                 },
               ),

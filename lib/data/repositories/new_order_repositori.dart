@@ -17,8 +17,6 @@ class NewOrderRepository {
     final isar = await DbProvider.instance();
     final addOrderId = NewModelDocumentId()
       ..dicumentId = orderId;
-
-
     // Сохраняем в базу
      await isar.writeTxn(() async {
       return await isar.newModelDocumentIds.put(addOrderId);
@@ -28,14 +26,16 @@ class NewOrderRepository {
   Future<List<NewModelDocumentId>> getOrderId() async {
     final isar = await DbProvider.instance();
     final orders = await isar.newModelDocumentIds.where().findAll();
-
-
     return orders;
   }
   Future<void> deleteOrderId() async {
     final isar = await DbProvider.instance();
     await isar.newModelDocumentIds.clear();
   }
+
+
+
+
 
   Future<Id> createOrder({
     required ModelClientDb client,
@@ -48,7 +48,7 @@ class NewOrderRepository {
     String? deliveryComment;
 
     if (outlet != null) {
-      if (outlet.comment?.isNotEmpty == true) {
+      if (outlet.comment.isNotEmpty == true) {
         deliveryComment = outlet.comment;
         deliveryAddress = outlet.address ?? 'Адрес не указан';
       } else {
@@ -60,7 +60,7 @@ class NewOrderRepository {
     final order = NewOrderModelDb()
       ..clientName = client.name ?? 'Без имени'
       ..clientUid = client.uid ?? ''
-      ..code = 'ORD-${DateTime.now().millisecondsSinceEpoch}'
+      ..code = ''
       ..comment = ''
       ..dateProcessed = DateTime.now().toString()
       ..dateValid = DateTime.now().toString()
@@ -70,7 +70,7 @@ class NewOrderRepository {
       ..stockUid = ''
       ..sum = 0.0
       ..tranmit = false
-      ..uid = _uuid.v4();
+      ..uid = '';
 
 
     // Сохраняем в базу
@@ -166,7 +166,7 @@ class NewOrderRepository {
   }
 
   /// Получение строк заказа
-  Future<List<NewOrderLineModelDb>> getOrderLines(Id orderId) async {
+  Future<List<NewOrderLineModelDb>> getOrderLines(int orderId) async {
     final isar = await DbProvider.instance();
     return await isar.newOrderLineModelDbs
         .filter()

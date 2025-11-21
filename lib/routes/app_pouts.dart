@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sales_agent/presentation/screens/create_orders_screen/first_step_create.dart';
-import 'package:sales_agent/presentation/screens/create_orders_screen/two_step_create.dart';
+import 'package:sales_agent/presentation/screens/create_orders_screen/select_client.dart';
+import 'package:sales_agent/presentation/screens/create_orders_screen/select_address_client.dart';
 import 'package:sales_agent/presentation/screens/home_screen.dart';
 
 class AppRoutes {

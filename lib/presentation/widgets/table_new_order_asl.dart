@@ -1,15 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:isar/isar.dart';
-import 'package:sales_agent/data/models_db/model_db_new_order/new_order_line_model_db.dart';
-import 'package:sales_agent/data/models_db/model_db_new_order/new_order_model_db.dart';
 import 'package:sales_agent/data/repositories/new_order_repositori.dart';
-import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_bloc.dart';
-import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_state.dart';
-import 'package:sales_agent/logic/blocs/new_order_line_bloc/new_line_cubit.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
@@ -17,12 +11,10 @@ import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
 import '../../core/utils/new_order_asl_sours.dart';
 
-import '../../data/models_db/model_db_new_order/new_model_document_id.dart';
-import '../../data/repositories/new_line_repositori.dart';
-import '../../logic/blocs/new_order_line_bloc/new_line_state.dart';
-
 class TableNewOrderAsl extends StatefulWidget {
-  TableNewOrderAsl({super.key});
+  final int orderId;
+
+  TableNewOrderAsl({super.key, required this.orderId});
 
   @override
   State<TableNewOrderAsl> createState() => _TableNewOrderAslState();
@@ -52,22 +44,28 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
     setState(() {
       _isLoading = true;
     });
-    Id? ordersId;
-    final orders = await newRepo.getOrderId();
-    for (var orderId in orders) {
-      ordersId = orderId.dicumentId;
-    }
-    final lines = await newRepo.getOrderLines(ordersId ?? 0);
-    if (lines.isEmpty || lines == null) {
+    final lines = await newRepo.getOrderLines(widget.orderId);
+    if (lines.isNotEmpty) {
       setState(() {
-        _isEmptyLine = true;
+        _isEmptyLine = false;
       });
     }
     setState(() {
       _dataSource.updateData(lines);
       _isLoading = false;
-      _isEmptyLine = false;
     });
+  }
+
+  double _calculateTotalSum() {
+    double total = 0;
+    for (var line in _dataSource.lineList) {
+      // Вариант 1: если есть готовое поле sum
+      total += line.sum ?? 0;
+
+      // Вариант 2: если нужно вычислить (раскомментируйте если нужно)
+      // total += (line.count ?? 0) * (line.price ?? 0);
+    }
+    return total;
   }
 
   @override
@@ -100,129 +98,110 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
     return Container(
       decoration: BoxDecoration(
         color: containerColor,
-        border: Border.all(color: borderColor, width: 1.w),
-        borderRadius: BorderRadius.vertical(top: Radius.circular(10.r)),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(15.r)),
+        border: Border(
+          bottom: BorderSide(color: borderColor, width: 1.w),
+          left: BorderSide(color: borderColor, width: 1.w),
+          right: BorderSide(color: borderColor, width: 1.w),
+        ),
       ),
       margin: EdgeInsets.only(left: 16.w),
-      child: SfDataGridTheme(
-        data: SfDataGridThemeData(
-          headerColor: Colors.transparent,
-          headerHoverColor: Colors.transparent,
-          rowHoverColor: Colors.transparent,
-        ),
-        child: SfDataGrid(
-          source: _dataSource,
-          rowHeight: 48.h,
-          headerRowHeight: 32.h,
-          columnWidthMode: ColumnWidthMode.fill,
-          gridLinesVisibility: GridLinesVisibility.none,
-          headerGridLinesVisibility: GridLinesVisibility.none,
-          columns: [
-            GridColumn(
-              columnName: 'cod',
-              width: 50.w,
-              label: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: borderColor, width: 1.w),
-                    bottom: BorderSide(color: borderColor, width: 0.5.w),
+      child: Column(
+        children: [
+          Expanded(
+            child: SfDataGridTheme(
+              data: SfDataGridThemeData(
+                headerColor: primariColor,
+                headerHoverColor: primariColor,
+                selectionColor: containerColor,
+              //  gridLineColor: containerColor,
+                rowHoverColor: Colors.transparent,
+              ),
+              child: SfDataGrid(
+                source: _dataSource,
+                rowHeight: 48.h,
+                headerRowHeight: 32.h,
+                columnWidthMode: ColumnWidthMode.fill,
+                gridLinesVisibility: GridLinesVisibility.none,
+                headerGridLinesVisibility: GridLinesVisibility.none,
+                columnWidthCalculationRange: ColumnWidthCalculationRange.visibleRows,
+                columns: [
+                  GridColumn(
+                    columnName: 'cod',
+                    width: 50.w,
+                    label: Center(
+                      child: Text('№', style: textStyleDialogOrderTitle),
+                    ),
                   ),
-                ),
-                child: Center(
-                  child: Text('№', style: textStyleDialogOrderTitle),
-                ),
+                  GridColumn(
+                    columnName: 'name',
+                    width: 500.w,
+                    label: Center(
+                      child: Text(
+                        'order.name'.tr(),
+                        style: textStyleDialogOrderTitle,
+                      ),
+                    ),
+                  ),
+                  GridColumn(
+                    columnName: 'code',
+                    width: 163.w,
+                    label: Center(
+                      child: Text(
+                        'order.code'.tr(),
+                        style: textStyleDialogOrderTitle,
+                      ),
+                    ),
+                  ),
+                  GridColumn(
+                    columnName: 'count',
+                    width: 110.w,
+                    label: Center(
+                      child: Text(
+                        'order.count'.tr(),
+                        style: textStyleDialogOrderTitle,
+                      ),
+                    ),
+                  ),
+                  GridColumn(
+                    columnName: 'price',
+                    label: Center(
+                      child: Text(
+                        'order.price'.tr(),
+                        style: textStyleDialogOrderTitle,
+                      ),
+                    ),
+                  ),
+                  GridColumn(
+                    columnName: 'sum',
+                    label: Center(
+                      child: Text(
+                        'order.sum'.tr(),
+                        style: textStyleDialogOrderTitle,
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            GridColumn(
-              columnName: 'name',
-              width: 500.w,
-              label: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: borderColor, width: 1.w),
-                    bottom: BorderSide(color: borderColor, width: 0.5.w),
-                  ),
+          ),
+
+          Container(
+            margin: EdgeInsets.only(bottom: 16.r, right: 32.r, top: 10.r),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text('order.total'.tr(), style: textStyleDialogOrderTotal),
+                SizedBox(width: 5.w),
+                Text(
+                  "${_calculateTotalSum().toStringAsFixed(2)}MDL",
+                  style: textStyleDialogOrderSum,
                 ),
-                child: Center(
-                  child: Text(
-                    'order.name'.tr(),
-                    style: textStyleDialogOrderTitle,
-                  ),
-                ),
-              ),
+              ],
             ),
-            GridColumn(
-              columnName: 'code',
-              width: 163.w,
-              label: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: borderColor, width: 1.w),
-                    bottom: BorderSide(color: borderColor, width: 0.5.w),
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    'order.code'.tr(),
-                    style: textStyleDialogOrderTitle,
-                  ),
-                ),
-              ),
-            ),
-            GridColumn(
-              columnName: 'count',
-              width: 110.w,
-              label: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: borderColor, width: 1.w),
-                    bottom: BorderSide(color: borderColor, width: 0.5.w),
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    'order.count'.tr(),
-                    style: textStyleDialogOrderTitle,
-                  ),
-                ),
-              ),
-            ),
-            GridColumn(
-              columnName: 'price',
-              label: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: borderColor, width: 1.w),
-                    bottom: BorderSide(color: borderColor, width: 0.5.w),
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    'order.price'.tr(),
-                    style: textStyleDialogOrderTitle,
-                  ),
-                ),
-              ),
-            ),
-            GridColumn(
-              columnName: 'sum',
-              label: Container(
-                decoration: BoxDecoration(
-                  border: Border(
-                    right: BorderSide(color: borderColor, width: 1.w),
-                    bottom: BorderSide(color: borderColor, width: 0.5.w),
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    'order.sum'.tr(),
-                    style: textStyleDialogOrderTitle,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

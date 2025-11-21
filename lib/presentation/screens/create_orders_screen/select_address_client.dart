@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 import 'package:sales_agent/core/colors_app.dart';
+import 'package:sales_agent/core/constans.dart';
 import 'package:sales_agent/data/models_api/models_client/ourlets_response.dart';
 import 'package:sales_agent/data/models_db/model_db_clients/model_client_db.dart';
 import 'package:sales_agent/data/models_db/model_db_new_order/new_model_document_id.dart';
@@ -15,10 +17,12 @@ import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 
 import '../../../core/styles_text.dart';
 import '../../../core/utils/costom_sidebar.dart';
+import '../../../data/models_api/models_client_detail/detail_outlands.dart';
 import '../../../data/providers/navigator_provider.dart';
 import '../../../data/repositories/new_order_repositori.dart';
 import '../../../logic/blocs/new_order_bloc/new_order_bloc.dart';
 import '../../../logic/blocs/new_order_bloc/new_order_event.dart';
+import '../../../logic/blocs/new_order_bloc/new_order_state.dart';
 import '../../widgets/new_order_title_widget.dart';
 import '../../widgets/title_home_widget.dart';
 
@@ -30,7 +34,7 @@ class TwoStepCreate extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ClientDetailBloc(ClientDetailApi())),
-        BlocProvider(create: (_) => NewOrderBloc(NewOrderRepository(), NewModelDocumentId()))
+        BlocProvider(create: (_) => NewOrderBloc(NewOrderRepository(), NewModelDocumentId(), context))
       ],
       child: TwoStepCreateUI(),
     );
@@ -62,7 +66,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
         context,
         listen: false,
       );
-      final client = navProvider.getPageData<ModelClientDb>('client');
+      final client = navProvider.getPageData<ModelClientDb>(Constant().modelDB);
       await context.read<ClientDetailBloc>().loadClient(client!.uid!);
       if (client != null) {
         setState(() {
@@ -73,6 +77,13 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
       }
     });
   }
+
+  Future<void> _proceedToNextStep({DetailOutlands? outlet}) async {
+    context.read<NewOrderBloc>().add(
+      CreateOrderEvent(client: clientDb, outlet: outlet),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -201,10 +212,19 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                       context.read<NewOrderBloc>().add(
                         CreateOrderEvent(client: clientDb),
                       );
-                      Provider.of<NavigationProvider>(
-                        context,
-                        listen: false,
-                      ).goToPageAndSave(8, data: {'client': clientDb});
+                   //   BlocListener<NewOrderBloc, NewOrderState>(
+                    //    listener: (context, state){
+                   //       if(state is NewOrderCreated){
+                    //        print(state.orderId);
+                   //       }
+                    //    },
+                   //   );
+
+
+                //      Provider.of<NavigationProvider>(
+                //        context,
+                //        listen: false,
+                //      ).goToPageAndSave(8, data: {'client': clientDb});
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -267,16 +287,18 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                       context.read<NewOrderBloc>().add(
                         CreateOrderEvent(client: clientDb, outlet: outlet),
                       );
-                      Provider.of<NavigationProvider>(
-                        context,
-                        listen: false,
-                      ).goToPageAndSave(
-                        8,
-                        data: {
-                          'client': clientDb,
-                          'outlet': outlet, // передаем конкретный outlet
-                        },
-                      );
+                   //   final orderId = createOrder();
+                  //    print(orderId);
+                  //    Provider.of<NavigationProvider>(
+                  //      context,
+                  //      listen: false,
+                  //    ).goToPageAndSave(
+                  //      8,
+                  //      data: {
+                   //       'client': clientDb,
+                  //        'outlet': outlet, // передаем конкретный outlet
+                  //      },
+                  //    );
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -307,5 +329,17 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
         );
       },
     );
+  }
+
+
+  Id? createOrder() {
+    final orderBloc = context.read<NewOrderBloc>();
+    final currentState = orderBloc.state;
+
+    // Проверяем текущее состояние перед добавлением события
+    if (currentState is NewOrderCreated) {
+     return currentState.orderId;
+    }
+    return null;
   }
 }

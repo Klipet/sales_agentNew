@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sales_agent/core/utils/table_util.dart';
 import 'package:sales_agent/data/models_db/model_db_new_order/new_order_line_model_db.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -33,10 +35,13 @@ class NewOrderAslSours extends DataGridSource{
   List<DataGridRow> get rows => _rows;
   @override
   DataGridRowAdapter? buildRow(DataGridRow row) {
+    final index = _rows.indexOf(row);
+    final isFirst = index == 0;
+
     return DataGridRowAdapter(
       cells: row.getCells().map((cell) {
         cell.value.toString();
-        return newOrderTable(cell);
+        return newOrderTable(cell, isFirst);
       }).toList(),
     );
   }

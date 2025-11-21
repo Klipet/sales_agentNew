@@ -13,10 +13,12 @@ import 'package:sales_agent/data/models_db/model_db_clients/model_client_db.dart
 import 'package:sales_agent/data/repositories/client_repositori.dart';
 import 'package:sales_agent/packages/advance_search_widget.dart';
 
+import '../../../core/constans.dart';
 import '../../../core/styles_text.dart';
 import '../../../data/providers/navigator_provider.dart';
 import '../../widgets/new_order_title_widget.dart';
 import '../../widgets/title_home_widget.dart';
+
 
 class FirstStepCreate extends StatefulWidget {
   const FirstStepCreate({super.key});
@@ -93,8 +95,7 @@ class _FirstStepCreateState extends State<FirstStepCreate> {
         showSelectedAsHint: true,
         clearAfterSelection: true,
         onSelected: (client) {
-          print('Выбран: ${client.uid}');
-          Provider.of<NavigationProvider>(contextEdit, listen: false).goToPageAndDestroy(7, data: {'client': client});
+          Provider.of<NavigationProvider>(contextEdit, listen: false).goToPageAndDestroy(7, data: { Constant().modelDB: client});
         },
         // ============ КАСТОМИЗАЦИЯ ТЕКСТОВОГО ПОЛЯ ============
         hintText: hint,

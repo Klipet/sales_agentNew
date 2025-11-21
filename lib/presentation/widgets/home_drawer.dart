@@ -15,9 +15,9 @@ import 'package:sidebarx/sidebarx.dart';
 
 import '../../core/utils/costom_sidebar.dart';
 import '../../data/providers/navigator_provider.dart';
-import '../screens/create_orders_screen/first_step_create.dart';
-import '../screens/create_orders_screen/free_step_create.dart';
-import '../screens/create_orders_screen/two_step_create.dart';
+import '../screens/create_orders_screen/select_client.dart';
+import '../screens/create_orders_screen/order_info.dart';
+import '../screens/create_orders_screen/select_address_client.dart';
 import '../screens/home_screen.dart';
 import '../screens/orders_screen.dart';
 

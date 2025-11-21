@@ -15,10 +15,10 @@ class NewOrderPostBloc extends Bloc<NewOrderPostEvent, NewOrderPostState> {
 
   NewOrderPostBloc(this.orderPostApi, this.repository, this.documentId)
       : super(OrderPostInitial()) {
-    on<FetchOrderPostData>(_onFetchOrderPostData);
+    on<FetchOrderPostData>(onFetchOrderPostData);
   }
 
-  Future<void> _onFetchOrderPostData(
+  Future<void> onFetchOrderPostData(
       FetchOrderPostData event,
       Emitter<NewOrderPostState> emit
       ) async {

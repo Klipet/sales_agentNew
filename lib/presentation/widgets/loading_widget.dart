@@ -49,7 +49,7 @@ class _LoadingWidgetState extends State<LoadingWidget> with TickerProviderStateM
         height: widget.height,
         width: widget.width,
         decoration: BoxDecoration(
-          color: containerColor,
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(30.r),
           border: Border.all(color: containerColor, width: 1.r),
         ),

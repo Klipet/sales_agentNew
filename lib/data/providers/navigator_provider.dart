@@ -27,19 +27,13 @@ class NavigationProvider extends ChangeNotifier {
   /// Переход на страницу с передачей данных
   void goToPageAndDestroy(int index, {Map<String, dynamic>? data}) {
     print('📤 Переход на страницу $index с данными: $data');
-
     if (data != null) {
       _pageData = data;
     }
-
     _currentPageIndex = index;
-
     if (_pageController != null && _pageController!.hasClients) {
-
         _pageController!.jumpToPage(index);
-
     }
-
     notifyListeners();
   }
 
@@ -47,19 +41,13 @@ class NavigationProvider extends ChangeNotifier {
   /// Переход на страницу с передачей данных
   void goToPageAndSave(int index, {Map<String, dynamic>? data}) {
     print('📤 Переход на страницу $index с данными: $data');
-
     if (data != null) {
       _pageData = data;
     }
-
     _currentPageIndex = index;
-
     if (_pageController != null && _pageController!.hasClients) {
-
       _pageController!.jumpToPage(index);
-
     }
-
     notifyListeners();
   }
 

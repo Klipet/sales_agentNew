@@ -9,9 +9,9 @@ class NewOrderCreating extends NewOrderState {}
 
 class NewOrderCreated extends NewOrderState {
   final Id orderId;
-  final NewOrderModelDb order;
+//  final NewOrderModelDb order;
 
-  NewOrderCreated(this.orderId, this.order);
+  NewOrderCreated(this.orderId);
 }
 
 class NewOrderLoading extends NewOrderState {

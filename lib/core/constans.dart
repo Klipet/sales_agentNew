@@ -24,4 +24,10 @@ class Constant{
   final int INLUCRU = 2;
   final int GATA = 3;
 
+
+
+  final String modelDB = 'modelDB';
+  final String outlet = 'outlet';
+  final String id = 'idDocument';
+
 }

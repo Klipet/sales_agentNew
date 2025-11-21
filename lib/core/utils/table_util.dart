@@ -149,7 +149,7 @@ Text textContentTableClient(DataGridCell<dynamic> cell) {
   }
 }
 
-Widget newOrderTable(DataGridCell<dynamic> cell){
+Widget newOrderTable(DataGridCell<dynamic> cell, bool isFirst){
   if(cell.columnName == 'cod'){
     return Container(
       alignment: Alignment.center,

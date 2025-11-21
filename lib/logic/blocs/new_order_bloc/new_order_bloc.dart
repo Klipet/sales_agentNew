@@ -1,7 +1,11 @@
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:isar/isar.dart';
+import 'package:provider/provider.dart';
 
+import '../../../core/constans.dart';
 import '../../../data/models_db/model_db_new_order/new_model_document_id.dart';
+import '../../../data/providers/navigator_provider.dart';
 import '../../../data/repositories/new_order_repositori.dart';
 import 'new_order_event.dart';
 import 'new_order_state.dart';
@@ -9,7 +13,8 @@ import 'new_order_state.dart';
 class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
   final NewOrderRepository repository;
   final NewModelDocumentId documentId;
-  NewOrderBloc(this.repository, this.documentId ) : super(NewOrderInitial()) {
+  final BuildContext context;
+  NewOrderBloc(this.repository, this.documentId, this.context ) : super(NewOrderInitial()) {
     on<CreateOrderEvent>(_onCreateOrder);
     on<AddLineToOrderEvent>(_onAddLine);
     on<RemoveLineFromOrderEvent>(_onRemoveLine);
@@ -24,16 +29,12 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
       ) async {
     try {
       emit(NewOrderCreating());
-
-      final id = await repository.createOrder(
-        client: event.client,
-        outlet: event.outlet,
-      );
-      await repository.addOrderId(id);
-      final order = await repository.getOrder(id);
-      if (order != null) {
-        emit(NewOrderCreated(id, order));
-      }
+      final id = await repository.createOrder(client: event.client, outlet: event.outlet,);
+        emit(NewOrderCreated(id));
+        Provider.of<NavigationProvider>(
+          context,
+          listen: false,
+        ).goToPageAndSave(8, data: {Constant().modelDB: event.client, Constant().id: id, Constant().outlet: event.outlet});
     } catch (e) {
       print('❌ Ошибка создания заказа: $e');
       emit(NewOrderError('Ошибка создания заказа: $e'));
@@ -44,37 +45,19 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
       AddLineToOrderEvent event,
       Emitter<NewOrderState> emit,
       ) async {
-    final currentState = state;
-    Id? orderId;
-    // Проверяем, что заказ уже создан
-    final newOrderId = await repository.getOrderId();
-    for(var order in newOrderId){
-      orderId = order.dicumentId;
-    }
-   // print('❌ Ошибка добавления товара: $orderId');
-  //  if (currentState is NewOrderCreated) {
-  //    orderId = currentState.orderId;
-  //  } else if (currentState is NewOrderLoaded) {
-  //    orderId = currentState.orderId;
-  //  } else if (currentState is NewOrderUpdated) {
-  //    orderId = currentState.orderId;
-  //  } else {
-  //    emit(NewOrderError('Заказ не создан. Сначала создайте заказ.'));
-  //    return;
-  //  }
 
     try {
-      emit(NewOrderUpdating(orderId!));
+      emit(NewOrderUpdating(event.id!));
       await repository.addLineToOrder(
-        orderId: orderId,
+        orderId: event.id!,
         item: event.item,
         quantity: event.quantity,
         priceSelected: event.priceSelected,
       );
 
-      final updatedOrder = await repository.getOrder(orderId);
+      final updatedOrder = await repository.getOrder(event.id!);
       if (updatedOrder != null) {
-        emit(NewOrderUpdated(orderId, updatedOrder));
+        emit(NewOrderUpdated(event.id!, updatedOrder));
       }
     } catch (e) {
       print('❌ Ошибка добавления товара: $e');

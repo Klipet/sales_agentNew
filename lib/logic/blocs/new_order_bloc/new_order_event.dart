@@ -21,10 +21,12 @@ class AddLineToOrderEvent extends NewOrderEvent {
   final ModelAssortimentDB item;
   final double quantity;
   final Prices? priceSelected;
+  final int? id;
 
   AddLineToOrderEvent({
     required this.item,
     required this.quantity,
+    required this.id,
     this.priceSelected,
   });
 }
