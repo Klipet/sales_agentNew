@@ -13,6 +13,7 @@ import '../../core/styles_text.dart';
 import '../../core/utils/order_line_data_sours.dart';
 import '../../core/utils/orders_urils.dart';
 import '../../core/utils/pop_menu_util.dart';
+
 import '../../data/models_db/model_db_orders/model_document_db.dart';
 import '../../data/models_db/model_db_orders/model_lines_db.dart';
 import '../../data/repositories/orders_repositori.dart';
@@ -180,7 +181,6 @@ Future<void> showDetailOrder({
                           child: Row(
                             children: [
                               textStatut(order),
-
                               Spacer(),
                               adressDialog(order)
                             ],
@@ -320,3 +320,7 @@ Future<void> showDetailOrder({
     },
   );
 }
+
+
+
+

@@ -24,11 +24,11 @@ class NewLineModelApi{
   @JsonKey(name: 'Sum', defaultValue: 0.0)
   final double sum;
   @JsonKey(name: 'Uid', defaultValue: '')
-  final String uid;
+  final String? uid;
   @JsonKey(name: 'UnitName', defaultValue: '')
   final String unitName;
   @JsonKey(name: 'UnitUid', defaultValue: '')
-  final String unitUid;
+  final String? unitUid ;
 
 
   NewLineModelApi({

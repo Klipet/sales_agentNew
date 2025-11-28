@@ -318,6 +318,19 @@ final textStyleDialogAddAssortimentTotalInfo = GoogleFonts.poppins(
     color: primariColor,
     decoration: TextDecoration.none
 );
+final textStyleTableCount = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontSize: 16.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+final textStyleTableDialogDelete = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontSize: 19.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+
 
 
 

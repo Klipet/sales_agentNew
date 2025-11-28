@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
 
-import '../../../data/models_db/model_db_new_order/new_order_model_db.dart';
 
 abstract class NewOrderPostEvent extends Equatable {
   const NewOrderPostEvent();
@@ -10,10 +10,12 @@ abstract class NewOrderPostEvent extends Equatable {
 }
 
 class FetchOrderPostData extends NewOrderPostEvent {
-  final NewOrderModelDb modelDb;
+  final int idDocument;
+ // final ModelDocumentDb modelDb;
 
-  const FetchOrderPostData(this.modelDb);
+  const FetchOrderPostData(//this.modelDb,
+   this.idDocument);
 
   @override
-  List<Object?> get props => [modelDb];
+  List<Object?> get props => [idDocument];
 }

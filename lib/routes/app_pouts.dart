@@ -15,7 +15,7 @@ class AppRoutes {
       case home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case second:
-        return MaterialPageRoute(builder: (_) => const FirstStepCreate());
+        return MaterialPageRoute(builder: (_) => const FirstStepCreateUI());
 
       case two:
       // если нужно передавать аргументы:

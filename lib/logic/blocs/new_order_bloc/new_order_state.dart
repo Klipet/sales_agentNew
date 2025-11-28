@@ -1,11 +1,14 @@
 import 'package:isar/isar.dart';
-import 'package:sales_agent/data/models_db/model_db_new_order/new_order_model_db.dart';
+import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
 
 abstract class NewOrderState {}
 
 class NewOrderInitial extends NewOrderState {}
 
 class NewOrderCreating extends NewOrderState {}
+
+class UpadeOutlandsCreating extends NewOrderState {
+}
 
 class NewOrderCreated extends NewOrderState {
   final Id orderId;
@@ -22,7 +25,7 @@ class NewOrderLoading extends NewOrderState {
 
 class NewOrderLoaded extends NewOrderState {
   final Id orderId;
-  final NewOrderModelDb order;
+  final ModelDocumentDb order;
 
   NewOrderLoaded(this.orderId, this.order);
 }
@@ -35,7 +38,7 @@ class NewOrderUpdating extends NewOrderState {
 
 class NewOrderUpdated extends NewOrderState {
   final Id orderId;
-  final NewOrderModelDb order;
+  final ModelDocumentDb order;
 
   NewOrderUpdated(this.orderId, this.order);
 }

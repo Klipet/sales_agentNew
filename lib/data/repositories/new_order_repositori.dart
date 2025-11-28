@@ -1,40 +1,16 @@
 import 'package:isar/isar.dart';
-import 'package:sales_agent/data/models_db/model_db_new_order/new_model_document_id.dart';
+import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
+import 'package:sales_agent/data/models_db/model_db_orders/model_lines_db.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models_api/models_client_detail/detail_outlands.dart';
 import '../models_api/models_client_prices/prices.dart';
 import '../models_db/model_db_assortiment/model_assortiment_db.dart';
 import '../models_db/model_db_clients/model_client_db.dart';
-import '../models_db/model_db_new_order/new_order_line_model_db.dart';
-import '../models_db/model_db_new_order/new_order_model_db.dart';
+
 import 'db_provider.dart';
 
 class NewOrderRepository {
-  final _uuid = Uuid();
-
-  Future<void> addOrderId(int orderId) async {
-    final isar = await DbProvider.instance();
-    final addOrderId = NewModelDocumentId()
-      ..dicumentId = orderId;
-    // Сохраняем в базу
-     await isar.writeTxn(() async {
-      return await isar.newModelDocumentIds.put(addOrderId);
-    });
-  }
-
-  Future<List<NewModelDocumentId>> getOrderId() async {
-    final isar = await DbProvider.instance();
-    final orders = await isar.newModelDocumentIds.where().findAll();
-    return orders;
-  }
-  Future<void> deleteOrderId() async {
-    final isar = await DbProvider.instance();
-    await isar.newModelDocumentIds.clear();
-  }
-
-
-
 
 
   Future<Id> createOrder({
@@ -57,29 +33,86 @@ class NewOrderRepository {
     }
 
     // Создаём заказ
-    final order = NewOrderModelDb()
+    final order = ModelDocumentDb()
       ..clientName = client.name ?? 'Без имени'
       ..clientUid = client.uid ?? ''
       ..code = ''
       ..comment = ''
-      ..dateProcessed = DateTime.now().toString()
-      ..dateValid = DateTime.now().toString()
+      ..dateProcessed = DateTime.now()
+      ..dateValid = DateTime.now()
       ..deliveryAddress = deliveryAddress
       ..state = 0
       ..stockName = ''
       ..stockUid = ''
       ..sum = 0.0
-      ..tranmit = false
+    //  ..tranmit = false
       ..uid = '';
 
 
     // Сохраняем в базу
     final orderId = await isar.writeTxn(() async {
-      return await isar.newOrderModelDbs.put(order);
+      return await isar.modelDocumentDbs.put(order);
     });
     return orderId;
   }
 
+
+
+  Future<int> addOutland({
+    DetailOutlands? outlet,
+    required int orderId,
+
+  }) async {
+    final isar = await DbProvider.instance();
+    final deliveryAddress = outlet?.comment.isNotEmpty == true
+        ? outlet!.comment
+        : outlet?.address.isNotEmpty == true
+        ? outlet!.address
+        : 'Адрес не указан';
+
+    // Создаём заказ
+    await isar.writeTxn(() async {
+      // Получаем существующий заказ
+      final order = await isar.modelDocumentDbs.get(orderId);
+
+      if (order != null) {
+        // Меняем только нужный параметр
+        order.deliveryAddress = deliveryAddress;
+
+        // Сохраняем обратно
+        await isar.modelDocumentDbs.put(order);
+      }
+    });
+    return orderId;
+  }
+
+
+
+  Future<void> updateUuidOrder({
+    required String uuid,
+    required int orderId,
+    required String code ,
+    required int state ,
+
+  }) async {
+    final isar = await DbProvider.instance();
+
+    // Создаём заказ
+    await isar.writeTxn(() async {
+      // Получаем существующий заказ
+      final order = await isar.modelDocumentDbs.get(orderId);
+
+      if (order != null) {
+        // Меняем только нужный параметр
+        order.uid = uuid;
+        order.code = code;
+        order.state = state;
+
+        // Сохраняем обратно
+        await isar.modelDocumentDbs.put(order);
+      }
+    });
+  }
 
 
 
@@ -94,7 +127,7 @@ class NewOrderRepository {
 
     await isar.writeTxn(() async {
       // Получаем заказ
-      final order = await isar.newOrderModelDbs.get(orderId);
+      final order = await isar.modelDocumentDbs.get(orderId);
       if (order == null) {
         throw Exception('Заказ с ID $orderId не найден');
       }
@@ -112,8 +145,8 @@ class NewOrderRepository {
       final lineNumber = order.lines.length + 1;
 
       // Создаём строку заказа
-      final orderLine = NewOrderLineModelDb()
-        ..orderId = orderId ?? 0
+      final orderLine = ModelLinesDb()
+      //  ..orderId = orderId ?? 0
         ..assortimentBarcode = item.barCode ?? ''
         ..assortimentCode = item.code ?? 'Без названия'
         ..assortimentName = item.name ?? ''
@@ -123,27 +156,31 @@ class NewOrderRepository {
         ..unitName = item.unitName ?? 'шт'
         ..price = price
         ..sum = sum
-        ..uid = ''
+        ..uid = '00000000-0000-0000-0000-000000000000'
         ..unitUid = ''
+        ..lineUuid = item.pricelineUid ?? '00000000-0000-0000-0000-000000000000'
         ..processedCount = quantity
         ..unitName = item.unitName ?? '';
       // Сохраняем строку
-      await isar.newOrderLineModelDbs.put(orderLine);
+
+
+      print('что-то тут не так');
+      await isar.modelLinesDbs.put(orderLine);
       // Связываем со заказом
       order.lines.add(orderLine);
       await order.lines.save();
       // Обновляем общую сумму заказа
       order.sum += sum;
-      order.tranmit = false;
+    //  order.tranmit = false;
       // Сохраняем заказ
-      await isar.newOrderModelDbs.put(order);
+      await isar.modelDocumentDbs.put(order);
     });
   }
 
   /// Получение заказа по ID
-  Future<NewOrderModelDb?> getOrder(Id orderId) async {
+  Future<ModelDocumentDb?> getOrder(Id orderId) async {
     final isar = await DbProvider.instance();
-    final order = await isar.newOrderModelDbs.get(orderId);
+    final order = await isar.modelDocumentDbs.get(orderId);
 
     if (order != null) {
       await order.lines.load();
@@ -153,9 +190,9 @@ class NewOrderRepository {
   }
 
   /// Получение всех заказов
-  Future<List<NewOrderModelDb>> getAllOrders() async {
+  Future<List<ModelDocumentDb>> getAllOrders() async {
     final isar = await DbProvider.instance();
-    final orders = await isar.newOrderModelDbs.where().findAll();
+    final orders = await isar.modelDocumentDbs.where().findAll();
 
     // Загружаем строки для каждого заказа
     for (var order in orders) {
@@ -166,12 +203,10 @@ class NewOrderRepository {
   }
 
   /// Получение строк заказа
-  Future<List<NewOrderLineModelDb>> getOrderLines(int orderId) async {
+  Future<List<ModelLinesDb>> getOrderLines(int orderId) async {
     final isar = await DbProvider.instance();
-    return await isar.newOrderLineModelDbs
-        .filter()
-        .orderIdEqualTo(orderId)
-        .findAll();
+    final order = await isar.modelDocumentDbs.get(orderId);
+    return await order?.lines.toList() ?? [];
   }
 
   /// Удаление строки из заказа
@@ -183,11 +218,11 @@ class NewOrderRepository {
 
     await isar.writeTxn(() async {
       // Получаем заказ
-      final order = await isar.newOrderModelDbs.get(orderId);
+      final order = await isar.modelDocumentDbs.get(orderId);
       if (order == null) return;
 
       // Получаем строку
-      final line = await isar.newOrderLineModelDbs.get(lineId);
+      final line = await isar.modelLinesDbs.get(lineId);
       if (line == null) return;
 
       // Загружаем связи
@@ -201,11 +236,11 @@ class NewOrderRepository {
       await order.lines.save();
 
       // Удаляем строку из базы
-      await isar.newOrderLineModelDbs.delete(lineId);
+      await isar.modelLinesDbs.delete(lineId);
 
       // Сохраняем заказ
-      order.tranmit = false;
-      await isar.newOrderModelDbs.put(order);
+    //  order.tranmit = false;
+      await isar.modelDocumentDbs.put(order);
 
       print('✅ Товар удалён из заказа');
       print('   Новая сумма: ${order.sum.toStringAsFixed(2)}');
@@ -221,8 +256,8 @@ class NewOrderRepository {
     final isar = await DbProvider.instance();
 
     await isar.writeTxn(() async {
-      final order = await isar.newOrderModelDbs.get(orderId);
-      final line = await isar.newOrderLineModelDbs.get(lineId);
+      final order = await isar.modelDocumentDbs.get(orderId);
+      final line = await isar.modelLinesDbs.get(lineId);
 
       if (order == null || line == null) return;
 
@@ -238,9 +273,9 @@ class NewOrderRepository {
       order.sum += line.sum;
 
       // Сохраняем
-      await isar.newOrderLineModelDbs.put(line);
-      order.tranmit = false;
-      await isar.newOrderModelDbs.put(order);
+      await isar.modelLinesDbs.put(line);
+    //  order.tranmit = false;
+      await isar.modelDocumentDbs.put(order);
 
       print('✅ Количество обновлено:');
       print('   Новое количество: $newQuantity');
@@ -249,113 +284,34 @@ class NewOrderRepository {
     });
   }
 
-  /// Удаление заказа полностью
-  Future<void> deleteOrder(Id orderId) async {
-    final isar = await DbProvider.instance();
 
-    await isar.writeTxn(() async {
-      // Получаем заказ
-      final order = await isar.newOrderModelDbs.get(orderId);
-      if (order == null) return;
-
-      // Загружаем строки
-      await order.lines.load();
-
-      // Удаляем все строки
-      for (var line in order.lines) {
-        await isar.newOrderLineModelDbs.delete(line.id);
-      }
-
-      // Удаляем сам заказ
-      await isar.newOrderModelDbs.delete(orderId);
-
-      print('✅ Заказ удалён: ID $orderId');
-    });
-  }
-
-  Future<void> deleteOrderByTransmit(bool isTransmit) async {
-    final isar = await DbProvider.instance();
-
-    await isar.writeTxn(() async {
-      // Получаем ВСЕ заказы с tranmit == isTransmit
-      final orders = await isar.newOrderModelDbs
-          .filter()
-          .tranmitEqualTo(isTransmit)
-          .findAll();
-
-      if (orders.isEmpty) {
-        print('⚠️ Нет заказов с tranmit = $isTransmit');
-        return;
-      }
-      for (var order in orders) {
-        // Загружаем строки заказа
-        await order.lines.load();
-        // Удаляем все строки
-        for (var line in order.lines) {
-          await isar.newOrderLineModelDbs.delete(line.id);
-        }
-        // Удаляем сам заказ
-        await isar.newOrderModelDbs.delete(order.id);
-        print('🗑 Заказ удалён: ID ${order.id}');
-      }
-    });
-    print('✅ Удаление завершено');
-  }
 
   /// Пометить заказ как отправленный
-  Future<void> markOrderAsTransmitted(Id orderId) async {
+  Future<void> markOrderAsTransmitted(Id orderId, String uuid) async {
     final isar = await DbProvider.instance();
 
     await isar.writeTxn(() async {
-      final order = await isar.newOrderModelDbs.get(orderId);
+      final order = await isar.modelDocumentDbs.get(orderId);
       if (order == null) return;
 
-      order.tranmit = true;
-      order.state = 1;
-      order.dateProcessed = DateTime.now().toString();
+      order.uid = uuid;
+      order.dateProcessed = DateTime.now();
 
-      await isar.newOrderModelDbs.put(order);
+      await isar.modelDocumentDbs.put(order);
       print('✅ Заказ отмечен как отправленный');
     });
   }
 
   /// Получить неотправленные заказы
-  Future<List<NewOrderModelDb>> getUntransmittedOrders() async {
+  Future<List<ModelDocumentDb>> getUntransmittedOrders() async {
     final isar = await DbProvider.instance();
-    final orders = await isar.newOrderModelDbs
+    final orders = await isar.modelDocumentDbs
         .filter()
-        .tranmitEqualTo(false)
+        .uidIsEmpty()
         .findAll();
 
     for (var order in orders) {
       await order.lines.load();
-    }
-
-    return orders;
-  }
-  Future<List<NewOrderModelDb>> filterOrders(int status) async {
-    final isar = await DbProvider.instance();
-    final orders = await isar.newOrderModelDbs
-        .filter()
-        .stateEqualTo(status) // тут твой фильтр
-        .findAll();
-    return orders;
-  }
-
-  Future<List<NewOrderModelDb>> filterOrdersNewCount( String searchQuery) async {
-    final isar = await DbProvider.instance();
-
-    List<NewOrderModelDb> orders;
-    // Получить все заказы
-    orders = await isar.newOrderModelDbs.where().findAll();
-    // Поиск по тексту в памяти
-    if (searchQuery.isNotEmpty) {
-      final query = searchQuery.toLowerCase();
-      orders = orders.where((order) {
-        return (order.code.toLowerCase().contains(query) ?? false) ||
-            (order.clientName.toLowerCase().contains(query) ?? false) ||
-            (order.comment.toLowerCase().contains(query) ?? false);
-      }).toList();
     }
 
     return orders;

@@ -12,8 +12,8 @@ NewOrderModelApi _$NewOrderModelApiFromJson(Map<String, dynamic> json) =>
       clientUid: json['ClientUid'] as String? ?? '',
       code: json['Code'] as String? ?? '',
       comment: json['Comment'] as String? ?? '',
-      dateProcessed: json['DateProcessed'] as String? ?? '',
-      dateValid: json['DateValid'] as String? ?? '',
+      dateProcessed: json['DateProcessed'] as String,
+      dateValid: json['DateValid'] as String,
       deliveryAddress: json['DeliveryAddress'] as String? ?? '',
       state: (json['State'] as num?)?.toInt() ?? 0,
       stockName: json['StockName'] as String? ?? '',
@@ -40,5 +40,5 @@ Map<String, dynamic> _$NewOrderModelApiToJson(NewOrderModelApi instance) =>
       'StockUid': instance.stockUid,
       'Sum': instance.sum,
       'Uid': instance.uid,
-      'Lines': instance.linesJson,
+      'Lines': instance.linesJson.map((e) => e.toJson()).toList(),
     };

@@ -8,13 +8,15 @@ import 'package:sales_agent/data/providers/api_provider/order_post_api.dart';
 import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_bloc.dart';
 import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_state.dart';
 import 'package:sales_agent/logic/blocs/new_order_post_bloc/new_order_post_bloc.dart';
-
+import 'package:sales_agent/logic/blocs/new_order_post_bloc/new_order_post_state.dart';
+import 'package:sales_agent/presentation/toast/toast_response_new_order.dart';
+import 'package:toastification/toastification.dart';
 import '../../core/colors_app.dart';
 import '../../core/constans.dart';
 import '../../core/styles_text.dart';
 import '../../data/models_api/models_client_detail/detail_outlands.dart';
+import '../../data/models_api/new_order_post/new_order_model_post_response_api.dart';
 import '../../data/models_db/model_db_clients/model_client_db.dart';
-import '../../data/models_db/model_db_new_order/new_model_document_id.dart';
 import '../../data/providers/navigator_provider.dart';
 import '../../data/repositories/new_order_repositori.dart';
 import '../../logic/blocs/new_order_post_bloc/new_order_post_event.dart';
@@ -22,31 +24,37 @@ class ButtonsNewOrderWidget extends StatelessWidget {
   final ModelClientDb? clientDb;
   final DetailOutlands? outlands;
   final int? id;
+  final Function(NewOrderModelPostResponseApi? response, String? message, bool save) onConfirm;
 
-  const ButtonsNewOrderWidget({super.key, this.clientDb, this.outlands,  this.id});
+  const ButtonsNewOrderWidget({super.key, this.clientDb, this.outlands,  this.id,  required this.onConfirm});
 
   @override
   Widget build(BuildContext context) {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => NewOrderBloc( NewOrderRepository(), NewModelDocumentId(), context)),
-        BlocProvider(create: (_) => NewOrderPostBloc(OrderPostApi(), NewOrderRepository(), NewModelDocumentId()))
+      //  BlocProvider(create: (_) => NewOrderBloc( NewOrderRepository(), context)),
+        BlocProvider(create: (_) => NewOrderPostBloc(OrderPostApi(), NewOrderRepository()))
       ],
-      child: BlocConsumer<NewOrderBloc, NewOrderState>(
+      child: BlocConsumer<NewOrderPostBloc, NewOrderPostState>(
           listener: (context, state){
-
+            if(state is OrderPostLoaded){
+              onConfirm(state.response, null, false);
+              print(state.response.uuid);
+            }else if(state is OrderPostError){
+              onConfirm( null, state.message, false);
+              print(' Error OrderStatePost: ${state.message}');
+            }
           },
           builder:(context, state){
             return Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                buttonSaveOrder(context),
+                buttonSaveOrder(context, onConfirm),
                 SizedBox(width: 16.w,),
-                buttonSendServerOrder(context),
+                buttonSendServerOrder(context, id ?? -1),
                 SizedBox(width: 16.w,),
                 buttonAddAsl(context, clientDb,outlands, id),
-
               ],
             );
           }
@@ -103,12 +111,12 @@ Widget buttonAddAsl(BuildContext context, ModelClientDb? clientDb, DetailOutland
 }
 
 
-Widget buttonSendServerOrder(BuildContext context){
+Widget buttonSendServerOrder(BuildContext context, int id){
   return GestureDetector(
     onTap: () {
-    //  context.read<NewOrderPostBloc>().add(
-    //     NewOrderPostEvent()
-   //   );
+      context.read<NewOrderPostBloc>().add(
+        FetchOrderPostData(id),   // передаём ID заказа в Isar
+      );
     },
     child: Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -145,12 +153,11 @@ Widget buttonSendServerOrder(BuildContext context){
   );
 }
 
-Widget buttonSaveOrder(BuildContext context){
+Widget buttonSaveOrder(BuildContext context,  Function(NewOrderModelPostResponseApi? response, String? message, bool save) onConfirm
+    ){
   return GestureDetector(
-    onTap: () {
-      //  context.read<NewOrderPostBloc>().add(
-      //     NewOrderPostEvent()
-      //   );
+    onTap: (){
+      onConfirm(null, null, true);
     },
     child: Row(
       mainAxisAlignment: MainAxisAlignment.end,

@@ -10,38 +10,38 @@ import '../models_api/models_documents/model_documents.dart';
 import 'db_provider.dart';
 
 class OrdersRepositori {
-
   Future<void> saveOrders(ModelDocuments modelDoc) async {
     final isar = await DbProvider.instance();
-    final db = ModelDocumentDb(
-      clientName: modelDoc.clientName ?? '',
-      clientUid: modelDoc.clientUid ?? '',
-      code: modelDoc.code ?? '',
-      comment: modelDoc.comment,
-      dateProcessed: modelDoc.dateProcessed,
-      dateValid: ConvertData().convertDate(modelDoc.dateValid),
-      deliveryAddress: modelDoc.deliveryAddress,
-      state: modelDoc.state,
-      stockName: modelDoc.stockName,
-      stockUid: modelDoc.stockUid,
-      sum: modelDoc.sum,
-      uid: modelDoc.uid,
-    );
+    final db = ModelDocumentDb()
+      ..clientName = modelDoc.clientName ?? ''
+      ..clientUid = modelDoc.clientUid ?? ''
+      ..code = modelDoc.code ?? ''
+      ..comment = modelDoc.comment ?? ''
+      ..dateProcessed =
+          ConvertData().convertDate(modelDoc.dateProcessed ?? '') ??
+          DateTime.now()
+      ..dateValid = ConvertData().convertDate(modelDoc.dateValid ?? '')
+      ..deliveryAddress = modelDoc.deliveryAddress ?? ''
+      ..state = modelDoc.state
+      ..stockName = modelDoc.stockName
+      ..stockUid = modelDoc.stockUid
+      ..sum = modelDoc.sum
+      ..uid = modelDoc.uid;
     final linesDB = modelDoc.lines.map((lines) {
-      return ModelLinesDb(
-        assortimentBarcode: lines.assortimentBarcode ?? '',
-        assortimentCode: lines.assortimentCode ?? '',
-        assortimentName: lines.assortimentName,
-        assortimentUid: lines.assortimentUid,
-        count: lines.count,
-        lineNumber: lines.lineNumber,
-        price: lines.price,
-        processedCount: lines.processedCount,
-        sum: lines.sum,
-        uid: lines.uid,
-        unitName: lines.unitName,
-        unitUid: lines.unitUid,
-      );
+      return ModelLinesDb()
+        ..assortimentBarcode = lines.assortimentBarcode ?? ''
+        ..assortimentCode = lines.assortimentCode ?? ''
+        ..assortimentName = lines.assortimentName
+        ..assortimentUid = lines.assortimentUid
+        ..count = lines.count
+        ..lineNumber = lines.lineNumber
+        ..price = lines.price
+        ..processedCount = lines.processedCount
+        ..sum = lines.sum
+        ..uid = lines.uid
+        ..lineUuid = ''
+        ..unitName = lines.unitName
+        ..unitUid = lines.unitUid;
     }).toList();
 
     await isar.writeTxn(() async {
@@ -65,15 +65,39 @@ class OrdersRepositori {
     return count;
   }
 
-Future<List<ModelDocumentDb>> getOrders() async{
-  final isar = await DbProvider.instance();
-  final orders = await isar.modelDocumentDbs.where().findAll();
-  return orders;
-}
+  Future<List<ModelDocumentDb>> getOrders() async {
+    final isar = await DbProvider.instance();
+    final orders = await isar.modelDocumentDbs.where().findAll();
+    return orders;
+  }
 
   Future<void> deleteOrder() async {
     final isar = await DbProvider.instance();
     await isar.writeTxn(() => isar.modelDocumentDbs.clear());
+  }
+
+  Future<void> deleteOrdersWhereUuidNotEmpty() async {
+    final isar = await DbProvider.instance();
+    await isar.writeTxn(() async {
+      // Получаем все документы с непустым uid
+      final documents = await isar.modelDocumentDbs
+          .filter()
+          .uidIsNotEmpty()
+          .findAll();
+
+      // Для каждого документа удаляем связанные line записи
+      for (final doc in documents) {
+        // Загружаем связь
+        await doc.lines.load();
+
+        // Удаляем все связанные line записи
+        final lineIds = doc.lines.map((line) => line.id).toList();
+        await isar.modelLinesDbs.deleteAll(lineIds);
+      }
+
+      // Удаляем сами документы
+      await isar.modelDocumentDbs.filter().uidIsNotEmpty().deleteAll();
+    });
   }
 
   Future<void> deleteLine() async {
@@ -102,13 +126,13 @@ Future<List<ModelDocumentDb>> getOrders() async{
       grouped[date]!.add(doc.state);
     }
 
-  //  print('loadOrdersGroupedByDate: $grouped');
+    //  print('loadOrdersGroupedByDate: $grouped');
     return grouped;
   }
 
   Future<List<ModelDocumentDb>> loadOrdersForDay(DateTime day) async {
     final isar = await DbProvider.instance();
-  //  print(day);
+    //  print(day);
     final start = day;
 
     final end = day.add(Duration(days: 1));
@@ -122,13 +146,11 @@ Future<List<ModelDocumentDb>> getOrders() async{
   }
 
   Future<List<ModelLinesDb>> loadOrdersLine(ModelDocumentDb order) async {
-
     // нужно загрузить связи явно
     await order.lines.load();
 
     return order.lines.toList();
   }
-
 
   Future<List<ModelDocumentDb>> filterOrders(int status) async {
     final isar = await DbProvider.instance();
@@ -139,13 +161,12 @@ Future<List<ModelDocumentDb>> getOrders() async{
     return orders;
   }
 
-
-  Future<List<ModelDocumentDb>> filterOrdersCount( String searchQuery) async {
+  Future<List<ModelDocumentDb>> filterOrdersCount(String searchQuery) async {
     final isar = await DbProvider.instance();
 
     List<ModelDocumentDb> orders;
-      // Получить все заказы
-      orders = await isar.modelDocumentDbs.where().findAll();
+    // Получить все заказы
+    orders = await isar.modelDocumentDbs.where().findAll();
     // Поиск по тексту в памяти
     if (searchQuery.isNotEmpty) {
       final query = searchQuery.toLowerCase();

@@ -9,7 +9,6 @@ import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/core/constans.dart';
 import 'package:sales_agent/data/models_api/models_client/ourlets_response.dart';
 import 'package:sales_agent/data/models_db/model_db_clients/model_client_db.dart';
-import 'package:sales_agent/data/models_db/model_db_new_order/new_model_document_id.dart';
 import 'package:sales_agent/data/providers/api_provider/client_detail_api.dart';
 import 'package:sales_agent/logic/blocs/client_detail_blocs/client_detail_bloc.dart';
 import 'package:sales_agent/logic/blocs/client_detail_blocs/client_detail_state.dart';
@@ -34,7 +33,7 @@ class TwoStepCreate extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ClientDetailBloc(ClientDetailApi())),
-        BlocProvider(create: (_) => NewOrderBloc(NewOrderRepository(), NewModelDocumentId(), context))
+        BlocProvider(create: (_) => NewOrderBloc(NewOrderRepository(), context))
       ],
       child: TwoStepCreateUI(),
     );
@@ -51,6 +50,7 @@ class TwoStepCreateUI extends StatefulWidget {
 class _TwoStepCreateUIState extends State<TwoStepCreateUI>
     with SingleTickerProviderStateMixin {
   late ModelClientDb clientDb;
+  late int idDoc;
   bool isLoaded = false;
 
   @override
@@ -67,10 +67,12 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
         listen: false,
       );
       final client = navProvider.getPageData<ModelClientDb>(Constant().modelDB);
+      final id = await navProvider.getPageData(Constant().id);
       await context.read<ClientDetailBloc>().loadClient(client!.uid!);
       if (client != null) {
         setState(() {
           clientDb = client;
+          idDoc = id;
           isLoaded = true;
         });
         navProvider.clearPageData();
@@ -176,7 +178,85 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
             ),
           );
         } else if (state is ClientDetailFailure) {
-          return Text(state.message);
+          return Expanded(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/empti.svg',
+                          width: 446.w,
+                          height: 259.h,
+                        ),
+                        SizedBox(height: 16),
+                        Center(
+                          child: Text(
+                            state.message,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    context.read<NewOrderBloc>().add(
+                      AddOrderOutlentEvent(
+                          client: clientDb,
+                          id: idDoc,
+                          page: 8
+                      ),
+                    );
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Container(
+                        constraints: BoxConstraints(
+                          maxHeight: 50.h,
+                          maxWidth: 147.w,
+                        ),
+                        //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
+                        alignment: Alignment.center,
+                        margin: EdgeInsets.only(bottom: 20.w),
+                        decoration: BoxDecoration(
+                          color: buttonColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(100.r),
+                          ),
+                          border: Border.all(color: borderColor, width: 1.w),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.skip_next_outlined,
+                              color: Colors.white,
+                              size: 24.r,
+                            ),
+                            SizedBox(width: 8.h),
+                            Text(
+                              "Next page",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+
+
         } else if (state is ClientDetailSuccess) {
           final outlets = state.contragrnt.outlets;
           if (outlets.isEmpty || outlets == null) {
@@ -205,26 +285,15 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                       ),
                     ),
                   ),
-                  //  SizedBox(height: 50,),
                   GestureDetector(
                     onTap: () {
-                      print("Tap_tap");
                       context.read<NewOrderBloc>().add(
-                        CreateOrderEvent(client: clientDb),
+                        AddOrderOutlentEvent(
+                            client: clientDb,
+                            id: idDoc,
+                            page: 8
+                        ),
                       );
-                   //   BlocListener<NewOrderBloc, NewOrderState>(
-                    //    listener: (context, state){
-                   //       if(state is NewOrderCreated){
-                    //        print(state.orderId);
-                   //       }
-                    //    },
-                   //   );
-
-
-                //      Provider.of<NavigationProvider>(
-                //        context,
-                //        listen: false,
-                //      ).goToPageAndSave(8, data: {'client': clientDb});
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -285,20 +354,13 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                   return GestureDetector(
                     onTap: () {
                       context.read<NewOrderBloc>().add(
-                        CreateOrderEvent(client: clientDb, outlet: outlet),
+                        AddOrderOutlentEvent(
+                            client: clientDb,
+                            outlet: outlet,
+                          id: idDoc,
+                          page: 8
+                        ),
                       );
-                   //   final orderId = createOrder();
-                  //    print(orderId);
-                  //    Provider.of<NavigationProvider>(
-                  //      context,
-                  //      listen: false,
-                  //    ).goToPageAndSave(
-                  //      8,
-                  //      data: {
-                   //       'client': clientDb,
-                  //        'outlet': outlet, // передаем конкретный outlet
-                  //      },
-                  //    );
                     },
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

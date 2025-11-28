@@ -149,7 +149,7 @@ class _HomeDrawerState extends State<HomeDrawer>
                     HomeScreen(),
                     Padding(
                       padding: EdgeInsets.only(right: 24.w, left: 100.w),
-                      child: FirstStepCreate(),
+                      child: FirstStepCreateUI(),
                     ),
                     Padding(
                       padding: EdgeInsets.only(right: 24.w, left: 100.w),

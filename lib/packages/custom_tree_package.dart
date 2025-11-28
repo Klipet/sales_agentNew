@@ -229,7 +229,7 @@ class CustomTreeWidget<T> extends StatelessWidget {
   final Widget? emptyWidget;
 
   const CustomTreeWidget({
-    Key? key,
+    super.key,
     required this.rootNodes,
     required this.manager,
     this.style,
@@ -247,7 +247,7 @@ class CustomTreeWidget<T> extends StatelessWidget {
     this.containerPadding,
     this.containerMargin,
 
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

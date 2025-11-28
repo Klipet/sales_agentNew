@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sales_agent/core/constans.dart';
+import 'package:sales_agent/data/models_db/model_db_orders/model_lines_db.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../colors_app.dart';
@@ -168,27 +169,7 @@ Widget newOrderTable(DataGridCell<dynamic> cell, bool isFirst){
           color: containerColor,
           border: borderSideTable(cell)
       ),
-      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
-    );
-  }if(cell.columnName == 'code'){
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(left: 16.r),
-      decoration: BoxDecoration(
-          color: containerColor,
-          border: borderSideTable(cell)
-      ),
-      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
-    );
-  }if(cell.columnName == 'count'){
-    return Container(
-      alignment: Alignment.centerRight,
-      padding: EdgeInsets.only(right: 16.r),
-      decoration: BoxDecoration(
-          color: containerColor,
-          border: borderSideTable(cell)
-      ),
-      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
+      child: Text(cell.value,style: textStyleDialogOrderContent),
     );
   }if(cell.columnName == 'price'){
     return Container(
@@ -198,7 +179,7 @@ Widget newOrderTable(DataGridCell<dynamic> cell, bool isFirst){
           color: containerColor,
           border: borderSideTable(cell)
       ),
-      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
+      child: Text(cell.value.toStringAsFixed(2),style: textStyleDialogOrderContent),
     );
   }if(cell.columnName == 'sum'){
     return Container(
@@ -208,7 +189,7 @@ Widget newOrderTable(DataGridCell<dynamic> cell, bool isFirst){
           color: containerColor,
           border: borderSideTable(cell)
       ),
-      child: Text(cell.value.toString(),style: textStyleDialogOrderContent),
+      child: Text(cell.value.toStringAsFixed(2),style: textStyleDialogOrderContent),
     );
   }else{
     return Container(

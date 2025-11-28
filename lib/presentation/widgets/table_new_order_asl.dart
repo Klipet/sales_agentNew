@@ -10,6 +10,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
 import '../../core/utils/new_order_asl_sours.dart';
+import '../dialogs/new_order_clear.dart';
 
 class TableNewOrderAsl extends StatefulWidget {
   final int orderId;
@@ -29,7 +30,11 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
   @override
   void initState() {
     super.initState();
-    _dataSource = NewOrderAslSours();
+    _dataSource = NewOrderAslSours(
+      onDelete: _deleteLine,
+      onIncrement: _incrementCount,
+      onDecrement: _decrementCount,
+    );
     _loadLines();
   }
 
@@ -48,12 +53,98 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
     if (lines.isNotEmpty) {
       setState(() {
         _isEmptyLine = false;
+        _dataSource.updateData(lines);
+        _isLoading = false;
+      });
+    }else{
+      setState(() {
+        _isEmptyLine = true;
+        _dataSource.updateData(lines);
       });
     }
-    setState(() {
-      _dataSource.updateData(lines);
-      _isLoading = false;
-    });
+  }
+
+  Future<void> _deleteLine(int lineId) async {
+    print("🗑️ _deleteLine CALLED: lineId=$lineId");
+
+    try {
+      final bool? deleted =  await showDeleteConfirmation(
+        context: context);
+      if (deleted == true) {
+        await newRepo.removeLineFromOrder(orderId: widget.orderId, lineId: lineId);
+        if(mounted){
+          setState(() {});
+          await _loadLines();
+        }else{
+          print("🗑️ ne не обновил: lineId=$lineId");
+        }
+
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Eroare la ștergere: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> _incrementCount(int lineId, double currentCount) async {
+    try {
+      await newRepo.updateLineQuantity(
+        orderId: widget.orderId,
+        lineId: lineId,
+        newQuantity: currentCount + 1,
+      );
+      if (mounted) {
+        await _loadLines(); // ✅ Обновляем таблицу
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Eroare: $e'), backgroundColor: Colors.red),
+      );
+    }
+  }
+
+  Future<void> _decrementCount(int lineId, double currentCount) async {
+    if (currentCount <= 1) {
+      print("⚠️ Cannot decrement below 1");
+      if (mounted) {
+       // ScaffoldMessenger.of(context).showSnackBar(
+       //   const SnackBar(
+       //     content: Text('Cantitatea minimă este 1'),
+       //     backgroundColor: Colors.orange,
+       //   ),
+       // );
+      }
+      return;
+    }
+
+    try {
+      await newRepo.updateLineQuantity(
+        orderId: widget.orderId,
+        lineId: lineId,
+        newQuantity: currentCount - 1,
+      );
+      if (mounted) {
+        await _loadLines();
+      } else {
+        print("❌ Widget not mounted");
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Eroare: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+
   }
 
   double _calculateTotalSum() {
@@ -114,28 +205,30 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
                 headerColor: primariColor,
                 headerHoverColor: primariColor,
                 selectionColor: containerColor,
-              //  gridLineColor: containerColor,
+                //  gridLineColor: containerColor,
                 rowHoverColor: Colors.transparent,
               ),
               child: SfDataGrid(
+                key: ValueKey(_dataSource.lineList.length),
                 source: _dataSource,
                 rowHeight: 48.h,
                 headerRowHeight: 32.h,
                 columnWidthMode: ColumnWidthMode.fill,
                 gridLinesVisibility: GridLinesVisibility.none,
                 headerGridLinesVisibility: GridLinesVisibility.none,
-                columnWidthCalculationRange: ColumnWidthCalculationRange.visibleRows,
+                columnWidthCalculationRange:
+                    ColumnWidthCalculationRange.visibleRows,
                 columns: [
                   GridColumn(
-                    columnName: 'cod',
-                    width: 50.w,
+                    columnName: 'nr.',
+                    width: 46.w,
                     label: Center(
                       child: Text('№', style: textStyleDialogOrderTitle),
                     ),
                   ),
                   GridColumn(
                     columnName: 'name',
-                    width: 500.w,
+                    width: 529.w,
                     label: Center(
                       child: Text(
                         'order.name'.tr(),
@@ -144,18 +237,8 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
                     ),
                   ),
                   GridColumn(
-                    columnName: 'code',
-                    width: 163.w,
-                    label: Center(
-                      child: Text(
-                        'order.code'.tr(),
-                        style: textStyleDialogOrderTitle,
-                      ),
-                    ),
-                  ),
-                  GridColumn(
                     columnName: 'count',
-                    width: 110.w,
+                    width: 230.w,
                     label: Center(
                       child: Text(
                         'order.count'.tr(),
@@ -165,6 +248,7 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
                   ),
                   GridColumn(
                     columnName: 'price',
+                    width: 179.w,
                     label: Center(
                       child: Text(
                         'order.price'.tr(),
@@ -174,12 +258,17 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
                   ),
                   GridColumn(
                     columnName: 'sum',
+                    width: 105.w,
                     label: Center(
                       child: Text(
                         'order.sum'.tr(),
                         style: textStyleDialogOrderTitle,
                       ),
                     ),
+                  ),
+                  GridColumn(
+                    columnName: 'actions',
+                    label: Center(child: Text('')),
                   ),
                 ],
               ),

@@ -5,27 +5,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:sales_agent/core/colors_app.dart';
-import 'package:sales_agent/data/models_api/models_client_prices/client_prices.dart';
 import 'package:sales_agent/data/models_api/models_client_prices/price_lists.dart';
-import 'package:sales_agent/data/models_db/model_db_new_order/new_model_document_id.dart';
-import 'package:sales_agent/data/providers/api_provider/price_list_client_api.dart';
 import 'package:sales_agent/data/repositories/new_order_repositori.dart';
 import 'package:sales_agent/data/repositories/price_repositori.dart';
 import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_bloc.dart';
-import 'package:sales_agent/logic/blocs/price_blocs/price_state.dart';
 import 'package:sales_agent/presentation/widgets/table_assortiment_widghet.dart';
-
 import '../../../core/constans.dart';
 import '../../../core/styles_text.dart';
 import '../../../data/models_api/models_client_detail/detail_outlands.dart';
 import '../../../data/models_db/model_db_clients/model_client_db.dart';
 import '../../../data/providers/navigator_provider.dart';
-import '../../../logic/blocs/client_detail_blocs/client_detail_bloc.dart';
 import '../../../logic/blocs/new_order_bloc/new_order_state.dart';
-import '../../../logic/blocs/price_blocs/price_cubit.dart';
 import '../../dialogs/assotriment_info_order.dart';
 import '../../widgets/loading_widget.dart';
-import '../../widgets/new_order_title_widget.dart';
+
 
 class AddAslToOrder extends StatelessWidget {
   const AddAslToOrder({super.key});
@@ -33,7 +26,7 @@ class AddAslToOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => NewOrderBloc(NewOrderRepository(), NewModelDocumentId(), context),
+      create: (_) => NewOrderBloc(NewOrderRepository(), context),
       child: AddAslToOrderUI(),
     );
   }
@@ -122,7 +115,6 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
                 search: _search,
                 clientPrices: priceLists! ?? [],
                 onItemSelected: (item, {priceSelected}) {
-                  //  print(item.pricelineUid);
                   //  print(priceSelected?.price);
                   showAssortimentInfoOrder(
                     asl: item,

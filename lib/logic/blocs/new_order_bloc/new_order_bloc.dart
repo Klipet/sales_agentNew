@@ -4,7 +4,7 @@ import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/constans.dart';
-import '../../../data/models_db/model_db_new_order/new_model_document_id.dart';
+
 import '../../../data/providers/navigator_provider.dart';
 import '../../../data/repositories/new_order_repositori.dart';
 import 'new_order_event.dart';
@@ -12,15 +12,34 @@ import 'new_order_state.dart';
 
 class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
   final NewOrderRepository repository;
-  final NewModelDocumentId documentId;
   final BuildContext context;
-  NewOrderBloc(this.repository, this.documentId, this.context ) : super(NewOrderInitial()) {
+  NewOrderBloc(this.repository, this.context ) : super(NewOrderInitial()) {
     on<CreateOrderEvent>(_onCreateOrder);
     on<AddLineToOrderEvent>(_onAddLine);
     on<RemoveLineFromOrderEvent>(_onRemoveLine);
     on<UpdateLineQuantityEvent>(_onUpdateQuantity);
     on<LoadOrderEvent>(_onLoadOrder);
     on<DeleteOrderEvent>(_onDeleteOrder);
+    on<AddOrderOutlentEvent>(_onAddOrderOutlend);
+  }
+
+
+  Future<void> _onAddOrderOutlend(
+      AddOrderOutlentEvent event,
+      Emitter<NewOrderState> emit,
+      ) async {
+    try {
+      emit(UpadeOutlandsCreating());
+      final id = await repository.addOutland(orderId: event.id!, outlet: event.outlet,);
+      emit(NewOrderCreated(id));
+      Provider.of<NavigationProvider>(
+        context,
+        listen: false,
+      ).goToPageAndSave(event.page!, data: {Constant().modelDB: event.client, Constant().id: id, Constant().outlet: event.outlet});
+    } catch (e) {
+      print('❌ Ошибка добавления адреса: $e');
+      emit(NewOrderError('Ошибка создания заказа: $e'));
+    }
   }
 
   Future<void> _onCreateOrder(
@@ -34,7 +53,7 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
         Provider.of<NavigationProvider>(
           context,
           listen: false,
-        ).goToPageAndSave(8, data: {Constant().modelDB: event.client, Constant().id: id, Constant().outlet: event.outlet});
+        ).goToPageAndSave(event.page!, data: {Constant().modelDB: event.client, Constant().id: id, Constant().outlet: event.outlet});
     } catch (e) {
       print('❌ Ошибка создания заказа: $e');
       emit(NewOrderError('Ошибка создания заказа: $e'));
@@ -172,7 +191,7 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     }
 
     try {
-      await repository.deleteOrder(orderId);
+      await repository.getAllOrders();
       emit(NewOrderDeleted());
     } catch (e) {
       print('❌ Ошибка удаления заказа: $e');

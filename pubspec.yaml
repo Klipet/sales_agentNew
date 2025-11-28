@@ -44,6 +44,7 @@ dependencies:
   provider: ^6.1.5+1
   advanced_search: ^2.2.6+1
   uuid: ^4.2.1
+  toastification: ^3.0.3
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -88,4 +89,11 @@ flutter:
       - assets/icons/assortiment/folder_open.svg
       - assets/icons/shopping_cart.svg
       - assets/icons/dawn.svg
+      - assets/icons/trash.svg
+      - assets/icons/add.svg
+      - assets/icons/min.svg
+      - assets/icons/trash_open.svg
+      - assets/icons/toast/error_send.svg
+      - assets/icons/toast/suces_send.svg
+      - assets/icons/toast/save_order.svg
 

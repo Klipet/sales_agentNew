@@ -10,10 +10,25 @@ abstract class NewOrderEvent {}
 class CreateOrderEvent extends NewOrderEvent {
   final ModelClientDb client;
   final DetailOutlands? outlet;
+  final int? page;
 
   CreateOrderEvent({
     required this.client,
     this.outlet,
+    this.page,
+  });
+}
+class AddOrderOutlentEvent extends NewOrderEvent {
+  final ModelClientDb client;
+  final DetailOutlands? outlet;
+  final int? page;
+  final int? id;
+
+  AddOrderOutlentEvent( {
+    required this.client,
+    this.outlet,
+    this.page,
+    this.id,
   });
 }
 
