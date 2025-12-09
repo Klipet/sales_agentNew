@@ -1,13 +1,17 @@
-import 'dart:ui';
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import 'package:provider/provider.dart';
+import 'package:sales_agent/data/providers/api_provider/delete_order_api.dart';
+import 'package:sales_agent/data/repositories/client_repositori.dart';
+import 'package:sales_agent/data/repositories/new_order_repositori.dart';
+import 'package:sales_agent/presentation/toast/toast_response_error.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../core/colors_app.dart';
+
 import '../../core/constans.dart';
 import '../../core/styles_text.dart';
 import '../../core/utils/order_line_data_sours.dart';
@@ -16,21 +20,23 @@ import '../../core/utils/pop_menu_util.dart';
 
 import '../../data/models_db/model_db_orders/model_document_db.dart';
 import '../../data/models_db/model_db_orders/model_lines_db.dart';
+
+import '../../data/providers/navigator_provider.dart';
 import '../../data/repositories/orders_repositori.dart';
 
-Future<void> showDetailOrder({
+Future<bool?> showDetailOrder({
   required BuildContext context,
   required ModelDocumentDb order,
 }) async {
   final formatDay = DateFormat('dd.MM.yyyy').format(order.dateValid);
   List<ModelLinesDb> dataLines = await OrdersRepositori().loadOrdersLine(order);
-  showGeneralDialog(
+  return showGeneralDialog<bool>(
     context: context,
     barrierDismissible: true,
     barrierLabel: "OrderDialog",
-  //  barrierColor:   Colors.black.withOpacity(0.4),
+    //  barrierColor:   Colors.black.withOpacity(0.4),
     pageBuilder: (context, anim1, anim2) {
-      return  GlassmorphicContainer(
+      return GlassmorphicContainer(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,
         borderRadius: 0,
@@ -49,7 +55,7 @@ Future<void> showDetailOrder({
             Colors.white.withOpacity(0.5),
           ],
         ),
-        child:Center(
+        child: Center(
           child: Material(
             color: Colors.transparent,
             child: Container(
@@ -81,9 +87,7 @@ Future<void> showDetailOrder({
                       ),
                       Spacer(),
                       PopupMenuButton<String>(
-                        constraints: BoxConstraints(
-                          minWidth: 314.w
-                        ),
+                        constraints: BoxConstraints(minWidth: 314.w),
                         padding: EdgeInsetsGeometry.zero,
                         menuPadding: EdgeInsets.zero,
                         offset: Offset(-10.w, 44.h),
@@ -92,13 +96,91 @@ Future<void> showDetailOrder({
                           side: BorderSide(color: borderColor, width: 0.5.w),
                           borderRadius: BorderRadius.circular(15.r),
                         ),
-                        onSelected: (value) {
+                        onSelected: (value) async {
+                          final newOrderRepository = NewOrderRepository();
+                          final clientRepositori = ClientRepositori();
+                          final deleteApi = DeleteOrderApi();
+                          final dialogContext = context;
+                          if (value == 'create') {
+                            final id = await newOrderRepository
+                                .createDocumentCopy(order);
+                            final client = await clientRepositori
+                                .getClientByUuid(order.clientUid);
+                            Provider.of<NavigationProvider>(
+                              context,
+                              listen: false,
+                            ).goToPageAndSave(
+                              8,
+                              data: {
+                                Constant().modelDB: client,
+                                Constant().id: id,
+                              },
+                            );
+                            if (id != null) {
+                              Navigator.pop(context, true);
+                            }
+                          }
                           if (value == 'edit') {
-                            print('Редактировать');
-                          } else if (value == 'create') {
-                            print('Создать');
+                            if (order.state == 0 || order.state == 1) {
+                              final client = await clientRepositori
+                                  .getClientByUuid(order.clientUid);
+                              Provider.of<NavigationProvider>(
+                                context,
+                                listen: false,
+                              ).goToPageAndSave(
+                                8,
+                                data: {
+                                  Constant().modelDB: client,
+                                  Constant().id: order.id,
+                                },
+                              );
+
+                              if (order.id != null) {
+                                Navigator.pop(context, true);
+                              }
+                            }else{
+                              ToastResponseError(
+                                context: context,
+                                textError:
+                                'Comanda este în lucru sau finisată, nu o puteți edita',
+                              ).showError();
+                            }
                           } else if (value == 'delete') {
-                            print('Удалить');
+                            if (order.uid.isNotEmpty) {
+                              if (order.state == 0 || order.state == 1) {
+                                final deletedServer = await deleteApi
+                                    .deleteOrder(order.uid);
+                                if (deletedServer.errorCode == 0) {
+                                  final deleted = await newOrderRepository
+                                      .deleteOrderWithLinesByUuid(order.id);
+                                  Navigator.pop(context, deleted);
+                                } else {
+                                  print('object');
+                                  if (dialogContext.mounted) {
+                                    ToastResponseError(
+                                      context: context,
+                                      textError:
+                                          'Comanda este în lucru sau finisată, nu o puteți șterge',
+                                    ).showError();
+                                  }
+                                }
+                              } else {
+                                if (dialogContext.mounted) {
+                                  ToastResponseError(
+                                    context: context,
+                                    textError:
+                                        'Comanda este în lucru sau finisată, nu o puteți șterge',
+                                  ).showError();
+                                }
+                              }
+                            } else {
+                              print('Удалить В базе');
+                              final deleted = await newOrderRepository
+                                  .deleteOrderWithLinesByUuid(order.id);
+                              if (deleted) {
+                                Navigator.pop(context, true);
+                              }
+                            }
                           }
                         },
                         itemBuilder: (context) => popMenuSetting(context),
@@ -106,7 +188,7 @@ Future<void> showDetailOrder({
                           width: 32.w,
                           height: 32.h,
                           margin: EdgeInsets.only(right: 16.r),
-                          decoration:  BoxDecoration(
+                          decoration: BoxDecoration(
                             color: containerColor,
                             borderRadius: BorderRadius.all(
                               Radius.circular(10.r),
@@ -182,7 +264,7 @@ Future<void> showDetailOrder({
                             children: [
                               textStatut(order),
                               Spacer(),
-                              adressDialog(order)
+                              adressDialog(order),
                             ],
                           ),
                         ),
@@ -288,7 +370,7 @@ Future<void> showDetailOrder({
                               ),
                             ),
                           ),
-                        //  Spacer(),
+                          //  Spacer(),
                           Container(
                             margin: EdgeInsets.only(bottom: 16.r, right: 32.r),
                             child: Row(
@@ -320,7 +402,3 @@ Future<void> showDetailOrder({
     },
   );
 }
-
-
-
-

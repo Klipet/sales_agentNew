@@ -14,7 +14,7 @@ class OrderDataSource extends DataGridSource {
 
   void updateData(List<ModelDocumentDb> orders) {
     _ordersList = orders..sort((a, b) => b.dateValid.compareTo(a.dateValid));
-
+    print('updateData: ${orders.length}');
     _rows = _ordersList.map((order) {
       return DataGridRow(cells: [
         DataGridCell<String>(columnName: 'nr', value: order.code),

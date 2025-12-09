@@ -91,24 +91,7 @@ class ToastResponseNewOrder {
             children: [
               GestureDetector(
                 onTap: dismiss,
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxWidth: 32.w,
-                    maxHeight: 32.h,
-                    minWidth: 32.w,
-                    minHeight: 32.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                    border: BoxBorder.all(color: borderColor, width: 1.w),
-                  ),
-                  child: Icon(
-                    Icons.close_rounded,
-                    color: Colors.black,
-                    size: 30.r,
-                  ),
-                ),
+                child: SvgPicture.asset('assets/icons/close.svg'),
               ),
             ],
           ),
@@ -167,24 +150,7 @@ class ToastResponseNewOrder {
             children: [
               GestureDetector(
                 onTap: dismiss,
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxWidth: 32.w,
-                    maxHeight: 32.h,
-                    minWidth: 32.w,
-                    minHeight: 32.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                    border: BoxBorder.all(color: borderColor, width: 1.w),
-                  ),
-                  child: Icon(
-                    Icons.close_rounded,
-                    color: Colors.black,
-                    size: 30.r,
-                  ),
-                ),
+                child: SvgPicture.asset('assets/icons/close.svg'),
               ),
             ],
           ),
@@ -229,24 +195,7 @@ class ToastResponseNewOrder {
             children: [
               GestureDetector(
                 onTap: dismiss,
-                child: Container(
-                  constraints: BoxConstraints(
-                    maxWidth: 32.w,
-                    maxHeight: 32.h,
-                    minWidth: 32.w,
-                    minHeight: 32.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.r),
-                    border: BoxBorder.all(color: borderColor, width: 1.w),
-                  ),
-                  child: Icon(
-                    Icons.close_rounded,
-                    color: Colors.black,
-                    size: 30.r,
-                  ),
-                ),
+                child: SvgPicture.asset('assets/icons/close.svg'),
               ),
             ],
           ),

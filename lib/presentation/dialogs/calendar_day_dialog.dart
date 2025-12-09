@@ -182,7 +182,7 @@ void showBlurDialogCalendar(
                                                 ),
                                           ),
                                           Text(
-                                            order.state == 1
+                                            order.state == 2
                                                 ? 'dialog.status'.tr(
                                                     namedArgs: {
                                                       'status': 'home.bodyJob'
@@ -217,17 +217,20 @@ void showBlurDialogCalendar(
                                       ),
                                       Spacer(),
                                       GestureDetector(
-                                        onTap: () {
-                                          showDetailOrder(
+                                        onTap: () async {
+                                          bool? resault  = await showDetailOrder(
                                             context: context,
                                             order: order,
                                           );
+                                          if(resault != null || resault == true){
+                                            Navigator.pop(context);
+                                          }
                                         },
                                         child: Container(
                                           height: 48.h,
                                           width: 155.w,
                                           decoration: BoxDecoration(
-                                            color: order.state == 1
+                                            color: order.state == 2
                                                 ? colorBtJob
                                                 : colorBtAwait,
                                             border: Border.all(

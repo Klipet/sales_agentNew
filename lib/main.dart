@@ -25,7 +25,7 @@ Future<void> main() async {
   runApp(
         EasyLocalization(
           supportedLocales: [
-            Locale('en', 'EN'),
+            Locale('en', 'GB'),
             Locale('ru', 'RU'),
             Locale('ro', 'RO'),
           ],

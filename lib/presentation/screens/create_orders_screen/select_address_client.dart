@@ -101,7 +101,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          NewOrderTitleWidget(),
+          NewOrderTitleWidget(title: "newComand.titleComand".tr(),),
           SizedBox(height: 15.h),
           _infoClient(),
           SizedBox(height: 15.h),

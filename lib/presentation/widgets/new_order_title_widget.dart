@@ -6,7 +6,8 @@ import 'package:sales_agent/presentation/widgets/title_home_widget.dart';
 import '../../core/styles_text.dart';
 
 class NewOrderTitleWidget extends StatefulWidget {
-  const NewOrderTitleWidget({super.key});
+  final String title;
+  const NewOrderTitleWidget({super.key, required this.title});
 
   @override
   State<NewOrderTitleWidget> createState() => _NewOrderTitleWidgetState();
@@ -26,7 +27,7 @@ class _NewOrderTitleWidgetState extends State<NewOrderTitleWidget> {
             textHeightBehavior: TextHeightBehavior(
               applyHeightToFirstAscent: false,
             ),
-            "newComand.titleComand".tr(),
+            widget.title,
             style: primaFontOrders,
             textAlign: TextAlign.left,
           ),

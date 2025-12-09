@@ -43,6 +43,14 @@ class NewOrderUpdated extends NewOrderState {
   NewOrderUpdated(this.orderId, this.order);
 }
 
+class NewOrderLineCountUpdated extends NewOrderState {
+  final int count;
+  NewOrderLineCountUpdated(this.count);
+}
+class NewOrderLineCount extends NewOrderState {}
+
+
+
 class NewOrderDeleted extends NewOrderState {}
 
 class NewOrderError extends NewOrderState {

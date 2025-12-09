@@ -1,5 +1,6 @@
 import 'package:isar/isar.dart';
 import 'package:sales_agent/data/models_api/models_documents/model_lines.dart';
+import 'package:sales_agent/data/models_db/model_db_clients/model_client_db.dart';
 import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
 import 'package:sales_agent/data/models_db/model_db_orders/model_lines_db.dart';
 
@@ -10,6 +11,12 @@ import '../models_api/models_documents/model_documents.dart';
 import 'db_provider.dart';
 
 class OrdersRepositori {
+
+  Future<Stream<void>> watchOrders() async {
+    final isar = await DbProvider.instance();
+    return isar.modelDocumentDbs.watchLazy();
+  }
+
   Future<void> saveOrders(ModelDocuments modelDoc) async {
     final isar = await DbProvider.instance();
     final db = ModelDocumentDb()
@@ -177,6 +184,15 @@ class OrdersRepositori {
       }).toList();
     }
 
+    return orders;
+  }
+
+  Future<List<ModelDocumentDb>> getOrderByClient(String? uuid) async {
+    final isar = await DbProvider.instance();
+    final orders = await isar.modelDocumentDbs
+        .filter()
+        .clientUidEqualTo(uuid ?? "") // тут твой фильтр
+        .findAll();
     return orders;
   }
 }

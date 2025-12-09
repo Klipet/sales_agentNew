@@ -84,4 +84,14 @@ class ClientRepositori{
     await clientDB.outlets.load();
     return clientDB.outlets.length;
   }
+
+  Future<ModelClientDb?> getClientByUuid(String uuid) async{
+    final isar = await DbProvider.instance();
+    final client = await isar.modelClientDbs
+        .filter()
+        .uidContains(uuid)
+        .findFirst();
+    print(client?.name);
+    return client;
+  }
 }

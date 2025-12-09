@@ -47,7 +47,7 @@ class NewOrderPostBloc extends Bloc<NewOrderPostEvent, NewOrderPostState> {
           price: line.price,
           processedCount: line.processedCount,
           sum: line.sum,
-          uid:  line.lineUuid ?? '00000000-0000-0000-0000-000000000000',
+          uid: '00000000-0000-0000-0000-000000000000',
           unitName: line.unitName,
           unitUid: '00000000-0000-0000-0000-000000000000',
         );
@@ -63,11 +63,11 @@ class NewOrderPostBloc extends Bloc<NewOrderPostEvent, NewOrderPostState> {
         dateValid: ConvertData().toDateNetFormat(order.dateValid),
         // ✅ ИСПРАВЛЕНО: ?. оператор
         deliveryAddress: order.deliveryAddress,
-        state: 3,
+        state: 1,
         stockName: order.stockName ?? '',
         stockUid: '00000000-0000-0000-0000-000000000000',
         sum: order.sum,
-        uid: '00000000-0000-0000-0000-000000000000',
+        uid: order.uid == '' ? '00000000-0000-0000-0000-000000000000' : order.uid,
         linesJson: linesForApi, // ✅ Передаем List<NewLineModelApi>
       );
 

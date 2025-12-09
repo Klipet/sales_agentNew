@@ -331,6 +331,13 @@ final textStyleTableDialogDelete = GoogleFonts.poppins(
     decoration: TextDecoration.none
 );
 
+final textStyleDelogare = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontSize: 16.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+
 
 
 

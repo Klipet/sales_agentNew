@@ -75,7 +75,7 @@ class _FirstStepCreateUIState extends State<FirstStepCreateUI> {
         builder: (context) => Scaffold(
           body: Column(
             children: [
-              NewOrderTitleWidget(),
+              NewOrderTitleWidget(title: "newComand.titleComand".tr(),),
               SizedBox(height: 15.h),
               Container(
                 constraints: BoxConstraints(maxHeight: 127.h),

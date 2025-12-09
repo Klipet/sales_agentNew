@@ -15,6 +15,7 @@ class NavigationProvider extends ChangeNotifier {
 
   /// Переход на страницу
   void goToPage(int index) {
+    print('🔄 $currentPageIndex $index');
     if (_currentPageIndex != index) {
       print('🔄 Переход на страницу $index');
       _currentPageIndex = index;
@@ -53,6 +54,7 @@ class NavigationProvider extends ChangeNotifier {
 
   /// Обновить текущий индекс (вызывается из onPageChanged)
   void updatePageIndex(int index) {
+    print('updatePageIndex $currentPageIndex $index');
     if (_currentPageIndex != index) {
       print('📍 Обновление индекса: $index');
       _currentPageIndex = index;
@@ -71,8 +73,16 @@ class NavigationProvider extends ChangeNotifier {
     _pageData.clear();
   }
 
+  void reset() {
+    _currentPageIndex = 0;
+    _pageData = {};
+    _pageController = null;
+    notifyListeners();
+  }
+
   @override
   void dispose() {
+    print('Удалил страницу');
     _pageController = null;
     super.dispose();
   }

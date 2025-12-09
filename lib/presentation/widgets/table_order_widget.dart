@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:sales_agent/core/constans.dart';
+import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
 import 'package:sales_agent/data/repositories/new_order_repositori.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
@@ -30,17 +33,47 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
   bool _isLoading = true;
   final repo = OrdersRepositori();
   final repoNewOrder = NewOrderRepository();
+  StreamSubscription? _ordersSubscription;
 
   @override
   void initState() {
     super.initState();
     _dataSource = OrderDataSource();
+    _setupOrdersListener();
     if (widget.search.isEmpty) {
       _loadOrders(); // при старте — показать все
     } else {
       _loadOrdersFilterSearch(widget.search); // если сразу пришёл поиск
     }
   }
+  Future<void> _setupOrdersListener() async {
+    final isar = await DbProvider.instance();
+
+    // Слушаем любые изменения в коллекции заказов
+    _ordersSubscription = isar.modelDocumentDbs
+        .watchLazy()
+        .listen((_) {
+      if (!mounted) return;
+      // База изменилась, перезагружаем данные
+      print('🔄 Обнаружены изменения в базе, обновляем список...');
+      _reloadCurrentView();
+    });
+  }
+  // Перезагрузка текущего представления
+  void _reloadCurrentView() {
+    if (widget.search.isNotEmpty) {
+      _loadOrdersFilterSearch(widget.search);
+    } else if (widget.status == 0) {
+      _loadOrders();
+    } else if (widget.status == 1) {
+      _loadOrdersFilter(Constant().INLUCRU);
+    } else if (widget.status == 2) {
+      _loadOrdersFilter(Constant().ASTEPTARE);
+    } else if (widget.status == 3) {
+      _loadOrdersFilter(Constant().SABLON);
+    }
+  }
+
 
   @override
   void didUpdateWidget(covariant TableOrderWidget oldWidget) {

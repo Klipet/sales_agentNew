@@ -9,6 +9,7 @@ import 'package:sales_agent/data/providers/api_provider/assotriment_api.dart';
 import 'package:sales_agent/data/repositories/assortiment_repositori.dart';
 import 'package:sales_agent/logic/blocs/assortiment_blocs/assortiment_bloc.dart';
 import 'package:sales_agent/logic/blocs/assortiment_blocs/assortiment_state.dart';
+import 'package:sales_agent/presentation/dialogs/assortiment_info.dart';
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 import 'package:sales_agent/presentation/widgets/table_assortiment_widghet.dart' hide AssortimentRepositori;
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -118,7 +119,13 @@ class _AssortimentUIState extends State<AssortimentUI> {
               Expanded(
                 child: Padding(
                   padding: EdgeInsets.only(left: 10.w),
-                  child: TableAssortimentWidghet(search: _search)),
+                  child: TableAssortimentWidghet(search: _search, onItemSelected: (item, {priceSelected}) {
+                    //  print(priceSelected?.price);
+                    assortimentInfo(
+                        asl: item,
+                      context: context
+                    );
+                  },)),
               )
             ],
           );

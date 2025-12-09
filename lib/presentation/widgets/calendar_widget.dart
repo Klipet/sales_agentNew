@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sales_agent/core/colors_app.dart';
+import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../core/styles_text.dart';
+import '../../data/repositories/db_provider.dart';
 import '../../data/repositories/orders_repositori.dart';
 import '../dialogs/calendar_day_dialog.dart';
 
@@ -21,12 +25,28 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   final reposetoryOrder = OrdersRepositori();
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  StreamSubscription? _ordersSubscription;
   Map<DateTime, List<int>> _ordersByDate = {};
 
   @override
   void initState() {
     super.initState();
+    _setupOrdersListener();
     _loadOrders();
+  }
+
+  Future<void> _setupOrdersListener() async {
+    final isar = await DbProvider.instance();
+
+    // Слушаем любые изменения в коллекции заказов
+    _ordersSubscription = isar.modelDocumentDbs
+        .watchLazy()
+        .listen((_) {
+      if (!mounted) return;
+      // База изменилась, перезагружаем данные
+      print('🔄 Обнаружены изменения в базе, обновляем список...');
+      _loadOrders();
+    });
   }
 
   Future<void> _loadOrders() async {
@@ -100,8 +120,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         defaultBuilder: (context, day, focusedDay) {
           final dateKey = DateTime(day.year, day.month, day.day);
           final dayOrders = _ordersByDate[dateKey] ?? [];
-          final awaitingCount = dayOrders.where((s) => s == 2).length;
-          final workingCount = dayOrders.where((s) => s == 1).length;
+          final awaitingCount = dayOrders.where((s) => s == 1).length;
+          final workingCount = dayOrders.where((s) => s == 2).length;
 
           return GestureDetector(
             onTap: () {
@@ -171,8 +191,8 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         selectedBuilder: (context, day, focusedDay) {
           final dateKey = DateTime(day.year, day.month, day.day);
           final dayOrders = _ordersByDate[dateKey] ?? [];
-          final awaitingCount = dayOrders.where((s) => s == 2).length;
-          final workingCount = dayOrders.where((s) => s == 1).length;
+          final awaitingCount = dayOrders.where((s) => s == 1).length;
+          final workingCount = dayOrders.where((s) => s == 2).length;
           //  final events = _getEventsForDay(day);
           return GestureDetector(
             onTap: () {

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sales_agent/data/providers/api_provider/client_api.dart';
 import 'package:sales_agent/data/providers/api_provider/login_api.dart';
@@ -187,10 +188,10 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> with TickerProvid
                             onTap: () => setState(() => savePass = !savePass),
                             child: Row(
                               children: [
-                                Image.asset(
+                                SvgPicture.asset(
                                   savePass
-                                      ? 'assets/icons/chek_box.png'
-                                      : 'assets/icons/chec_unbox.png',
+                                      ? 'assets/icons/chek_box.svg'
+                                      : 'assets/icons/chec_unbox.svg',
                                 ),
                                 Expanded(
                                   child: Padding(

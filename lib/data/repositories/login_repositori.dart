@@ -62,4 +62,14 @@ class LoginRepository {
     final isar = await DbProvider.instance();
     await isar.writeTxn(() => isar.modelLogins.delete(0));
   }
+
+  Future<void> changeSave(bool save)async {
+    final isar = await DbProvider.instance();
+    await isar.writeTxn(()async{
+      final settings = await isar.modelLogins.get(0);
+      settings!.savePass = save;
+      await isar.modelLogins.put(settings);
+      print('✅ изменили на $save');
+    });
+  }
 }

@@ -12,4 +12,10 @@ class FetchLoginData extends LoginEvent {
   FetchLoginData(this.login, this.password, this.save);
 
 }
+
 class CheckSavedLogin extends LoginEvent {}
+
+class SavedLogin extends LoginEvent {
+  final bool save;
+  SavedLogin(this.save);
+}

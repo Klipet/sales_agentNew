@@ -9,6 +9,8 @@ import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/presentation/screens/assortiment_screen.dart';
 import 'package:sales_agent/presentation/screens/clients_screen.dart';
 import 'package:sales_agent/presentation/screens/create_orders_screen/add_asl_to_order.dart';
+import 'package:sales_agent/presentation/screens/hisrory_screen.dart';
+import 'package:sales_agent/presentation/screens/settings_screens/setting_screan.dart';
 import 'package:sales_agent/presentation/widgets/list_driver.dart'
     hide ListDriver;
 import 'package:sidebarx/sidebarx.dart';
@@ -59,6 +61,7 @@ class _HomeDrawerState extends State<HomeDrawer>
 
       // Слушаем изменения в NavigationProvider
       _navigationProvider.addListener(_onNavigationChanged);
+
 
       _isInitialized = true;
     });
@@ -145,8 +148,14 @@ class _HomeDrawerState extends State<HomeDrawer>
                       padding: EdgeInsets.only(right: 24.w, left: 100.w),
                       child: AssortimentScreen(),
                     ),
-                    HomeScreen(),
-                    HomeScreen(),
+                    Padding(
+                      padding: EdgeInsets.only(right: 24.w, left: 100.w),
+                      child: HistortyScreen(),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 24.w, left: 100.w),
+                      child: SettingScrean(),
+                    ),
                     Padding(
                       padding: EdgeInsets.only(right: 24.w, left: 100.w),
                       child: FirstStepCreateUI(),
@@ -163,9 +172,6 @@ class _HomeDrawerState extends State<HomeDrawer>
                       padding: EdgeInsets.only(right: 24.w, left: 100.w),
                       child: AddAslToOrder(),
                     ),
-
-                    // HistoryScreen(),
-                    // SettingsScreen(),
                   ],
                 ),
 

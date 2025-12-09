@@ -13,7 +13,8 @@ import 'new_order_state.dart';
 class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
   final NewOrderRepository repository;
   final BuildContext context;
-  NewOrderBloc(this.repository, this.context ) : super(NewOrderInitial()) {
+
+  NewOrderBloc(this.repository, this.context) : super(NewOrderInitial()) {
     on<CreateOrderEvent>(_onCreateOrder);
     on<AddLineToOrderEvent>(_onAddLine);
     on<RemoveLineFromOrderEvent>(_onRemoveLine);
@@ -21,21 +22,37 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     on<LoadOrderEvent>(_onLoadOrder);
     on<DeleteOrderEvent>(_onDeleteOrder);
     on<AddOrderOutlentEvent>(_onAddOrderOutlend);
+    on<LoadLineCountEvent>(_onGetOrderLine);
   }
 
+  Future<void> _onGetOrderLine(
+      LoadLineCountEvent event,
+    Emitter<NewOrderState> emit,
+  ) async {
+    emit(NewOrderLineCount());
+    final count = await repository.getOrderLines(event.orderId);
+    emit(NewOrderLineCountUpdated(count.length));
+  }
 
   Future<void> _onAddOrderOutlend(
-      AddOrderOutlentEvent event,
-      Emitter<NewOrderState> emit,
-      ) async {
+    AddOrderOutlentEvent event,
+    Emitter<NewOrderState> emit,
+  ) async {
     try {
       emit(UpadeOutlandsCreating());
-      final id = await repository.addOutland(orderId: event.id!, outlet: event.outlet,);
+      final id = await repository.addOutland(
+        orderId: event.id!,
+        outlet: event.outlet,
+      );
       emit(NewOrderCreated(id));
-      Provider.of<NavigationProvider>(
-        context,
-        listen: false,
-      ).goToPageAndSave(event.page!, data: {Constant().modelDB: event.client, Constant().id: id, Constant().outlet: event.outlet});
+      Provider.of<NavigationProvider>(context, listen: false).goToPageAndSave(
+        event.page!,
+        data: {
+          Constant().modelDB: event.client,
+          Constant().id: id,
+          Constant().outlet: event.outlet,
+        },
+      );
     } catch (e) {
       print('❌ Ошибка добавления адреса: $e');
       emit(NewOrderError('Ошибка создания заказа: $e'));
@@ -43,17 +60,24 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
   }
 
   Future<void> _onCreateOrder(
-      CreateOrderEvent event,
-      Emitter<NewOrderState> emit,
-      ) async {
+    CreateOrderEvent event,
+    Emitter<NewOrderState> emit,
+  ) async {
     try {
       emit(NewOrderCreating());
-      final id = await repository.createOrder(client: event.client, outlet: event.outlet,);
-        emit(NewOrderCreated(id));
-        Provider.of<NavigationProvider>(
-          context,
-          listen: false,
-        ).goToPageAndSave(event.page!, data: {Constant().modelDB: event.client, Constant().id: id, Constant().outlet: event.outlet});
+      final id = await repository.createOrder(
+        client: event.client,
+        outlet: event.outlet,
+      );
+      emit(NewOrderCreated(id));
+      Provider.of<NavigationProvider>(context, listen: false).goToPageAndSave(
+        event.page!,
+        data: {
+          Constant().modelDB: event.client,
+          Constant().id: id,
+          Constant().outlet: event.outlet,
+        },
+      );
     } catch (e) {
       print('❌ Ошибка создания заказа: $e');
       emit(NewOrderError('Ошибка создания заказа: $e'));
@@ -61,10 +85,9 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
   }
 
   Future<void> _onAddLine(
-      AddLineToOrderEvent event,
-      Emitter<NewOrderState> emit,
-      ) async {
-
+    AddLineToOrderEvent event,
+    Emitter<NewOrderState> emit,
+  ) async {
     try {
       emit(NewOrderUpdating(event.id!));
       await repository.addLineToOrder(
@@ -85,9 +108,9 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
   }
 
   Future<void> _onRemoveLine(
-      RemoveLineFromOrderEvent event,
-      Emitter<NewOrderState> emit,
-      ) async {
+    RemoveLineFromOrderEvent event,
+    Emitter<NewOrderState> emit,
+  ) async {
     final currentState = state;
 
     Id? orderId;
@@ -119,9 +142,9 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
   }
 
   Future<void> _onUpdateQuantity(
-      UpdateLineQuantityEvent event,
-      Emitter<NewOrderState> emit,
-      ) async {
+    UpdateLineQuantityEvent event,
+    Emitter<NewOrderState> emit,
+  ) async {
     final currentState = state;
 
     Id? orderId;
@@ -154,9 +177,9 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
   }
 
   Future<void> _onLoadOrder(
-      LoadOrderEvent event,
-      Emitter<NewOrderState> emit,
-      ) async {
+    LoadOrderEvent event,
+    Emitter<NewOrderState> emit,
+  ) async {
     try {
       emit(NewOrderLoading(event.orderId));
 
@@ -173,9 +196,9 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
   }
 
   Future<void> _onDeleteOrder(
-      DeleteOrderEvent event,
-      Emitter<NewOrderState> emit,
-      ) async {
+    DeleteOrderEvent event,
+    Emitter<NewOrderState> emit,
+  ) async {
     final currentState = state;
 
     Id? orderId;

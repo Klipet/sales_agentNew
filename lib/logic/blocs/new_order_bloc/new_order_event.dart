@@ -65,4 +65,13 @@ class LoadOrderEvent extends NewOrderEvent {
   LoadOrderEvent(this.orderId);
 }
 
+
+class LoadLineCountEvent extends NewOrderEvent {
+  final int orderId;
+
+  LoadLineCountEvent(this.orderId);
+
+}
+
+
 class DeleteOrderEvent extends NewOrderEvent {}

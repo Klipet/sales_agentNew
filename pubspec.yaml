@@ -45,6 +45,7 @@ dependencies:
   advanced_search: ^2.2.6+1
   uuid: ^4.2.1
   toastification: ^3.0.3
+  carousel_slider: ^5.1.1
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -67,8 +68,9 @@ flutter:
       - assets/translations/
       - assets/icons/pass_enable.png
       - assets/icons/pass_hide.png
-      - assets/icons/chec_unbox.png
-      - assets/icons/chek_box.png
+      - assets/icons/chec_unbox.svg
+      - assets/icons/chek_box.svg
+      - assets/icons/exit.svg
       - assets/icons/drawers/assortiment.svg
       - assets/icons/drawers/contragents.svg
       - assets/icons/drawers/history.svg
@@ -95,5 +97,14 @@ flutter:
       - assets/icons/trash_open.svg
       - assets/icons/toast/error_send.svg
       - assets/icons/toast/suces_send.svg
+      - assets/icons/toast/no_signal.svg
+      - assets/icons/toast/bubu_error.svg
+      - assets/icons/toast/succes_pop.svg
+      - assets/icons/toast/await_pop.svg
       - assets/icons/toast/save_order.svg
+      - assets/icons/info_asl/arrow_left.svg
+      - assets/icons/info_asl/arrow_right.svg
+      - assets/icons/info_asl/non_image.svg
+      - assets/icons/close.svg
+
 

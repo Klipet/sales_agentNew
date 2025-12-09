@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -77,7 +78,7 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
     return Scaffold(
       body: Column(
         children: [
-          NewOrderTitleWidget(),
+          NewOrderTitleWidget(title: "newComand.titleComand".tr(),),
           SizedBox(height: 15.w),
           _infoClient(name: clientDb!.name!, idnp: clientDb!.idnp!, page: 6),
           if (outlands != null) SizedBox(height: 15.w),

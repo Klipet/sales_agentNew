@@ -8,32 +8,44 @@ import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/data/models_api/models_client_prices/price_lists.dart';
 import 'package:sales_agent/data/repositories/new_order_repositori.dart';
 import 'package:sales_agent/data/repositories/price_repositori.dart';
+import 'package:sales_agent/logic/blocs/assortiment_blocs/assortiment_state.dart';
 import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_bloc.dart';
+import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_event.dart';
 import 'package:sales_agent/presentation/widgets/table_assortiment_widghet.dart';
 import '../../../core/constans.dart';
 import '../../../core/styles_text.dart';
 import '../../../data/models_api/models_client_detail/detail_outlands.dart';
 import '../../../data/models_db/model_db_clients/model_client_db.dart';
+import '../../../data/providers/api_provider/assotriment_api.dart';
 import '../../../data/providers/navigator_provider.dart';
+import '../../../data/repositories/assortiment_repositori.dart';
+import '../../../logic/blocs/assortiment_blocs/assortiment_bloc.dart';
 import '../../../logic/blocs/new_order_bloc/new_order_state.dart';
 import '../../dialogs/assotriment_info_order.dart';
 import '../../widgets/loading_widget.dart';
-
 
 class AddAslToOrder extends StatelessWidget {
   const AddAslToOrder({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => NewOrderBloc(NewOrderRepository(), context),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => NewOrderBloc(NewOrderRepository(), context),
+        ),
+        BlocProvider(
+          create: (_) =>
+              AssortimentBloc(AssortimentApi(), AssortimentRepositori())
+                ..fetchAssortiment(),
+        ),
+      ],
       child: AddAslToOrderUI(),
     );
   }
 }
 
 class AddAslToOrderUI extends StatefulWidget {
-
   const AddAslToOrderUI({super.key});
 
   @override
@@ -47,11 +59,13 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
   late int id;
   bool isLoaded = false;
   String _search = '';
+  late int itemCount;
   TextEditingController controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
+    context.read<AssortimentBloc>().fetchAssortiment();
     getData();
   }
 
@@ -61,15 +75,16 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
     super.dispose();
   }
 
+
   Future<void> getData() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final navProvider = Provider.of<NavigationProvider>(
         context,
         listen: false,
       );
-      final client = navProvider.getPageData<ModelClientDb>( Constant().modelDB);
-      final outlet = navProvider.getPageData<DetailOutlands>( Constant().outlet);
-      final idDoc = navProvider.getPageData( Constant().id);
+      final client = navProvider.getPageData<ModelClientDb>(Constant().modelDB);
+      final outlet = navProvider.getPageData<DetailOutlands>(Constant().outlet);
+      final idDoc = navProvider.getPageData(Constant().id);
       final price = await PriceRepositori().getPriceListsFromIsar(
         client!.pricelistUid ?? '',
       );
@@ -78,6 +93,7 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
         setState(() {
           clientDb = client;
           id = idDoc;
+          context.read<NewOrderBloc>().add(LoadLineCountEvent(idDoc));
           outlands = outlet ?? DetailOutlands(address: '', comment: '');
           priceLists = price;
           print('price: Order $priceLists');
@@ -108,24 +124,7 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
                 : (outlands?.comment ?? ''),
             clientDb.idnp ?? '',
           ),
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.only(top: 16.w, left: 15.h),
-              child: TableAssortimentWidghet(
-                search: _search,
-                clientPrices: priceLists! ?? [],
-                onItemSelected: (item, {priceSelected}) {
-                  //  print(priceSelected?.price);
-                  showAssortimentInfoOrder(
-                    asl: item,
-                    prices: priceSelected,
-                    context: context,
-                    idDocument: id
-                  );
-                },
-              ),
-            ),
-          ),
+          aslContent(),
         ],
       ),
     );
@@ -173,7 +172,6 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
 
               Stack(
                 children: [
-
                   Container(
                     padding: EdgeInsets.only(left: 16.h),
                     child: Stack(
@@ -186,17 +184,28 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
                             ).goToPage(8);
                           },
                           child: Container(
-                            constraints: BoxConstraints(maxHeight: 42.h, maxWidth: 231.w),
+                            constraints: BoxConstraints(
+                              maxHeight: 42.h,
+                              maxWidth: 231.w,
+                            ),
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: containerColor,
-                              borderRadius: BorderRadius.all(Radius.circular(10.r)),
-                              border: Border.all(color: borderColor, width: 1.w),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(10.r),
+                              ),
+                              border: Border.all(
+                                color: borderColor,
+                                width: 1.w,
+                              ),
                             ),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text("Vizualizează comanda", style: textStyleTitleAslAdd),
+                                Text(
+                                  "Vizualizează comanda",
+                                  style: textStyleTitleAslAdd,
+                                ),
                                 SizedBox(width: 8.h),
                                 SvgPicture.asset(
                                   'assets/icons/shopping_cart.svg',
@@ -207,11 +216,10 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ),
-                  counterAsl(),
+                  _counterLine(),
                 ],
               ),
             ],
@@ -220,20 +228,91 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
       ),
     );
   }
+  Widget aslContent(){
+    return BlocBuilder<AssortimentBloc, AssortimentState>(
+        builder:(context, state){
+          if(state is AssortimentSuccess){
+            return  Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(top: 16.w, left: 15.h),
+                child:
+                TableAssortimentWidghet(
+                  search: _search,
+                  clientPrices: priceLists! ?? [],
+                  onItemSelected: (item, {priceSelected}) {
+                    //  print(priceSelected?.price);
+                    showAssortimentInfoOrder(
+                      asl: item,
+                      prices: priceSelected,
+                      context: context,
+                      idDocument: id,
+                    );
+                  },
+                ),
+              ),
+            );
+        }else if( state is AssortimentFailure){
+            return  Expanded(
+              child: Column(
+                children: [
+              Expanded(
+              child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/empti.svg',
+                    width: 446.w,
+                    height: 259.h,
+                  ),
+                  SizedBox(height: 16),
+                  Center(
+                    child: Text(
+                      state.message,
+                      style: TextStyle(
+                        fontSize: 18,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          )
+          ])
+          );
+        }
+          return Expanded(
+            child: Center(
+              child: LoadingWidget(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+              ),
+            ),
+          );
+        }
+    );
+  }
 
-  Widget counterAsl() {
+  Widget _counterLine() {
     return BlocBuilder<NewOrderBloc, NewOrderState>(
       builder: (context, state) {
-        int itemCount = 0;
+        final int itemCount;
+
         if (state is NewOrderLoaded) {
           itemCount = state.order.lines.length;
         } else if (state is NewOrderUpdated) {
           itemCount = state.order.lines.length;
+        } else if (state is NewOrderLineCountUpdated) {
+          itemCount = state.count; // Новое состояние
+        } else {
+          itemCount = 0;
         }
 
         if (itemCount == 0) {
           return SizedBox.shrink();
         }
+
 
         return Positioned(
           left: 1.w,
@@ -248,7 +327,7 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
             child: Center(
               child: Text(
                 '$itemCount',
-                style: textStyleDialogAddAssortimentTotalInfo
+                style: textStyleDialogAddAssortimentTotalInfo,
               ),
             ),
           ),

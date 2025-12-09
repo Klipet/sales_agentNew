@@ -316,4 +316,87 @@ class NewOrderRepository {
 
     return orders;
   }
+
+  Future<int> createDocumentCopy(ModelDocumentDb original) async {
+    final isar = await DbProvider.instance();
+    final db = ModelDocumentDb()
+      ..clientName = original.clientName ?? ''
+      ..clientUid = original.clientUid ?? ''
+      ..code = ''
+      ..comment = original.comment ?? ''
+      ..dateProcessed = DateTime.now()
+      ..dateValid = DateTime.now()
+      ..deliveryAddress = original.deliveryAddress ?? ''
+      ..state = 0
+      ..stockName = original.stockName
+      ..stockUid = original.stockUid
+      ..sum = original.sum
+      ..uid = '';
+    final linesDB = original.lines.map((lines) {
+      return ModelLinesDb()
+        ..assortimentBarcode = lines.assortimentBarcode ?? ''
+        ..assortimentCode = lines.assortimentCode ?? ''
+        ..assortimentName = lines.assortimentName
+        ..assortimentUid = lines.assortimentUid
+        ..count = lines.count
+        ..lineNumber = lines.lineNumber
+        ..price = lines.price
+        ..processedCount = lines.processedCount
+        ..sum = lines.sum
+        ..uid = lines.uid
+        ..lineUuid = ''
+        ..unitName = lines.unitName
+        ..unitUid = lines.unitUid;
+    }).toList();
+
+    await isar.writeTxn(() async {
+      await isar.modelDocumentDbs.put(db); // сначала документ
+      await isar.modelLinesDbs.putAll(linesDB); // потом строки
+
+      // связываем через IsarLinks
+      db.lines.addAll(linesDB);
+      await db.lines.save();
+    });
+    return db.id;
+  }
+
+
+  Future<bool> deleteOrderWithLinesByUuid(int uuid) async {
+    try {
+      final isar = await DbProvider.instance();
+      bool deleted = false;
+
+      await isar.writeTxn(() async {
+        final doc = await isar.modelDocumentDbs
+            .filter()
+            .idEqualTo(uuid)
+            .findFirst();
+
+        if (doc == null) {
+          print('⚠️ Документ с UUID $uuid не найден');
+          return;
+        }
+
+        if (doc.state != 0 && doc.state != 1) {
+          throw Exception('Можно удалять только документы со статусом 0 или 1');
+        }
+
+        // Загрузить и удалить связанные строки
+        await doc.lines.load();
+        final lineIds = doc.lines.map((line) => line.id).toList();
+        final deletedLinesCount = await isar.modelLinesDbs.deleteAll(lineIds);
+
+        print('🗑️ Удалено строк: $deletedLinesCount');
+
+        // Удалить документ
+        deleted = await isar.modelDocumentDbs.delete(doc.id);
+      });
+
+      return deleted;
+
+    } catch (e) {
+      print('❌ Ошибка при удалении документа: $e');
+      rethrow;
+    }
+  }
 }
