@@ -10,10 +10,10 @@ import 'package:sales_agent/data/providers/api_provider/assortiment_img_api.dart
 import 'package:sales_agent/data/repositories/login_repositori.dart';
 import 'package:sales_agent/logic/blocs/assortiment_image_bloc/assortiment_img_cubit.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 
 import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
-import '../../data/models_api/models_client_prices/prices.dart';
 import '../../data/models_db/model_db_assortiment/model_assortiment_db.dart';
 import '../../logic/blocs/assortiment_image_bloc/assotriment_img_state.dart';
 
@@ -80,11 +80,13 @@ class _AssortimentInfoUIState extends State<AssortimentInfoUI> {
               BlocBuilder<AssortimentImgCubit, AssotrimentImgState>(
                 builder: (context, state) {
                   if (state is ImgLoading) {
-                    return Center(child: CircularProgressIndicator());
+                    return LoadingWidget(width: 192.w, height: 192.h);
                   } else if (state is ImgSuccess) {
-                    print(state.contragrnt.images);
                     return ContentImage(img: state.contragrnt.images);
-                  } return ContentImage(img: []);
+                  } if(state is ImgFailure){
+                    return ContentImage(img: []);
+                  }
+                  return ContentImage(img: []);
                 },
               ),
             ],

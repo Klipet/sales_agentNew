@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:sales_agent/data/models_db/model_db_clients/model_client_db.dart';
+
 
 class NavigationProvider extends ChangeNotifier {
   int _currentPageIndex = 0;
   Map<String, dynamic> _pageData = {};
   PageController? _pageController;
+
+  Function(int oldIndex, int newIndex)? onIndexChanged;
 
   int get currentPageIndex => _currentPageIndex;
 
@@ -16,10 +18,16 @@ class NavigationProvider extends ChangeNotifier {
   /// Переход на страницу
   void goToPage(int index) {
     print('🔄 $currentPageIndex $index');
+    if(_currentPageIndex == 8){
+      print('🔄 Переход на страницу $_currentPageIndex');
+      onIndexChanged?.call(_currentPageIndex, index);
+    }
     if (_currentPageIndex != index) {
-      print('🔄 Переход на страницу $index');
       _currentPageIndex = index;
       _pageController!.jumpToPage(index);
+
+      FocusManager.instance.primaryFocus?.unfocus();
+
     }
 
     notifyListeners();
@@ -57,6 +65,7 @@ class NavigationProvider extends ChangeNotifier {
     print('updatePageIndex $currentPageIndex $index');
     if (_currentPageIndex != index) {
       print('📍 Обновление индекса: $index');
+
       _currentPageIndex = index;
       notifyListeners();
     }

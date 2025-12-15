@@ -30,372 +30,348 @@ Future<bool?> showDetailOrder({
 }) async {
   final formatDay = DateFormat('dd.MM.yyyy').format(order.dateValid);
   List<ModelLinesDb> dataLines = await OrdersRepositori().loadOrdersLine(order);
-  return showGeneralDialog<bool>(
+  return showDialog<bool>(
     context: context,
     barrierDismissible: true,
-    barrierLabel: "OrderDialog",
-    //  barrierColor:   Colors.black.withOpacity(0.4),
-    pageBuilder: (context, anim1, anim2) {
-      return GlassmorphicContainer(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        borderRadius: 0,
-        blur: 2,
-        alignment: Alignment.center,
-        border: 0,
-        linearGradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.1),
-            Colors.white.withOpacity(0.05),
-          ],
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: primariColor,
+        contentPadding: EdgeInsets.only(
+          top: 12.r,
+          bottom: 14.r,
+          left: 16.r,
+          right: 16.r,
         ),
-        borderGradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.5),
-            Colors.white.withOpacity(0.5),
-          ],
-        ),
-        child: Center(
-          child: Material(
-            color: Colors.transparent,
-            child: Container(
-              width: 976.w,
-              height: 574.h,
-              padding: EdgeInsets.only(
-                top: 12.r,
-                bottom: 14.r,
-                left: 16.r,
-                right: 16.r,
-              ),
-              decoration: BoxDecoration(
-                color: primariColor,
-                borderRadius: BorderRadius.circular(30.r),
-              ),
-              child: Column(
+        content: Container(
+          width: 976.w,
+          height: 574.h,
+          decoration: BoxDecoration(
+            color: primariColor,
+            borderRadius: BorderRadius.circular(30.r),
+          ),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(left: 16.r),
-                        child: Text(
-                          order.code,
-                          style: textStyleDialogInfoClient.copyWith(
-                            decoration: TextDecoration.none,
-                          ),
-                        ),
+                  Container(
+                    margin: EdgeInsets.only(left: 16.r),
+                    child: Text(
+                      order.code,
+                      style: textStyleDialogInfoClient.copyWith(
+                        decoration: TextDecoration.none,
                       ),
-                      Spacer(),
-                      PopupMenuButton<String>(
-                        constraints: BoxConstraints(minWidth: 314.w),
-                        padding: EdgeInsetsGeometry.zero,
-                        menuPadding: EdgeInsets.zero,
-                        offset: Offset(-10.w, 44.h),
-                        color: containerColor,
-                        shape: RoundedRectangleBorder(
-                          side: BorderSide(color: borderColor, width: 0.5.w),
-                          borderRadius: BorderRadius.circular(15.r),
-                        ),
-                        onSelected: (value) async {
-                          final newOrderRepository = NewOrderRepository();
-                          final clientRepositori = ClientRepositori();
-                          final deleteApi = DeleteOrderApi();
-                          final dialogContext = context;
-                          if (value == 'create') {
-                            final id = await newOrderRepository
-                                .createDocumentCopy(order);
-                            final client = await clientRepositori
-                                .getClientByUuid(order.clientUid);
-                            Provider.of<NavigationProvider>(
-                              context,
-                              listen: false,
-                            ).goToPageAndSave(
-                              8,
-                              data: {
-                                Constant().modelDB: client,
-                                Constant().id: id,
-                              },
-                            );
-                            if (id != null) {
-                              Navigator.pop(context, true);
-                            }
-                          }
-                          if (value == 'edit') {
-                            if (order.state == 0 || order.state == 1) {
-                              final client = await clientRepositori
-                                  .getClientByUuid(order.clientUid);
-                              Provider.of<NavigationProvider>(
-                                context,
-                                listen: false,
-                              ).goToPageAndSave(
-                                8,
-                                data: {
-                                  Constant().modelDB: client,
-                                  Constant().id: order.id,
-                                },
-                              );
+                    ),
+                  ),
+                  Spacer(),
+                  PopupMenuButton<String>(
+                    constraints: BoxConstraints(minWidth: 314.w),
+                    padding: EdgeInsetsGeometry.zero,
+                    menuPadding: EdgeInsets.zero,
+                    offset: Offset(-10.w, 44.h),
+                    color: containerColor,
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(color: borderColor, width: 0.5.w),
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                    onSelected: (value) async {
+                      final newOrderRepository = NewOrderRepository();
+                      final clientRepositori = ClientRepositori();
+                      final deleteApi = DeleteOrderApi();
+                      final dialogContext = context;
+                      if (value == 'create') {
+                        final id = await newOrderRepository
+                            .createDocumentCopy(order);
+                        final client = await clientRepositori
+                            .getClientByUuid(order.clientUid);
+                        Provider.of<NavigationProvider>(
+                          context,
+                          listen: false,
+                        ).goToPageAndSave(
+                          8,
+                          data: {
+                            Constant().modelDB: client,
+                            Constant().id: id,
+                          },
+                        );
+                        if (id != null) {
+                          Navigator.pop(context, true);
+                        }
+                      }
+                      if (value == 'edit') {
+                        if (order.state == 0 || order.state == 1) {
+                          final client = await clientRepositori
+                              .getClientByUuid(order.clientUid);
+                          Provider.of<NavigationProvider>(
+                            context,
+                            listen: false,
+                          ).goToPageAndSave(
+                            8,
+                            data: {
+                              Constant().modelDB: client,
+                              Constant().id: order.id,
+                            },
+                          );
 
-                              if (order.id != null) {
-                                Navigator.pop(context, true);
+                          if (order.id != null) {
+                            Navigator.pop(context, true);
+                          }
+                        }else{
+                          ToastResponseError(
+                            context: context,
+                            textError:
+                            'Comanda este în lucru sau finisată, nu o puteți edita',
+                          ).showError();
+                        }
+                      } else if (value == 'delete') {
+                        if (order.uid.isNotEmpty) {
+                          if (order.state == 0 || order.state == 1) {
+                            final deletedServer = await deleteApi
+                                .deleteOrder(order.uid);
+                            if (deletedServer.errorCode == 0) {
+                              final deleted = await newOrderRepository
+                                  .deleteOrderWithLinesByUuid(order.id);
+                              Navigator.pop(context, deleted);
+                            } else {
+                              print('object');
+                              if (dialogContext.mounted) {
+                                ToastResponseError(
+                                  context: context,
+                                  textError:
+                                      'Comanda este în lucru sau finisată, nu o puteți șterge',
+                                ).showError();
                               }
-                            }else{
+                            }
+                          } else {
+                            if (dialogContext.mounted) {
                               ToastResponseError(
                                 context: context,
                                 textError:
-                                'Comanda este în lucru sau finisată, nu o puteți edita',
+                                    'Comanda este în lucru sau finisată, nu o puteți șterge',
                               ).showError();
                             }
-                          } else if (value == 'delete') {
-                            if (order.uid.isNotEmpty) {
-                              if (order.state == 0 || order.state == 1) {
-                                final deletedServer = await deleteApi
-                                    .deleteOrder(order.uid);
-                                if (deletedServer.errorCode == 0) {
-                                  final deleted = await newOrderRepository
-                                      .deleteOrderWithLinesByUuid(order.id);
-                                  Navigator.pop(context, deleted);
-                                } else {
-                                  print('object');
-                                  if (dialogContext.mounted) {
-                                    ToastResponseError(
-                                      context: context,
-                                      textError:
-                                          'Comanda este în lucru sau finisată, nu o puteți șterge',
-                                    ).showError();
-                                  }
-                                }
-                              } else {
-                                if (dialogContext.mounted) {
-                                  ToastResponseError(
-                                    context: context,
-                                    textError:
-                                        'Comanda este în lucru sau finisată, nu o puteți șterge',
-                                  ).showError();
-                                }
-                              }
-                            } else {
-                              print('Удалить В базе');
-                              final deleted = await newOrderRepository
-                                  .deleteOrderWithLinesByUuid(order.id);
-                              if (deleted) {
-                                Navigator.pop(context, true);
-                              }
-                            }
                           }
-                        },
-                        itemBuilder: (context) => popMenuSetting(context),
-                        child: Container(
-                          width: 32.w,
-                          height: 32.h,
-                          margin: EdgeInsets.only(right: 16.r),
-                          decoration: BoxDecoration(
-                            color: containerColor,
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.r),
-                            ),
-                            border: BoxBorder.all(
-                              color: borderColor,
-                              width: 1.w,
-                            ),
-                          ),
-                          child: Icon(Icons.more_vert),
-                        ),
-                      ),
-                      GestureDetector(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            width: 32.w,
-                            height: 32.h,
-                            margin: EdgeInsets.only(right: 16.r),
-                            decoration: BoxDecoration(
-                              color: containerColor,
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(10.r),
-                              ),
-                              border: BoxBorder.all(
-                                color: borderColor,
-                                width: 1.w,
-                              ),
-                            ),
-                            child: Icon(Icons.close_rounded, size: 24.r),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 12.r),
-                    padding: EdgeInsets.only(left: 16.h, right: 16.h),
-                    height: 96.h,
-                    decoration: BoxDecoration(
-                      color: containerColor,
-                      border: Border.all(color: borderColor, width: 1),
-                      borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(15.r),
-                      ),
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Text(
-                                order.clientName.toString(),
-                                style: textStyleDialogInfoClient.copyWith(
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
-                              Spacer(),
-                              Text(
-                                formatDay,
-                                style: textStyleDialogOrderData.copyWith(
-                                  decoration: TextDecoration.none,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Divider(height: 1.h, color: borderColor),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              textStatut(order),
-                              Spacer(),
-                              adressDialog(order),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Expanded(
+                        } else {
+                          print('Удалить В базе');
+                          final deleted = await newOrderRepository
+                              .deleteOrderWithLinesByUuid(order.id);
+                          if (deleted) {
+                            Navigator.pop(context, true);
+                          }
+                        }
+                      }
+                    },
+                    itemBuilder: (context) => popMenuSetting(context),
                     child: Container(
+                      width: 32.w,
+                      height: 32.h,
+                      margin: EdgeInsets.only(right: 16.r),
                       decoration: BoxDecoration(
                         color: containerColor,
-                        borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(15.r),
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(10.r),
                         ),
-                        border: Border(
-                          bottom: BorderSide(color: borderColor, width: 1.w),
-                          left: BorderSide(color: borderColor, width: 1.w),
-                          right: BorderSide(color: borderColor, width: 1.w),
+                        border: BoxBorder.all(
+                          color: borderColor,
+                          width: 1.w,
                         ),
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Expanded(
-                            child: SfDataGridTheme(
-                              data: SfDataGridThemeData(
-                                headerColor: primariColor,
-                                headerHoverColor: primariColor,
-                                selectionColor: containerColor,
-                                gridLineColor: containerColor,
-                                rowHoverColor: containerColor,
-                              ),
-                              child: SfDataGrid(
-                                source: OrderLinesDataSource(dataLines),
-                                rowHeight: 48.h,
-                                headerRowHeight: 32.h,
-                                columnWidthMode: ColumnWidthMode.lastColumnFill,
-                                gridLinesVisibility: GridLinesVisibility.none,
-                                headerGridLinesVisibility:
-                                    GridLinesVisibility.none,
-                                columnWidthCalculationRange:
-                                    ColumnWidthCalculationRange.visibleRows,
-                                columns: [
-                                  GridColumn(
-                                    columnName: 'nr',
-                                    width: 46.w,
-                                    label: Center(
-                                      child: Text(
-                                        'Nr.',
-                                        style: textStyleDialogOrderTitle,
-                                      ),
-                                    ),
-                                  ),
-                                  GridColumn(
-                                    columnName: 'denumire',
-                                    width: 385.w,
-                                    label: Center(
-                                      child: Text(
-                                        'order.name'.tr(),
-                                        style: textStyleDialogOrderTitle,
-                                      ),
-                                    ),
-                                  ),
-                                  GridColumn(
-                                    columnName: 'cant',
-                                    width: 90.w,
-                                    label: Center(
-                                      child: Text(
-                                        'order.count'.tr(),
-                                        style: textStyleDialogOrderTitle,
-                                      ),
-                                    ),
-                                  ),
-                                  GridColumn(
-                                    columnName: 'pret',
-                                    width: 179.w,
-                                    label: Center(
-                                      child: Text(
-                                        'order.price'.tr(),
-                                        style: textStyleDialogOrderTitle,
-                                      ),
-                                    ),
-                                  ),
-                                  GridColumn(
-                                    columnName: 'suma',
-                                    width: 90.w,
-                                    label: Center(
-                                      child: Text(
-                                        'order.sum'.tr(),
-                                        style: textStyleDialogOrderTitle,
-                                      ),
-                                    ),
-                                  ),
-                                  GridColumn(
-                                    columnName: 'stocuri',
-                                    label: Center(
-                                      child: Text(
-                                        'order.stock'.tr(),
-                                        style: textStyleDialogOrderTitle,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                      child: Icon(Icons.more_vert),
+                    ),
+                  ),
+                  GestureDetector(
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: Container(
+                        width: 32.w,
+                        height: 32.h,
+                        margin: EdgeInsets.only(right: 16.r),
+                        decoration: BoxDecoration(
+                          color: containerColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(10.r),
                           ),
-                          //  Spacer(),
-                          Container(
-                            margin: EdgeInsets.only(bottom: 16.r, right: 32.r),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  'order.total'.tr(),
-                                  style: textStyleDialogOrderTotal,
-                                ),
-                                SizedBox(width: 5.w),
-                                Text(
-                                  "${order.sum.toString()} MDL",
-                                  style: textStyleDialogOrderSum,
-                                ),
-                              ],
-                            ),
+                          border: BoxBorder.all(
+                            color: borderColor,
+                            width: 1.w,
                           ),
-                        ],
+                        ),
+                        child: Icon(Icons.close_rounded, size: 24.r),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
+              Container(
+                margin: EdgeInsets.only(top: 12.r),
+                padding: EdgeInsets.only(left: 16.h, right: 16.h),
+                height: 96.h,
+                decoration: BoxDecoration(
+                  color: containerColor,
+                  border: Border.all(color: borderColor, width: 1),
+                  borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(15.r),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Text(
+                            order.clientName.toString(),
+                            style: textStyleDialogInfoClient.copyWith(
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                          Spacer(),
+                          Text(
+                            formatDay,
+                            style: textStyleDialogOrderData.copyWith(
+                              decoration: TextDecoration.none,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Divider(height: 1.h, color: borderColor),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          textStatut(order),
+                          Spacer(),
+                          adressDialog(order),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: containerColor,
+                    borderRadius: BorderRadius.vertical(
+                      bottom: Radius.circular(15.r),
+                    ),
+                    border: Border(
+                      bottom: BorderSide(color: borderColor, width: 1.w),
+                      left: BorderSide(color: borderColor, width: 1.w),
+                      right: BorderSide(color: borderColor, width: 1.w),
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Expanded(
+                        child: SfDataGridTheme(
+                          data: SfDataGridThemeData(
+                            headerColor: primariColor,
+                            headerHoverColor: primariColor,
+                            selectionColor: containerColor,
+                            gridLineColor: containerColor,
+                            rowHoverColor: containerColor,
+                          ),
+                          child: SfDataGrid(
+                            source: OrderLinesDataSource(dataLines),
+                            rowHeight: 48.h,
+                            headerRowHeight: 32.h,
+                            columnWidthMode: ColumnWidthMode.lastColumnFill,
+                            gridLinesVisibility: GridLinesVisibility.none,
+                            headerGridLinesVisibility:
+                                GridLinesVisibility.none,
+                            columnWidthCalculationRange:
+                                ColumnWidthCalculationRange.visibleRows,
+                            columns: [
+                              GridColumn(
+                                columnName: 'nr',
+                                width: 46.w,
+                                label: Center(
+                                  child: Text(
+                                    'Nr.',
+                                    style: textStyleDialogOrderTitle,
+                                  ),
+                                ),
+                              ),
+                              GridColumn(
+                                columnName: 'denumire',
+                                width: 385.w,
+                                label: Center(
+                                  child: Text(
+                                    'order.name'.tr(),
+                                    style: textStyleDialogOrderTitle,
+                                  ),
+                                ),
+                              ),
+                              GridColumn(
+                                columnName: 'cant',
+                                width: 90.w,
+                                label: Center(
+                                  child: Text(
+                                    'order.count'.tr(),
+                                    style: textStyleDialogOrderTitle,
+                                  ),
+                                ),
+                              ),
+                              GridColumn(
+                                columnName: 'pret',
+                                width: 179.w,
+                                label: Center(
+                                  child: Text(
+                                    'order.price'.tr(),
+                                    style: textStyleDialogOrderTitle,
+                                  ),
+                                ),
+                              ),
+                              GridColumn(
+                                columnName: 'suma',
+                                width: 90.w,
+                                label: Center(
+                                  child: Text(
+                                    'order.sum'.tr(),
+                                    style: textStyleDialogOrderTitle,
+                                  ),
+                                ),
+                              ),
+                              GridColumn(
+                                columnName: 'stocuri',
+                                label: Center(
+                                  child: Text(
+                                    'order.stock'.tr(),
+                                    style: textStyleDialogOrderTitle,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      //  Spacer(),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 16.r, right: 32.r),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'order.total'.tr(),
+                              style: textStyleDialogOrderTotal,
+                            ),
+                            SizedBox(width: 5.w),
+                            Text(
+                              "${order.sum.toString()} MDL",
+                              style: textStyleDialogOrderSum,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       );

@@ -12,7 +12,7 @@ class DetailClientResponse{
   @JsonKey(name: 'Token')
   final Token? token;
   @JsonKey(name: 'Contragent', defaultValue: null)
-  final ClientDetail contragents;
+  final ClientDetail? contragents;
 
   DetailClientResponse({
     required this.errorCode,

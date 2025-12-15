@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:sales_agent/data/models_api/models_assortiment/assortiment_model.dart';
 import 'package:sales_agent/data/models_api/models_assortiment/assortiment_response.dart';
 
@@ -15,6 +16,8 @@ class AssortimentApi {
     final url = await apikeyRepository.getUrl();
     final token = await loginRepository.getToken();
     try{
+
+
       final baseUrl = url!.endsWith("/") ? url : "$url/";
       final urlPars = Uri.parse(baseUrl)
           .resolve('json/GetAssortimentList?tokenUid=$token');
@@ -27,7 +30,7 @@ class AssortimentApi {
         throw Exception("Ошибка Assortiment: ${ordersResponse.statusCode}");
       }
     }catch(e){
-      throw Exception("Ошибка при загрузки Assortiment: ${e.toString()}");
+      return [];
     }
   }
 }

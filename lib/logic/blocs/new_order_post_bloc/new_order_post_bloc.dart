@@ -6,6 +6,7 @@ import 'package:sales_agent/logic/blocs/new_order_post_bloc/new_order_post_event
 
 import '../../../core/utils/convert_data.dart';
 import '../../../data/models_api/new_order_post/new_line_model_api.dart';
+import '../../../data/models_api/new_order_post/new_order_model_post_response_api.dart';
 import '../../../data/providers/api_provider/order_post_api.dart';
 import '../../../data/repositories/new_order_repositori.dart';
 import 'new_order_post_state.dart';
@@ -29,7 +30,14 @@ class NewOrderPostBloc extends Bloc<NewOrderPostEvent, NewOrderPostState> {
       final order = await repository.getOrder(event.idDocument);
 
       if (order == null) {
-        emit(OrderPostError("Заказ не найден"));
+        emit(OrderPostError(NewOrderModelPostResponseApi(
+          errorCode: 105,
+          errorMessage: 'Null Document',
+          token: null,
+          state: 0,
+          uuid: '',
+          code: ''
+        )));
         return;
       }
 
@@ -91,12 +99,19 @@ class NewOrderPostBloc extends Bloc<NewOrderPostEvent, NewOrderPostState> {
         ); // ⚠️ Не забудьте сохранить изменения!
         emit(OrderPostLoaded(response));
       } else {
-        emit(OrderPostError(response.errorMessage));
+        emit(OrderPostError(response));
       }
     } catch (e, stackTrace) {
       print("❌ ERROR in onFetchOrderPostData: $e");
       print("❌ Stack trace: $stackTrace");
-      emit(OrderPostError("Ошибка отправки заказа: ${e.toString()}"));
+      emit(OrderPostError(NewOrderModelPostResponseApi(
+          errorCode: 106,
+          errorMessage: 'ERROR in onFetchOrderPostData',
+          token: null,
+          state: 0,
+          uuid: '',
+          code: ''
+      )));
     }
   }
 }

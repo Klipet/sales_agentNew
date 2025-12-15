@@ -1,9 +1,9 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:sales_agent/data/providers/api_provider/login_api.dart';
 import 'package:sales_agent/data/repositories/login_repositori.dart';
-import '../../../data/models_db/model_login.dart';
-import '../../../data/repositories/db_provider.dart';
+import '../../../data/repositories/apikey_repositori.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
@@ -11,15 +11,16 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository repository;
   final LoginApi actualizationUser;
 
-
   LoginBloc(this.repository, this.actualizationUser) : super(LoginInitial()) {
     on<CheckSavedLogin>(onCheckSavedLogin);
     on<FetchLoginData>(_onFetchActivationData);
-    on<SavedLogin>(_setSave);
+    on<SavedLogin>(_savePassword);
   }
 
-  Future<void> _onFetchActivationData(FetchLoginData event,
-      Emitter<LoginState> emit) async {
+  Future<void> _onFetchActivationData(
+    FetchLoginData event,
+    Emitter<LoginState> emit,
+  ) async {
     emit(LoginLoading());
     try {
       String login;
@@ -32,30 +33,40 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         login = event.login;
         password = event.password;
       }
-      if (kDebugMode) {
-        //    print(login + password);
-      }
       final apiResponse = await actualizationUser.getLogInUser(login, password);
       if (apiResponse.errorCode == 0) {
-        final token = apiResponse.token.uid;
-        final validTo = apiResponse.token.validTo;
-        final userName = apiResponse.user.name;
-        final surName = apiResponse.user.surname ?? '';
+        final token = apiResponse.token!.uid ?? '';
+        final validTo = apiResponse.token!.validTo ?? '';
+        final userName = apiResponse.user!.name ?? '';
+        final surName = apiResponse.user!.surname ?? '';
         final String fullName = '$userName$surName';
         await repository.saveLogin(
-            login, password, token, validTo, fullName, event.save);
-
+          login,
+          password,
+          token,
+          validTo,
+          fullName,
+          event.save,
+        );
         emit(LoginSuccess());
       } else {
-        emit(LoginFailure(apiResponse.errorMessage.toString()));
+        final loginS = await repository.getLogin() ?? '';
+        final passwordS = await repository.getPassword() ?? '';
+        if (event.password != passwordS || event.login != loginS) {
+          emit(LoginFailure('login nu concide'));
+        }else{
+          emit(LoginFailure(''));
+        }
       }
     } catch (e) {
       emit(LoginFailure(e.toString()));
     }
   }
 
-  Future<void> onCheckSavedLogin(CheckSavedLogin event,
-      Emitter<LoginState> emit) async {
+  Future<void> onCheckSavedLogin(
+    CheckSavedLogin event,
+    Emitter<LoginState> emit,
+  ) async {
     final loginDB = await repository.getLogin();
     final passwordDB = await repository.getPassword();
     final savePass = await repository.getSavePassword();
@@ -64,7 +75,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     }
   }
 
-  Future<bool?> _setSave(SavedLogin event,Emitter<LoginState> emit ) async {
-    final loginDB = await repository.changeSave(event.save);
-  }
+  Future<void> _savePassword(SavedLogin event,
+      Emitter<LoginState> emit,) async{
+     await repository.changeSave(event.save);
+}
+
 }

@@ -55,6 +55,20 @@ class ToastResponseError{
     );
   }
 
+  void showErrorConnect() {
+    CustomToast.showCustom(
+      context: context,
+      onDismiss: () {},
+      builder: (context, dismiss) {
+        return SizedBox(
+          width: 565.w,
+          height: 160.h,
+          child: _contentToastErrorInternet(dismiss),
+        );
+      },
+    );
+  }
+
   Widget _contentToastError(VoidCallback dismiss) {
     return Container(
       margin: EdgeInsets.only(right: 12.h),
@@ -174,6 +188,57 @@ class ToastResponseError{
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SvgPicture.asset('assets/icons/toast/succes_pop.svg'),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  textError,
+                  textAlign: TextAlign.center,
+                  style: textStyleDialogAddAssortimentTotal.copyWith(
+                    fontSize: 22.sp,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(width: 16.w),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: dismiss,
+                child: SvgPicture.asset('assets/icons/close.svg'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _contentToastErrorInternet(VoidCallback dismiss) {
+    return Container(
+      margin: EdgeInsets.only(right: 12.h),
+      padding: EdgeInsets.only(
+        left: 32.h,
+        top: 16.w,
+        bottom: 16.h,
+        right: 16.h,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(15.r),
+        border: BoxBorder.all(color: borderColor, width: 1.w),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          SvgPicture.asset('assets/icons/toast/no_signal.svg'),
           SizedBox(width: 16.w),
           Expanded(
             child: Column(

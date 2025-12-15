@@ -89,7 +89,7 @@ class _HistortyScreenState extends State<HistortyScreen> {
         borderRadius: BorderRadius.circular(10.r),
       ),
       child: CustomSearchWidget<ModelClientDb>(
-        //  autofocus: true,
+        autofocus: false,
         items: client,
         displayStringForOption: (client) => client.name ?? '',
         subtitleStringForOption: (client) => client.idnp ?? '',
@@ -133,7 +133,6 @@ class _HistortyScreenState extends State<HistortyScreen> {
 
   @override
   void dispose() {
-    FocusManager.instance.primaryFocus?.unfocus();
     debugPrint('DISPOSE: CustomSearchWidget');
     super.dispose();
   }

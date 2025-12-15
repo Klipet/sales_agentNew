@@ -24,11 +24,19 @@ import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 import '../../core/colors_app.dart';
 import '../../core/errors/error_toast.dart';
 import '../../core/styles_text.dart';
+import '../../data/providers/api_provider/assotriment_api.dart';
 import '../../data/providers/api_provider/price_list_client_api.dart';
+import '../../data/repositories/assortiment_repositori.dart';
+import '../../logic/blocs/assortiment_blocs/assortiment_bloc.dart';
+import '../../logic/blocs/assortiment_blocs/assortiment_state.dart';
 import '../../logic/blocs/clients_bloc/clients_cubit.dart';
+import '../../logic/blocs/price_blocs/price_state.dart';
+import '../toast/toast_response_error.dart';
 
 class AuthLoginWidget extends StatelessWidget {
-  const AuthLoginWidget({super.key});
+  final bool internet;
+
+  const AuthLoginWidget({super.key, required this.internet});
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +45,10 @@ class AuthLoginWidget extends StatelessWidget {
         BlocProvider<LoginBloc>(
           create: (_) => LoginBloc(LoginRepository(), LoginApi()),
         ),
+        BlocProvider<AssortimentBloc>(
+          create: (_) =>
+              AssortimentBloc(AssortimentApi(), AssortimentRepositori()),
+        ),
         BlocProvider<DocumentsCubit>(
           create: (_) => DocumentsCubit(OrdersApi(), OrdersRepositori()),
         ),
@@ -44,27 +56,31 @@ class AuthLoginWidget extends StatelessWidget {
           create: (_) => ClientsCubit(ClientApi(), ClientRepositori()),
         ),
         BlocProvider<PriceCubit>(
-            create:(_) => PriceCubit(PriceListClientApi(), PriceRepositori()))
+          create: (_) => PriceCubit(PriceListClientApi(), PriceRepositori()),
+        ),
       ],
-      child: AuthLoginWidgetUI(),
+      child: AuthLoginWidgetUI(connectInternet: internet),
     );
   }
 }
 
 class AuthLoginWidgetUI extends StatefulWidget {
-  const AuthLoginWidgetUI({super.key});
+  final bool connectInternet;
+
+  const AuthLoginWidgetUI({super.key, required this.connectInternet});
 
   @override
   State<AuthLoginWidgetUI> createState() => _AuthLoginWidgetUIState();
 }
 
-class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> with TickerProviderStateMixin {
+class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
+    with TickerProviderStateMixin {
   bool hidePassword = true;
   bool savePass = false;
   final TextEditingController _controllerLogin = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
-  late AnimationController _controller1;
-  late AnimationController _controller2;
+  int _loadedCount = 0;
+  final int _totalCount = 4; // Количество блоков
 
   @override
   void initState() {
@@ -72,25 +88,10 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> with TickerProvid
     context.read<LoginBloc>().add(
       CheckSavedLogin(),
     ); // проверка сохранённых данных
-    _controller1 = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 2),
-    )..repeat();
-
-    // Второй круг — против часовой стрелки
-    _controller2 = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 3),
-    )..repeat(reverse: true);
   }
 
-  Future<void> documant(BuildContext context) async {
-    return await context.read<DocumentsCubit>().fetchOrders();
-  }
   @override
   void dispose() {
-    _controller1.dispose();
-    _controller2.dispose();
     super.dispose();
   }
 
@@ -101,26 +102,54 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> with TickerProvid
         BlocListener<LoginBloc, LoginState>(
           listener: (context, state) {
             if (state is LoginFailure) {
-              showMesageError(state.message, context);
+              print(state.message);
+              if(state.message == ''){
+                _onModuleError('Login','LoginFailure: Nu este conectiune cu internet');
+              }else if(state.message == 'login nu concide'){
+                _onModuleErrorAuth('Login','Login sau parola nu concide');
+              }
             } else if (state is LoginSuccess) {
-              documant(context);
-              context.read<PriceCubit>().fetchPriceList();
-              context.read<ClientsCubit>().fetchClients();
+              // Сбрасываем счётчик модулей
+              _loadedCount = 0;
+              _refreshAllData();
               _controllerPassword.clear();
               _controllerLogin.clear();
+            }
+          },
+        ),
+        BlocListener<AssortimentBloc, AssortimentState>(
+          listener: (context, state) {
+            if (state is AssortimentSuccess) {
+              _onModuleLoaded('Ассортимент');
+            } else if (state is AssortimentFailure) {
+              _onModuleError('Ассортимент', state.message);
+            }
+          },
+        ),
+        BlocListener<DocumentsCubit, DocumentState>(
+          listener: (context, state) {
+            if (state is OrdersLoaded) {
+              _onModuleLoaded('Документы');
+            } else if (state is OrdersError) {
+              _onModuleError('Документы', 'Ошибка загрузки');
             }
           },
         ),
         BlocListener<ClientsCubit, ClientsState>(
           listener: (context, state) {
             if (state is ClientsLoaded) {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (_) => HomeDrawer()),
-                (route) => false,
-              );
+              _onModuleLoaded('Клиенты');
             } else if (state is ClientsError) {
-              showMesageError(state.message, context);
+              _onModuleError('Клиенты', 'Ошибка загрузки');
+            }
+          },
+        ),
+        BlocListener<PriceCubit, PriceState>(
+          listener: (context, state) {
+            if (state is PriceLoaded) {
+              _onModuleLoaded('Цены');
+            } else if (state is PriceError) {
+              _onModuleError('Цены', 'Ошибка загрузки');
             }
           },
         ),
@@ -129,9 +158,10 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> with TickerProvid
         builder: (context, loginState) {
           final clientsState = context.watch<ClientsCubit>().state;
           // Показ загрузки
-          if (loginState is LoginLoading || clientsState is ClientsLoading) {
-            return
-              LoadingWidget(width: 464.w, height: 448.h);
+          if (loginState is LoginLoading) {
+            if(_loadedCount != _totalCount){
+              return LoadingWidget(width: 464.w, height: 448.h);
+            }
           }
           return ConstrainedBox(
             constraints: BoxConstraints(maxHeight: 464.h, maxWidth: 448.w),
@@ -139,7 +169,7 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> with TickerProvid
               decoration: BoxDecoration(
                 color: containerColor,
                 borderRadius: BorderRadius.circular(30.r),
-                border: Border.all(color: HexColor('#E5E5E5'), width: 1.r),
+                border: Border.all(color: borderColor, width: 1.r),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -316,5 +346,65 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI> with TickerProvid
         ),
       ),
     );
+  }
+
+  void _refreshAllData() {
+    setState(() {
+      _loadedCount = 0;
+    });
+    if (widget.connectInternet) {
+      context.read<AssortimentBloc>().fetchAssortiment();
+      context.read<DocumentsCubit>().fetchOrders();
+      context.read<ClientsCubit>().fetchClients();
+      context.read<PriceCubit>().fetchPriceList();
+    } else {
+      _onModuleError('все модули', 'Datele nu au fost actualizate');
+    }
+
+    //  ToastResponseError(context: context, textError: 'Datele se sincronizează, așteptați').showUpdate();
+  }
+
+  void _onModuleLoaded(String moduleName) {
+    setState(() {
+      _loadedCount++;
+    });
+
+    print('✅ $moduleName загружен ($_loadedCount/$_totalCount)');
+    ToastResponseError(
+      context: context,
+      textError: 'Datele au fost actualizate cu succes $moduleName',
+    ).showUpdate();
+
+
+    if (_loadedCount == _totalCount) {
+      ToastResponseError(
+        context: context,
+        textError: 'Datele au fost actualizate cu succes',
+      ).showUpdateSucces();
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => HomeDrawer()),
+        (route) => false,
+      );
+    }
+  }
+
+  void _onModuleError(String moduleName, String error) {
+    ToastResponseError(
+      context: context,
+      textError: error,
+    ).showError();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (_) => HomeDrawer()),
+          (route) => false,
+    );
+  }
+  void _onModuleErrorAuth(String moduleName, String error) {
+   return ToastResponseError(
+      context: context,
+      textError: error,
+    ).showError();
   }
 }

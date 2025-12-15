@@ -1,5 +1,6 @@
 import 'package:animated_tree_view/tree_view/tree_node.dart';
 import 'package:animated_tree_view/tree_view/tree_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -77,7 +78,7 @@ class _TableAssortimentWidghetState extends State<TableAssortimentWidghet> {
         searchQuery = widget.search;
       });
       final data = await repo.searchAssortiment(searchQuery);
-      print(widget.search);
+    //  print(widget.search);
       final map = <String, List<ModelAssortimentDB>>{};
       for (var item in data) {
         // Обрабатываем все варианты parentUid
@@ -127,51 +128,39 @@ class _TableAssortimentWidghetState extends State<TableAssortimentWidghet> {
     );
   }
 
-  // Получаем корневые элементы
-  List<CustomTreeNode<ModelAssortimentDB>> _buildTreeNodes() {
-    // Пробуем разные варианты ключей для корневых элементов
-    List<ModelAssortimentDB> rootItems = [];
+  List<CustomTreeNode<ModelAssortimentDB>> _buildTreeNodes({
+    bool onlyProducts = false,
+    bool onlyFolders = false,
+  }) {
+    final allData = folderMap.values.expand((list) => list).toList();
 
-    // Вариант 1: пустая строка
-    if (folderMap.containsKey('')) {
-      rootItems = folderMap['']!;
-    }
-    // Вариант 2: null как строка
-    else if (folderMap.containsKey('null')) {
-      rootItems = folderMap['null']!;
-    }
-    // Вариант 3: ищем элементы где parentUid пустой или null
-    else {
-      final allData = folderMap.values.expand((list) => list).toList();
-      rootItems = allData
-          .where(
-            (item) =>
-                item.parentUid == null ||
-                item.parentUid == '00000000-0000-0000-0000-000000000000' ||
-                item.parentUid == 'null',
-          )
-          .toList();
+    // Находим корневые элементы
+    var rootItems = allData.where((item) {
+      return item.parentUid == null ||
+          item.parentUid == '00000000-0000-0000-0000-000000000000' ||
+          item.parentUid?.isEmpty == true ||
+          item.parentUid == 'null';
+    }).toList();
+
+    // Применяем фильтры (если не указаны оба одновременно)
+    if (onlyProducts && !onlyFolders) {
+      rootItems = rootItems.where((item) => item.isFolder == false).toList();
+    } else if (onlyFolders && !onlyProducts) {
+      rootItems = rootItems.where((item) => item.isFolder == true).toList();
     }
 
-    print('Найдено корневых узлов: ${rootItems.length}'); // Отладка
-
+    // Fallback на все данные с учетом фильтра
     if (rootItems.isEmpty) {
-      // Если корневых нет, показываем все папки верхнего уровня
-      final allData = folderMap.values.expand((list) => list).toList();
-      rootItems = allData.where((item) => item.isFolder == true).toList();
-
+      if (onlyProducts) {
+        rootItems = allData.where((item) => item.isFolder == false).toList();
+      } else if (onlyFolders) {
+        rootItems = allData.where((item) => item.isFolder == true).toList();
+      } else {
+        rootItems = allData;
+      }
     }
 
     return rootItems.map((item) => _modelToNode(item)).toList();
-  }
-
-  bool _matchesSearch(ModelAssortimentDB item) {
-    if (widget.search.isEmpty) return true;
-
-    final searchLower = widget.search.toLowerCase();
-    return (item.name?.toLowerCase().contains(searchLower) ?? false) ||
-        (item.code?.toLowerCase().contains(searchLower) ?? false) ||
-        (item.barCode?.toLowerCase().contains(searchLower) ?? false);
   }
 
   @override
@@ -181,7 +170,19 @@ class _TableAssortimentWidghetState extends State<TableAssortimentWidghet> {
     }
 
     if (folderMap.isEmpty) {
-      return const Scaffold(body: Center(child: Text('Нет данных')));
+      return  Scaffold(body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset('assets/icons/empti.svg', width: 446.w, height: 259.h,),
+            SizedBox(height: 16),
+            Text(
+              widget.search.isNotEmpty ? 'errors.notFound'.tr() : 'errors.notFound'.tr(),
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+      ));
     }
 
     final corporateStyle = CustomTreeStyle(

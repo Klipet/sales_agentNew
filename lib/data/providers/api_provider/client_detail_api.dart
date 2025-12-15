@@ -26,10 +26,10 @@ class ClientDetailApi {
         print(dataResponse.contragents);
         return dataResponse;
       }else{
-        throw Exception("Ошибка GetContragent: ${ordersResponse.statusCode}");
+        return DetailClientResponse(errorCode: ordersResponse.statusCode, contragents: null);
       }
     }catch(e){
-      throw Exception("Ошибка при загрузки GetContragent: ${e.toString()}");
+      return DetailClientResponse(errorCode: 2, contragents: null);
     }
   }
 }

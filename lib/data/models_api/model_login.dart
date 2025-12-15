@@ -3,8 +3,8 @@ import 'model_token.dart';
 class ModelLogin {
   final int errorCode;
   final String errorMessage;
-  final ModelToken token;
-  final ModelUser user;
+  final ModelToken? token;
+  final ModelUser? user;
 
   ModelLogin({
     required this.errorCode,

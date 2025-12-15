@@ -17,3 +17,7 @@ class AssortimentFailure extends AssortimentState {
   final String message;
   AssortimentFailure(this.message);
 }
+class AssortimentFailureNonInternet extends AssortimentState {
+  final int error;
+  AssortimentFailureNonInternet(this.error);
+}

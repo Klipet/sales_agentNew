@@ -36,6 +36,8 @@ class _HomeDrawerState extends State<HomeDrawer>
   late PageController _pageController;
   late NavigationProvider _navigationProvider;
 
+
+
   bool _isInitialized = false;
 
   @override
@@ -47,21 +49,16 @@ class _HomeDrawerState extends State<HomeDrawer>
     // Инициализируем после построения виджета
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
-
       _navigationProvider = Provider.of<NavigationProvider>(
         context,
         listen: false,
       );
-
       // Передаем PageController в NavigationProvider
       _navigationProvider.setPageController(_pageController);
-
       // Слушаем изменения в Sidebar
       _controller.addListener(_onSidebarChanged);
-
       // Слушаем изменения в NavigationProvider
       _navigationProvider.addListener(_onNavigationChanged);
-
 
       _isInitialized = true;
     });
@@ -118,14 +115,11 @@ class _HomeDrawerState extends State<HomeDrawer>
             child: Stack(
               children: [
                 PageView(
-                  //  IndexedStack(
-                  //  index: navigationProvider.currentPageIndex,
                   controller: _pageController,
-                  //.pageController,
                   physics: NeverScrollableScrollPhysics(),
                   onPageChanged: (index) {
-                    // Обновляем индекс в Provider
                     navigationProvider.updatePageIndex(index);
+
                   },
                   children: [
                     Padding(

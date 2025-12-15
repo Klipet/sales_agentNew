@@ -91,7 +91,30 @@ class ClientRepositori{
         .filter()
         .uidContains(uuid)
         .findFirst();
-    print(client?.name);
     return client;
   }
+
+  Future<List<ModelOutlensDb>> getOutlets(String uuid) async {
+    try {
+      final isar = await DbProvider.instance();
+
+      final client = await isar.modelClientDbs
+          .filter()
+          .uidEqualTo(uuid)
+          .findFirst();
+
+      if (client == null) {
+        print('Клиент с uuid $uuid не найден');
+        return [];
+      }
+
+      // Если outlets - это список (IsarLinks)
+      await client.outlets.load();
+      return client.outlets.toList();
+    } catch (e) {
+      print('Ошибка при получении outlets: $e');
+      return [];
+    }
+  }
+
 }

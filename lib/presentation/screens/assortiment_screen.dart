@@ -10,6 +10,7 @@ import 'package:sales_agent/data/repositories/assortiment_repositori.dart';
 import 'package:sales_agent/logic/blocs/assortiment_blocs/assortiment_bloc.dart';
 import 'package:sales_agent/logic/blocs/assortiment_blocs/assortiment_state.dart';
 import 'package:sales_agent/presentation/dialogs/assortiment_info.dart';
+import 'package:sales_agent/presentation/toast/toast_response_error.dart';
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 import 'package:sales_agent/presentation/widgets/table_assortiment_widghet.dart' hide AssortimentRepositori;
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
@@ -62,7 +63,10 @@ class _AssortimentUIState extends State<AssortimentUI> {
     //    print('LISTENER: State type: ${state.runtimeType}'); // ДОБАВЬТЕ
 
         if (state is AssortimentFailure) {
-          showMesageError(state.message, context);
+          ToastResponseError(context: context, textError: state.message).showError();
+        }
+        if(state is AssortimentFailureNonInternet){
+          ToastResponseError(context: context, textError: 'я не смог загрузить и сохранить ассортимент').showError();
         }
       },
       builder: (context, state) {
@@ -131,9 +135,55 @@ class _AssortimentUIState extends State<AssortimentUI> {
           );
         }
 
-        return LoadingWidget(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
+        return Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(width: 40.w),
+                SizedBox(
+                  height: 100.h,
+                  child: Text(
+                    textHeightBehavior: TextHeightBehavior(
+                        applyHeightToFirstAscent: false
+                    ),
+                    "asl.title".tr(),
+                    style: primaFontOrders,
+                    //  textAlign: TextAlign.left,
+                  ),
+                ),
+                Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(top: 16.h),
+                  child: TitleHomeWidget(),
+                ),
+              ],
+            ),
+            SizedBox(height: 8.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(child: ediTextClient(_editingController, 'asl.search'.tr())),
+                SizedBox(width: 15.w),
+                btCreate(context: context),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            Expanded(
+              child: Padding(
+                  padding: EdgeInsets.only(left: 10.w),
+                  child: TableAssortimentWidghet(search: _search, onItemSelected: (item, {priceSelected}) {
+                    //  print(priceSelected?.price);
+                    assortimentInfo(
+                        asl: item,
+                        context: context
+                    );
+                  },)),
+            )
+          ],
         );
       },
     );

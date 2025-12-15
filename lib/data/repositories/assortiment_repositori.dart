@@ -95,6 +95,7 @@ class AssortimentRepositori {
       }).toList();
     }
 
+    print(assortiment.length);
     return assortiment;
   }
 

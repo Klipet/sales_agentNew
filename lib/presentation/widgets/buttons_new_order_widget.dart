@@ -24,7 +24,7 @@ class ButtonsNewOrderWidget extends StatelessWidget {
   final ModelClientDb? clientDb;
   final DetailOutlands? outlands;
   final int? id;
-  final Function(NewOrderModelPostResponseApi? response, String? message, bool save) onConfirm;
+  final Function(NewOrderModelPostResponseApi? response, bool save) onConfirm;
 
   const ButtonsNewOrderWidget({super.key, this.clientDb, this.outlands,  this.id,  required this.onConfirm});
 
@@ -39,11 +39,10 @@ class ButtonsNewOrderWidget extends StatelessWidget {
       child: BlocConsumer<NewOrderPostBloc, NewOrderPostState>(
           listener: (context, state){
             if(state is OrderPostLoaded){
-              onConfirm(state.response, null, false);
-              print(state.response.uuid);
+              onConfirm(state.response,  false);
             }else if(state is OrderPostError){
-              onConfirm( null, state.message, false);
-              print(' Error OrderStatePost: ${state.message}');
+              onConfirm( state.response, false);
+              print(' Error OrderStatePost: ${state.response.errorMessage}');
             }
           },
           builder:(context, state){
@@ -153,11 +152,10 @@ Widget buttonSendServerOrder(BuildContext context, int id){
   );
 }
 
-Widget buttonSaveOrder(BuildContext context,  Function(NewOrderModelPostResponseApi? response, String? message, bool save) onConfirm
-    ){
+Widget buttonSaveOrder(BuildContext context,  Function(NewOrderModelPostResponseApi? response,  bool save) onConfirm){
   return GestureDetector(
     onTap: (){
-      onConfirm(null, null, true);
+      onConfirm(null,  true);
     },
     child: Row(
       mainAxisAlignment: MainAxisAlignment.end,

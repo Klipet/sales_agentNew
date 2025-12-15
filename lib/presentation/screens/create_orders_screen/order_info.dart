@@ -5,6 +5,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 import 'package:sales_agent/data/models_api/models_client_detail/detail_outlands.dart';
+import 'package:sales_agent/data/models_db/model_db_clients/model_outlens_db.dart';
+import 'package:sales_agent/presentation/screens/login_screen.dart';
 import 'package:sales_agent/presentation/toast/toast_response_new_order.dart';
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 import 'package:sales_agent/presentation/widgets/table_new_order_asl.dart';
@@ -16,6 +18,7 @@ import '../../../data/models_api/new_order_post/new_order_model_post_response_ap
 import '../../../data/models_db/model_db_clients/model_client_db.dart';
 
 import '../../../data/providers/navigator_provider.dart';
+import '../../dialogs/order_dialog_status.dart';
 import '../../widgets/buttons_new_order_widget.dart';
 import '../../widgets/new_order_title_widget.dart';
 
@@ -36,8 +39,11 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
   @override
   void initState() {
     super.initState();
+    FocusManager.instance.primaryFocus?.unfocus();
     getData();
+
   }
+
 
   Future<void> getData() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -50,9 +56,13 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
       );
       final outlet = await navProvider.getPageData<DetailOutlands>(
         Constant().outlet,
-      );
-      final id = await navProvider.getPageData(Constant().id);
+      ) ?? null;
 
+      final id = await navProvider.getPageData(Constant().id);
+       navProvider.onIndexChanged = (oldIndex, newIndex) {
+        print('Другую страницу $newIndex');
+        orderDialogStatus(context: context, orderId: id);
+      };
       if (client != null) {
         setState(() {
           clientDb = client;
@@ -81,8 +91,8 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
           NewOrderTitleWidget(title: "newComand.titleComand".tr(),),
           SizedBox(height: 15.w),
           _infoClient(name: clientDb!.name!, idnp: clientDb!.idnp!, page: 6),
-          if (outlands != null) SizedBox(height: 15.w),
-          if (outlands != null)
+          if (outlands == null ) SizedBox(height: 15.w),
+          if (outlands != null )
             _infoClient(
               name: outlands!.comment == ''
                   ? outlands!.address
@@ -96,14 +106,23 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
             clientDb: clientDb,
             outlands: outlands,
             id: idDocument,
-            onConfirm: (response, message, save ){
-              if(response != null){
+            onConfirm: (response,  save ){
+              if(response != null && response.errorCode == 0){
                 ToastResponseNewOrder(context).toastSucces();
                 Provider.of<NavigationProvider>(
                   context,
                   listen: false,
                 ).goToPageAndDestroy(0);
-              }else if(message != null){
+                return;
+              }else if(response != null && (response.errorCode == 6 || response.errorCode == 5)){
+                ToastResponseNewOrder(context).toastTokenInvalid();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => LoginScreen()),
+                      (route) => false,
+                );
+                return;
+              }else if(response != null && response.errorCode > 6 ){
                 ToastResponseNewOrder(context).toastError();
                 Provider.of<NavigationProvider>(
                   context,

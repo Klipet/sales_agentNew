@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:bloc/bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -7,7 +9,9 @@ import 'package:sales_agent/data/providers/api_provider/splash_api.dart';
 import 'package:sales_agent/data/repositories/apikey_repositori.dart';
 import 'package:sales_agent/logic/blocs/splash_bloc/splash_bloc.dart';
 import 'package:sales_agent/presentation/screens/activation_screen.dart';
+import 'package:sales_agent/presentation/toast/toast_response_error.dart';
 
+import '../../data/providers/internet_provider.dart';
 import '../../logic/blocs/splash_bloc/splash_event.dart';
 import '../../logic/blocs/splash_bloc/splash_state.dart';
 import 'login_screen.dart';
@@ -32,6 +36,8 @@ class SplashScreenUI extends StatefulWidget {
 }
 
 class _SplashScreenUIState extends State<SplashScreenUI> {
+
+
   static const colorizeColors = [
     Colors.green,
     Colors.blue,
@@ -64,12 +70,21 @@ class _SplashScreenUIState extends State<SplashScreenUI> {
                 (Route<dynamic> route) => false,
               );
             } else if (state is SplashError) {
-            //  print(state.errorMessage);
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const ActivationScreen()),
-                (Route<dynamic> route) => false,
-              );
+              print(state.errorMessage);
+              if(state.errorMessage == ""){
+                ToastResponseError(context: context, textError: 'Нет подключения к интернету').showErrorConnect();
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                      (Route<dynamic> route) => false,
+                );
+              }else{
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ActivationScreen()),
+                      (Route<dynamic> route) => false,
+                );
+              }
             }
           },
           child:  AnimatedTextKit(

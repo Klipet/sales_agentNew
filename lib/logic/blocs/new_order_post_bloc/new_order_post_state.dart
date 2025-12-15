@@ -14,6 +14,6 @@ class OrderPostLoaded extends NewOrderPostState {
 class OrderPostSave extends NewOrderPostState {}
 
 class OrderPostError extends NewOrderPostState {
-  final String message;
-  OrderPostError(this.message);
+  final NewOrderModelPostResponseApi response;
+  OrderPostError(this.response);
 }

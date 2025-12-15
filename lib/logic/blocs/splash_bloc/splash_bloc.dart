@@ -1,23 +1,31 @@
 import 'package:bloc/bloc.dart';
+import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:sales_agent/data/providers/api_provider/splash_api.dart';
 import 'package:sales_agent/data/repositories/apikey_repositori.dart';
 import 'package:sales_agent/logic/blocs/splash_bloc/splash_event.dart';
 import 'package:sales_agent/logic/blocs/splash_bloc/splash_state.dart';
 
+import '../../../data/providers/internet_provider.dart';
+
 class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final SplashApi service;
   final ApikeyRepository repository;
+  final InternetCheckService internetService = InternetCheckService();
 
   SplashBloc(this.repository, this.service) : super(SplashInitial()) {
     on<GetUrlEvent>((event, emit) async {
       emit(SplashLoad());
       try {
+        final bool isConnected = await InternetConnection().hasInternetAccess;
         final repoApikey = await repository.getApiKey();
       //  print('SplashBloc: repoApikey = $repoApikey');
 
         if(repoApikey != null){
+          if (!isConnected) {
+            emit(SplashError(''));
+            return;
+          }
           final apiResponse = await service.registerUrl();
-          print('SplashBloc: apiResponse = ${apiResponse.appData?.departament}');
           if (apiResponse != null && apiResponse.errorCode == 0) {
             final url = apiResponse.appData?.uri;
             final apikey = apiResponse.appData?.licenseID;

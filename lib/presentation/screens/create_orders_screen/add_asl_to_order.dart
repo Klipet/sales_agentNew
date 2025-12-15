@@ -65,16 +65,15 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
   @override
   void initState() {
     super.initState();
-    context.read<AssortimentBloc>().fetchAssortiment();
+  //  context.read<AssortimentBloc>().fetchAssortiment();
     getData();
   }
 
   @override
   void dispose() {
-    controller.dispose(); // 👈 освобождаем память
+    controller.dispose();
     super.dispose();
   }
-
 
   Future<void> getData() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -169,7 +168,6 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
             children: [
               ediTextClient(controller, 'Caută produs'),
               Spacer(),
-
               Stack(
                 children: [
                   Container(
@@ -228,69 +226,80 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
       ),
     );
   }
-  Widget aslContent(){
+
+  Widget aslContent() {
     return BlocBuilder<AssortimentBloc, AssortimentState>(
-        builder:(context, state){
-          if(state is AssortimentSuccess){
-            return  Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(top: 16.w, left: 15.h),
-                child:
-                TableAssortimentWidghet(
-                  search: _search,
-                  clientPrices: priceLists! ?? [],
-                  onItemSelected: (item, {priceSelected}) {
-                    //  print(priceSelected?.price);
-                    showAssortimentInfoOrder(
-                      asl: item,
-                      prices: priceSelected,
-                      context: context,
-                      idDocument: id,
-                    );
-                  },
-                ),
+      builder: (context, state) {
+        if (state is AssortimentSuccess) {
+          return Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(top: 16.w, left: 15.h),
+              child: TableAssortimentWidghet(
+                search: _search,
+                clientPrices: priceLists! ?? [],
+                onItemSelected: (item, {priceSelected}) {
+                  //  print(priceSelected?.price);
+                  showAssortimentInfoOrder(
+                    asl: item,
+                    prices: priceSelected,
+                    context: context,
+                    idDocument: id,
+                  );
+                },
               ),
-            );
-        }else if( state is AssortimentFailure){
-            return  Expanded(
-              child: Column(
-                children: [
-              Expanded(
-              child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/icons/empti.svg',
-                    width: 446.w,
-                    height: 259.h,
-                  ),
-                  SizedBox(height: 16),
-                  Center(
-                    child: Text(
-                      state.message,
-                      style: TextStyle(
-                        fontSize: 18,
-                        color: Colors.grey[600],
-                      ),
+            ),
+          );
+        } else if (state is AssortimentFailure) {
+          return Expanded(
+            child: Column(
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/icons/empti.svg',
+                          width: 446.w,
+                          height: 259.h,
+                        ),
+                        SizedBox(height: 16),
+                        Center(
+                          child: Text(
+                            state.message,
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-          )
-          ])
-          );
-        }
-          return Expanded(
-            child: Center(
-              child: LoadingWidget(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-              ),
+                ),
+              ],
             ),
           );
         }
+        return Expanded(
+          child: Padding(
+            padding: EdgeInsets.only(top: 16.w, left: 15.h),
+            child: TableAssortimentWidghet(
+              search: _search,
+              clientPrices: priceLists! ?? [],
+              onItemSelected: (item, {priceSelected}) {
+                //  print(priceSelected?.price);
+                showAssortimentInfoOrder(
+                  asl: item,
+                  prices: priceSelected,
+                  context: context,
+                  idDocument: id,
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -312,7 +321,6 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
         if (itemCount == 0) {
           return SizedBox.shrink();
         }
-
 
         return Positioned(
           left: 1.w,

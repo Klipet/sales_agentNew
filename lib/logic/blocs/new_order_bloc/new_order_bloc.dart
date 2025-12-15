@@ -50,7 +50,7 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
         data: {
           Constant().modelDB: event.client,
           Constant().id: id,
-          Constant().outlet: event.outlet,
+          Constant().outlet: event.outlet ?? event.modelOutlensDb,
         },
       );
     } catch (e) {

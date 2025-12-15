@@ -10,6 +10,7 @@ import 'package:sales_agent/core/constans.dart';
 import 'package:sales_agent/data/models_api/models_client/ourlets_response.dart';
 import 'package:sales_agent/data/models_db/model_db_clients/model_client_db.dart';
 import 'package:sales_agent/data/providers/api_provider/client_detail_api.dart';
+import 'package:sales_agent/data/repositories/client_repositori.dart';
 import 'package:sales_agent/logic/blocs/client_detail_blocs/client_detail_bloc.dart';
 import 'package:sales_agent/logic/blocs/client_detail_blocs/client_detail_state.dart';
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
@@ -32,7 +33,7 @@ class TwoStepCreate extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => ClientDetailBloc(ClientDetailApi())),
+        BlocProvider(create: (_) => ClientDetailBloc(ClientDetailApi(), ClientRepositori())),
         BlocProvider(create: (_) => NewOrderBloc(NewOrderRepository(), context))
       ],
       child: TwoStepCreateUI(),
@@ -80,13 +81,6 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
     });
   }
 
-  Future<void> _proceedToNextStep({DetailOutlands? outlet}) async {
-    context.read<NewOrderBloc>().add(
-      CreateOrderEvent(client: clientDb, outlet: outlet),
-    );
-  }
-
-
   @override
   Widget build(BuildContext context) {
     if (!isLoaded) {
@@ -105,10 +99,9 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
           SizedBox(height: 15.h),
           _infoClient(),
           SizedBox(height: 15.h),
-          if (clientDb != null)
             Padding(
               padding: EdgeInsets.only(left: 35.h),
-              child: Text('Selectează adresa:'),
+              child:clientDb.outlets.isNotEmpty ? Text('Selectează adresa:'): SizedBox(),
             ),
           infoOutlans(),
         ],
@@ -194,7 +187,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                         SizedBox(height: 16),
                         Center(
                           child: Text(
-                            state.message,
+                            'Nu am gasit nimic.......',
                             style: TextStyle(
                               fontSize: 18,
                               color: Colors.grey[600],
@@ -243,7 +236,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                             ),
                             SizedBox(width: 8.h),
                             Text(
-                              "Next page",
+                              "Urmatore pagina",
                               style: TextStyle(color: Colors.white),
                             ),
                           ],
@@ -255,10 +248,8 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
               ],
             ),
           );
-
-
         } else if (state is ClientDetailSuccess) {
-          final outlets = state.contragrnt.outlets;
+          final outlets = state.contragrnt?.outlets ?? [];
           if (outlets.isEmpty || outlets == null) {
             return Expanded(
               child: Column(
@@ -335,10 +326,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                 ],
               ),
             );
-          } else {
-            print(
-              '${state.contragrnt.outlets.length} state is ClientDetailSuccess',
-            );
+          }
             return Container(
               margin: EdgeInsets.only(left: 15.w),
               decoration: BoxDecoration(
@@ -347,7 +335,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                 border: Border.all(color: borderColor, width: 1.w),
               ),
               child: Column(
-                children: state.contragrnt.outlets.map((outlet) {
+                children: state.contragrnt!.outlets.map((outlet) {
                   final text = outlet.comment != ''
                       ? outlet.comment
                       : outlet.address;
@@ -381,7 +369,51 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                 }).toList(),
               ),
             );
-          }
+          }else if(state is OutlandDetailSuccess){
+          return Container(
+            margin: EdgeInsets.only(left: 15.w),
+            decoration: BoxDecoration(
+              color: containerColor,
+              borderRadius: BorderRadius.all(Radius.circular(10.r)),
+              border: Border.all(color: borderColor, width: 1.w),
+            ),
+            child: Column(
+              children: state.outlands!.map((outlet) {
+                final text = outlet.comment != ''
+                    ? outlet.comment
+                    : outlet.address;
+                return GestureDetector(
+                  onTap: () {
+                    context.read<NewOrderBloc>().add(
+                      AddOrderOutlentEvent(
+                          client: clientDb,
+                          outlet: DetailOutlands(
+                            comment: outlet.comment!,
+                          address: outlet.address!),
+                          id: idDoc,
+                          page: 8
+                      ),
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        padding: EdgeInsets.symmetric(
+                          vertical: 10.w,
+                          horizontal: 16.h,
+                        ),
+                        child: Text(text!, style: textStyleOutlandsText),
+                      ),
+                      Divider(color: borderColor, thickness: 1, height: 1),
+                    ],
+                  ),
+                );
+              }).toList(),
+            ),
+          );
         }
         return Expanded(
           child: LoadingWidget(

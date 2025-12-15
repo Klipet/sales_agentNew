@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:sales_agent/data/models_db/model_db_clients/model_outlens_db.dart';
 
 import '../../../data/models_api/models_client_detail/detail_outlands.dart';
 import '../../../data/models_api/models_client_prices/prices.dart';
@@ -21,11 +22,13 @@ class CreateOrderEvent extends NewOrderEvent {
 class AddOrderOutlentEvent extends NewOrderEvent {
   final ModelClientDb client;
   final DetailOutlands? outlet;
+  final ModelOutlensDb? modelOutlensDb;
   final int? page;
   final int? id;
 
-  AddOrderOutlentEvent( {
+  AddOrderOutlentEvent(  {
     required this.client,
+    this.modelOutlensDb,
     this.outlet,
     this.page,
     this.id,
