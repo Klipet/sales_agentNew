@@ -9,6 +9,7 @@ class ModelOutlensDb{
   Id id = Isar.autoIncrement;
   late String? address;
   late String? comment;
+  @Backlink(to: 'outlets')
   final client = IsarLink<ModelClientDb>();
 
   ModelOutlensDb({

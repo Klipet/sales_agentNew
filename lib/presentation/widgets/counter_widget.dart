@@ -27,7 +27,7 @@ class CounterWidget extends StatefulWidget {
 }
 
 class _CounterWidgetState extends State<CounterWidget> {
-  double count = 0;
+  double count = 1;
   double sum = 0;
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -35,7 +35,7 @@ class _CounterWidgetState extends State<CounterWidget> {
   @override
   void initState() {
     super.initState();
-    _controller.text = widget.asl.nonWhole! ? '0.00' : '0';
+    _controller.text = widget.asl.nonWhole! ? '1.00' : '1';
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
@@ -60,7 +60,7 @@ class _CounterWidgetState extends State<CounterWidget> {
       if (newCount > widget.asl.remain!) {
         count = widget.asl.remain!;
       } else if (newCount < 0) {
-        count = 0;
+        count = 1;
       } else {
         count = newCount;
       }
@@ -95,7 +95,7 @@ class _CounterWidgetState extends State<CounterWidget> {
 
   void _onTextChanged(String value) {
     if (value.isEmpty) {
-      setState(() => count = 0);
+      setState(() => count = 1);
       return;
     }
 
@@ -142,7 +142,7 @@ class _CounterWidgetState extends State<CounterWidget> {
   }
 
   Widget _textTotalColor(){
-    if(count > 0){
+    if(count >= 0){
       return  Row(
         children: [
           Text(
@@ -177,109 +177,107 @@ class _CounterWidgetState extends State<CounterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          // Total Section
-          SizedBox(height: 5.h),
-          _textTotalColor(),
-          // Counter Container
-          SizedBox(height: 5.h),
-          Row(
-            children: [
-              Material(
-                color: Colors.transparent,
-                child: Container(
-                  height: 64.h,
-                  width: 290.w,
-                  decoration: BoxDecoration(
-                    color: borderColor,
-                    borderRadius: BorderRadius.circular(10.r),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _CounterButton(
-                        icon: Icons.remove,
-                        onPressed: _decrement,
-                      ),
-                      Container(
-                        width: 190.w,
-                        alignment: Alignment.center,
-                        child: TextField(
-                          controller: _controller,
-                          focusNode: _focusNode,
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.numberWithOptions(
-                            decimal: widget.asl.nonWhole,
-                          ),
-                          inputFormatters: [
-                            if (widget.asl.nonWhole!)
-                              FilteringTextInputFormatter.allow(RegExp(r'[\d,.]'))
-                            else
-                              FilteringTextInputFormatter.digitsOnly,
-                            LengthLimitingTextInputFormatter(10),
-                          ],
-                          style: GoogleFonts.poppins(
-                            fontSize: 30.sp,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.black,
-                            decoration: TextDecoration.none,
-                          ),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.zero,
-                            isDense: true,
-                          ),
-                          onChanged: _onTextChanged,
-                          onSubmitted: (value) {
-                            _focusNode.unfocus();
-                            if (value.isEmpty) {
-                              _updateCount(0);
-                            } else {
-                              _updateCount(count);
-                            }
-                          },
-                        ),
-                      ),
-                      _CounterButton(
-                        icon: Icons.add,
-                        onPressed: _increment,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              Spacer(),
-              Container(
+    return Column(
+      children: [
+        // Total Section
+        SizedBox(height: 5.h),
+        _textTotalColor(),
+        // Counter Container
+        SizedBox(height: 5.h),
+        Row(
+          children: [
+            Material(
+              color: Colors.transparent,
+              child: Container(
                 height: 64.h,
-                width: 64.w,
+                width: 290.w,
                 decoration: BoxDecoration(
                   color: borderColor,
                   borderRadius: BorderRadius.circular(10.r),
                 ),
-                child: Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    borderRadius: BorderRadius.circular(8.r),
-                    onTap: count > 0
-                        ? () {
-                      _focusNode.unfocus();
-                      widget.onConfirm(count, sum);
-                    }
-                        : null,
-                    child: Icon(
-                      Icons.check_outlined,
-                      size: 50.r,
-                      color: textColor,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    _CounterButton(
+                      icon: Icons.remove,
+                      onPressed: _decrement,
                     ),
+                    Container(
+                      width: 190.w,
+                      alignment: Alignment.center,
+                      child: TextField(
+                        controller: _controller,
+                        focusNode: _focusNode,
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.numberWithOptions(
+                          decimal: widget.asl.nonWhole,
+                        ),
+                        inputFormatters: [
+                          if (widget.asl.nonWhole!)
+                            FilteringTextInputFormatter.allow(RegExp(r'[\d,.]'))
+                          else
+                            FilteringTextInputFormatter.digitsOnly,
+                          LengthLimitingTextInputFormatter(10),
+                        ],
+                        style: GoogleFonts.poppins(
+                          fontSize: 30.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
+                          decoration: TextDecoration.none,
+                        ),
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: EdgeInsets.zero,
+                          isDense: true,
+                        ),
+                        onChanged: _onTextChanged,
+                        onSubmitted: (value) {
+                          _focusNode.unfocus();
+                          if (value.isEmpty) {
+                            _updateCount(0);
+                          } else {
+                            _updateCount(count);
+                          }
+                        },
+                      ),
+                    ),
+                    _CounterButton(
+                      icon: Icons.add,
+                      onPressed: _increment,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Spacer(),
+            Container(
+              height: 64.h,
+              width: 64.w,
+              decoration: BoxDecoration(
+                color: borderColor,
+                borderRadius: BorderRadius.circular(10.r),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(8.r),
+                  onTap: count > 0
+                      ? () {
+                    _focusNode.unfocus();
+                    widget.onConfirm(count, sum);
+                  }
+                      : null,
+                  child: Icon(
+                    Icons.check_outlined,
+                    size: 50.r,
+                    color: textColor,
                   ),
                 ),
               ),
-            ],
-          ),
-        ],
-      ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

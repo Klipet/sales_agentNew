@@ -337,6 +337,19 @@ final textStyleDelogare = GoogleFonts.poppins(
     color: textColor,
     decoration: TextDecoration.none
 );
+final textStyleDialogClient = GoogleFonts.poppins(
+    fontWeight: FontWeight.w700,
+    fontSize: 32.sp,
+    color: borderColor,
+    decoration: TextDecoration.none
+);
+final textStyleDialogClientInfo = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontSize: 19.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+
 
 
 

@@ -1,7 +1,8 @@
 import 'package:isar/isar.dart';
+import 'package:sales_agent/data/models_api/models_client/ourlets_response.dart';
+import 'package:sales_agent/data/models_api/models_client_detail/client_detail.dart';
 import 'package:sales_agent/data/models_db/model_db_clients/model_outlens_db.dart';
 
-import '../../../data/models_api/models_client_detail/detail_outlands.dart';
 import '../../../data/models_api/models_client_prices/prices.dart';
 import '../../../data/models_db/model_db_assortiment/model_assortiment_db.dart';
 import '../../../data/models_db/model_db_clients/model_client_db.dart';
@@ -10,7 +11,7 @@ abstract class NewOrderEvent {}
 
 class CreateOrderEvent extends NewOrderEvent {
   final ModelClientDb client;
-  final DetailOutlands? outlet;
+  final OutletsResponse? outlet;
   final int? page;
 
   CreateOrderEvent({
@@ -21,12 +22,14 @@ class CreateOrderEvent extends NewOrderEvent {
 }
 class AddOrderOutlentEvent extends NewOrderEvent {
   final ModelClientDb client;
-  final DetailOutlands? outlet;
+  final ClientDetail? clientDetail;
+  final OutletsResponse? outlet;
   final ModelOutlensDb? modelOutlensDb;
   final int? page;
   final int? id;
 
-  AddOrderOutlentEvent(  {
+  AddOrderOutlentEvent({
+    this.clientDetail,
     required this.client,
     this.modelOutlensDb,
     this.outlet,
@@ -77,4 +80,18 @@ class LoadLineCountEvent extends NewOrderEvent {
 }
 
 
+
+
 class DeleteOrderEvent extends NewOrderEvent {}
+
+class AddCommentEvent extends NewOrderEvent {
+  final int orderId;
+  final String comment;
+  AddCommentEvent(this.orderId, this.comment);
+}
+
+class LoadCommentEvent extends NewOrderEvent {
+  final int orderId;
+
+  LoadCommentEvent(this.orderId);
+}

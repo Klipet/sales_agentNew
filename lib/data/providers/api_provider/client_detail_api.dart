@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:sales_agent/data/models_api/models_client_detail/client_detail.dart';
+
 import 'package:sales_agent/data/models_api/models_client_detail/detail_client_response.dart';
 
 import '../../repositories/apikey_repositori.dart';

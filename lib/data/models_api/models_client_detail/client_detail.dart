@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:sales_agent/data/models_api/models_client_detail/detail_outlands.dart';
+
+import '../models_client/ourlets_response.dart';
 part 'client_detail.g.dart';
 
 @JsonSerializable()
@@ -13,14 +14,14 @@ class ClientDetail{
   @JsonKey(name: 'IDNP', defaultValue: '----')
   final String idnp;
 
-  @JsonKey(name: 'Image',defaultValue: '')
-  final String image;
+  @JsonKey(name: 'Image',defaultValue: [])
+  final List<int> image;
 
   @JsonKey(name: 'Name', defaultValue: '')
   final String name;
 
   @JsonKey(name: 'Outlets', defaultValue: [])
-  final List<DetailOutlands> outlets;
+  final List<OutletsResponse> outlets;
 
   @JsonKey(name: 'PricelistUid',defaultValue: '')
   final String pricelistUid;

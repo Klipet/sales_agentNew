@@ -10,7 +10,7 @@ class ModelClientDb{
   late double? balance;
   late String? code;
   late String? idnp;
-  late String? image;
+  late List<int>? image;
   late String? name;
   late String? pricelistUid;
   late String? tvaCode;
@@ -32,7 +32,7 @@ class ModelClientDb{
         balance: (json['Balance'] as num?)?.toDouble(),
         code: json['Code'] as String?,
         idnp: json['IDNP'] as String?,
-        image: json['Image'] as String?,
+        image: json['Image'] as List<int>,
         name: json['Name'] as String?,
         pricelistUid: json['PricelistUid'] as String?,
         tvaCode: json['TVACode'] as String?,

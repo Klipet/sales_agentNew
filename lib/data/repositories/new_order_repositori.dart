@@ -1,9 +1,9 @@
 import 'package:isar/isar.dart';
+import 'package:sales_agent/data/models_api/models_client/ourlets_response.dart';
 import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
 import 'package:sales_agent/data/models_db/model_db_orders/model_lines_db.dart';
 import 'package:uuid/uuid.dart';
 
-import '../models_api/models_client_detail/detail_outlands.dart';
 import '../models_api/models_client_prices/prices.dart';
 import '../models_db/model_db_assortiment/model_assortiment_db.dart';
 import '../models_db/model_db_clients/model_client_db.dart';
@@ -15,7 +15,7 @@ class NewOrderRepository {
 
   Future<Id> createOrder({
     required ModelClientDb client,
-    DetailOutlands? outlet,
+    OutletsResponse? outlet,
   }) async {
     final isar = await DbProvider.instance();
 
@@ -24,7 +24,7 @@ class NewOrderRepository {
     String? deliveryComment;
 
     if (outlet != null) {
-      if (outlet.comment.isNotEmpty == true) {
+      if (outlet.comment == true) {
         deliveryComment = outlet.comment;
         deliveryAddress = outlet.address ?? 'Адрес не указан';
       } else {
@@ -59,14 +59,14 @@ class NewOrderRepository {
 
 
   Future<int> addOutland({
-    DetailOutlands? outlet,
+    OutletsResponse? outlet,
     required int orderId,
 
   }) async {
     final isar = await DbProvider.instance();
-    final deliveryAddress = outlet?.comment.isNotEmpty == true
+    final deliveryAddress = outlet?.comment == true
         ? outlet!.comment
-        : outlet?.address.isNotEmpty == true
+        : outlet?.address == true
         ? outlet!.address
         : 'Адрес не указан';
 
@@ -77,7 +77,7 @@ class NewOrderRepository {
 
       if (order != null) {
         // Меняем только нужный параметр
-        order.deliveryAddress = deliveryAddress;
+        order.deliveryAddress = deliveryAddress ?? '';
 
         // Сохраняем обратно
         await isar.modelDocumentDbs.put(order);
@@ -398,6 +398,29 @@ class NewOrderRepository {
       print('❌ Ошибка при удалении документа: $e');
       rethrow;
     }
+  }
+
+  Future<bool> addCommentToOrder(int id, String comment) async {
+    final isar = await DbProvider.instance();
+    try{
+      await isar.writeTxn(() async {
+        final order = await isar.modelDocumentDbs.get(id);
+        if (order == null) return false;
+        order.comment = comment;
+        await isar.modelDocumentDbs.put(order);
+        print('✅ Заказ обновлен');
+        return true;
+      });
+    }catch(e){
+      return false;
+    }
+    return false;
+  }
+
+  Future<String> getCommentFromOrder(int id) async{
+    final isar = await DbProvider.instance();
+    final order = await isar.modelDocumentDbs.get(id);
+    return await order!.comment;
   }
 
 }

@@ -18,6 +18,7 @@ import '../../core/utils/order_line_data_sours.dart';
 import '../../core/utils/orders_urils.dart';
 import '../../core/utils/pop_menu_util.dart';
 
+import '../../data/models_api/models_client/ourlets_response.dart';
 import '../../data/models_db/model_db_orders/model_document_db.dart';
 import '../../data/models_db/model_db_orders/model_lines_db.dart';
 
@@ -102,6 +103,7 @@ Future<bool?> showDetailOrder({
                         if (order.state == 0 || order.state == 1) {
                           final client = await clientRepositori
                               .getClientByUuid(order.clientUid);
+                          final outlent = await clientRepositori.getOutletsOrder(client!, order.deliveryAddress) ?? null;
                           Provider.of<NavigationProvider>(
                             context,
                             listen: false,
@@ -110,6 +112,10 @@ Future<bool?> showDetailOrder({
                             data: {
                               Constant().modelDB: client,
                               Constant().id: order.id,
+                              if(outlent!=null)
+                              Constant().outlet: OutletsResponse(
+                                comment: outlent.comment ?? '',
+                                address: outlent.address ?? '')
                             },
                           );
 

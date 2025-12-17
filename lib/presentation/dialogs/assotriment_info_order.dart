@@ -3,12 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:glassmorphism/glassmorphism.dart';
+import 'package:sales_agent/presentation/dialogs/show_iages_dialog.dart';
 
 
 import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
 import '../../data/models_api/models_client_prices/prices.dart';
 import '../../data/models_db/model_db_assortiment/model_assortiment_db.dart';
+import '../../logic/blocs/assortiment_image_bloc/assortiment_img_cubit.dart';
+import '../../logic/blocs/assortiment_image_bloc/assotriment_img_state.dart';
 import '../../logic/blocs/new_order_bloc/new_order_bloc.dart';
 import '../../logic/blocs/new_order_bloc/new_order_event.dart';
 import '../../logic/blocs/new_order_bloc/new_order_state.dart';
@@ -21,34 +24,17 @@ Future<bool?> showAssortimentInfoOrder({
   required int idDocument,
 }) async {
   final orderBloc = context.read<NewOrderBloc>();
+  final orderBlocAls = context.read<AssortimentImgCubit>();
 
-  return await showGeneralDialog<bool>(
+  return await showDialog<bool>(
     context: context,
-    barrierDismissible: false,
-    barrierLabel: "Dialog",
-    barrierColor: Colors.black.withOpacity(0.2),
-    pageBuilder: (dialogContext, anim1, anim2) {
-      return BlocProvider.value(
-      value: orderBloc,
-        child:   GlassmorphicContainer(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        borderRadius: 0,
-        blur: 2,
-        alignment: Alignment.center,
-        border: 0,
-        linearGradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.1),
-            Colors.white.withOpacity(0.05),
-          ],
-        ),
-        borderGradient: LinearGradient(
-          colors: [
-            Colors.white.withOpacity(0.5),
-            Colors.white.withOpacity(0.5),
-          ],
-        ),
+    builder: (dialogContext) {
+      orderBlocAls.loadImg(aslUuid:asl.uid ?? '');
+      return MultiBlocProvider(
+        providers: [
+          BlocProvider.value(value: orderBloc),
+          BlocProvider.value(value: orderBlocAls),
+        ],
         child: Center(
           child: Container(
             constraints: BoxConstraints(
@@ -70,13 +56,31 @@ Future<bool?> showAssortimentInfoOrder({
                       width: 24.w,
                       height: 24.h,
                     ),
-                    Spacer(),
+                    SizedBox(width: 16.w),
+                    // Кнопка для просмотра изображения
                     GestureDetector(
-                      onTap: () => Navigator.pop(dialogContext, false),
-                      child: Icon(
-                        Icons.close_rounded,
-                        color: textColor,
-                        size: 30.r,
+                      onTap: () {
+                        final state = context.read<AssortimentImgCubit>().state;
+                        if (state is ImgSuccess && state.imgResponse.images.isNotEmpty) {
+                          showImagesDialog(
+                            dialogContext,
+                            state.imgResponse.images,
+                          );
+                        }
+                      },
+                      child: BlocBuilder<AssortimentImgCubit, AssotrimentImgState>(
+                        builder: (context, state) {
+                          // Меняем иконку в зависимости от состояния
+                           if (state is ImgSuccess) {
+                             if(state.imgResponse.images.isNotEmpty && state.imgResponse.images != [] ){
+                               return Icon(
+                                 Icons.photo_camera,
+                                 color: buttonColor, // Цвет если изображение есть
+                               );
+                             }
+                          }
+                          return SizedBox();
+                        },
                       ),
                     ),
                   ],
@@ -171,10 +175,12 @@ Future<bool?> showAssortimentInfoOrder({
             ),
           ),
         ),
-        ));
+        );
     },
   );
 }
+
+
 
 /// Форматирование цены
 String _formatPrice(ModelAssortimentDB asl, Prices? prices) {

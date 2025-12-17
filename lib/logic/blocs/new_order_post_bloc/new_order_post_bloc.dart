@@ -61,6 +61,8 @@ class NewOrderPostBloc extends Bloc<NewOrderPostEvent, NewOrderPostState> {
         );
       }).toList();
 
+    //  Map<String, dynamic> data = jsonDecode(order.comment);
+
       // 2. Создаём объект для отправки на API
       final orderForApi = NewOrderModelApi(
         clientName: order.clientName ?? '',
@@ -69,7 +71,6 @@ class NewOrderPostBloc extends Bloc<NewOrderPostEvent, NewOrderPostState> {
         comment: order.comment,
         dateProcessed: ConvertData().toDateNetFormat(order.dateProcessed),
         dateValid: ConvertData().toDateNetFormat(order.dateValid),
-        // ✅ ИСПРАВЛЕНО: ?. оператор
         deliveryAddress: order.deliveryAddress,
         state: 1,
         stockName: order.stockName ?? '',

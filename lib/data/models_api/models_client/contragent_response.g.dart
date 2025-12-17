@@ -11,7 +11,10 @@ ContragentResponse _$ContragentResponseFromJson(Map<String, dynamic> json) =>
       balance: (json['Balance'] as num?)?.toDouble() ?? 0,
       code: json['Code'] as String? ?? '',
       idnp: json['IDNP'] as String? ?? '----',
-      image: json['Image'] as String? ?? '',
+      image: (json['Image'] as List<dynamic>?)
+              ?.map((e) => (e as num).toInt())
+              .toList() ??
+          [],
       name: json['Name'] as String? ?? '',
       outlets: (json['Outlets'] as List<dynamic>?)
               ?.map((e) => OutletsResponse.fromJson(e as Map<String, dynamic>))

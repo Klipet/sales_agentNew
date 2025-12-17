@@ -8,8 +8,8 @@ part of 'ourlets_response.dart';
 
 OutletsResponse _$OutletsResponseFromJson(Map<String, dynamic> json) =>
     OutletsResponse(
-      address: json['Address'] as String?,
-      comment: json['Comment'] as String?,
+      address: json['Address'] as String? ?? '',
+      comment: json['Comment'] as String? ?? '',
     );
 
 Map<String, dynamic> _$OutletsResponseToJson(OutletsResponse instance) =>

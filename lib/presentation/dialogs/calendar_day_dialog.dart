@@ -6,6 +6,7 @@ import 'package:glassmorphism/glassmorphism.dart';
 
 import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/data/repositories/orders_repositori.dart';
+import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 
 import '../../core/styles_text.dart';
 import '../../core/utils/convert_data.dart';
@@ -70,7 +71,7 @@ void showBlurDialogCalendar(
                   // функция, которая берёт заказы из базы
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
+                      return Center(child: LoadingWidget(width: double.maxFinite, height: double.maxFinite,));
                     } else if (snapshot.hasError) {
                       return Center(child: Text("Ошибка: ${snapshot.error}"));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -151,7 +152,7 @@ void showBlurDialogCalendar(
                                         Text(
                                           'dialog.address'.tr(
                                             namedArgs: {
-                                              'address': order.comment
+                                              'address': order.deliveryAddress
                                                   .toString(),
                                             },
                                           ),

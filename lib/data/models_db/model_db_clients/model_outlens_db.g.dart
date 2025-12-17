@@ -36,10 +36,11 @@ const ModelOutlensDbSchema = CollectionSchema(
   indexes: {},
   links: {
     r'client': LinkSchema(
-      id: -1443947227131156779,
+      id: 7631580489423146780,
       name: r'client',
       target: r'ModelClientDb',
       single: true,
+      linkName: r'outlets',
     )
   },
   embeddedSchemas: {},

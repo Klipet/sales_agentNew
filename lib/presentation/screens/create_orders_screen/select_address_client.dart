@@ -16,8 +16,6 @@ import 'package:sales_agent/logic/blocs/client_detail_blocs/client_detail_state.
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 
 import '../../../core/styles_text.dart';
-import '../../../core/utils/costom_sidebar.dart';
-import '../../../data/models_api/models_client_detail/detail_outlands.dart';
 import '../../../data/providers/navigator_provider.dart';
 import '../../../data/repositories/new_order_repositori.dart';
 import '../../../logic/blocs/new_order_bloc/new_order_bloc.dart';
@@ -292,7 +290,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                         Container(
                           constraints: BoxConstraints(
                             maxHeight: 50.h,
-                            maxWidth: 147.w,
+                            maxWidth: 200.w,
                           ),
                           //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
                           alignment: Alignment.center,
@@ -308,13 +306,13 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               Icon(
-                                Icons.skip_next_outlined,
+                                Icons.queue_play_next_outlined,
                                 color: Colors.white,
                                 size: 24.r,
                               ),
                               SizedBox(width: 8.h),
                               Text(
-                                "Next page",
+                                "Creaza document",
                                 style: TextStyle(color: Colors.white),
                               ),
                             ],
@@ -384,12 +382,13 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                     : outlet.address;
                 return GestureDetector(
                   onTap: () {
+                    print(outlet.comment!.length);
                     context.read<NewOrderBloc>().add(
                       AddOrderOutlentEvent(
                           client: clientDb,
-                          outlet: DetailOutlands(
-                            comment: outlet.comment!,
-                          address: outlet.address!),
+                          outlet: OutletsResponse(
+                            comment: outlet.comment ?? '',
+                          address: outlet.address ?? ''),
                           id: idDoc,
                           page: 8
                       ),

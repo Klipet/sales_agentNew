@@ -13,8 +13,8 @@ class ContragentResponse{
   @JsonKey(name: 'IDNP', defaultValue: '----')
   final String idnp;
 
-  @JsonKey(name: 'Image',defaultValue: '')
-  final String image;
+  @JsonKey(name: 'Image',defaultValue: [])
+  final List<int> image;
 
   @JsonKey(name: 'Name', defaultValue: '')
   final String name;

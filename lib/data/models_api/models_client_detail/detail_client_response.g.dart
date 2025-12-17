@@ -14,8 +14,9 @@ DetailClientResponse _$DetailClientResponseFromJson(
       token: json['Token'] == null
           ? null
           : Token.fromJson(json['Token'] as Map<String, dynamic>),
-      contragents:
-          ClientDetail.fromJson(json['Contragent'] as Map<String, dynamic>),
+      contragents: json['Contragent'] == null
+          ? null
+          : ClientDetail.fromJson(json['Contragent'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$DetailClientResponseToJson(

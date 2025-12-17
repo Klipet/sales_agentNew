@@ -14,6 +14,7 @@ class ClientDataSource extends DataGridSource{
 
 
   void updateData(List<ModelClientDb> client) {
+    _clientList = client..sort((a, b) => a.name!.compareTo(b.name!));
     _clientList = client;
     _rows = client.map((client) {
       return DataGridRow(cells: [

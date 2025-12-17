@@ -10,6 +10,7 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
+import '../dialogs/cient_detail_info.dart';
 
 class TableClientWidget extends StatefulWidget {
   final String search;
@@ -45,7 +46,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
         _loadOrders(); // если строка пустая — показать все
       } else {
         _loadOrdersFilterSearch(widget.search);
-      //  print(widget.search);
+        //  print(widget.search);
       }
     }
   }
@@ -60,6 +61,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
       _isLoading = false;
     });
   }
+
   Future<void> _loadOrdersFilterSearch(String? search) async {
     setState(() {
       _isLoading = true;
@@ -85,7 +87,10 @@ class _TableClientWidgetState extends State<TableClientWidget> {
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return LoadingWidget(width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height);
+      return LoadingWidget(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+      );
     }
 
     if (_dataSource.clientList.isEmpty) {
@@ -93,10 +98,16 @@ class _TableClientWidgetState extends State<TableClientWidget> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SvgPicture.asset('assets/icons/empti.svg', width: 446.w, height: 259.h,),
+            SvgPicture.asset(
+              'assets/icons/empti.svg',
+              width: 446.w,
+              height: 259.h,
+            ),
             SizedBox(height: 16),
             Text(
-              widget.search.isNotEmpty ? 'errors.notFound'.tr() : 'errors.notFound'.tr(),
+              widget.search.isNotEmpty
+                  ? 'errors.notFound'.tr()
+                  : 'errors.notFound'.tr(),
               style: TextStyle(fontSize: 18, color: Colors.grey[600]),
             ),
           ],
@@ -123,7 +134,7 @@ class _TableClientWidgetState extends State<TableClientWidget> {
               final tappedRow = _dataSource.clientList[rowIndex - 1];
 
               if (tappedRow != null) {
-             //  showDetailOrder(context: context, order: tappedRow);
+                clientDetailInfo(context: context, clientInfo: tappedRow);
               } else {
                 print('Объект заказа не найден в строке!');
               }
@@ -143,11 +154,16 @@ class _TableClientWidgetState extends State<TableClientWidget> {
               width: 104.w,
               label: Container(
                 decoration: BoxDecoration(
-                  border: Border(right: BorderSide(color: borderColor, width:  1.w),
-                    bottom: BorderSide(color: borderColor, width:  0.5.w),),
+                  border: Border(
+                    right: BorderSide(color: borderColor, width: 1.w),
+                    bottom: BorderSide(color: borderColor, width: 0.5.w),
+                  ),
                 ),
                 child: Center(
-                  child: Text('gridColumn.cod'.tr(), style: textStyleDialogOrderTitle),
+                  child: Text(
+                    'gridColumn.cod'.tr(),
+                    style: textStyleDialogOrderTitle,
+                  ),
                 ),
               ),
             ),
@@ -156,8 +172,10 @@ class _TableClientWidgetState extends State<TableClientWidget> {
               width: 556.w,
               label: Container(
                 decoration: BoxDecoration(
-                  border: Border(right: BorderSide(color: borderColor, width:  1.w),
-                    bottom: BorderSide(color: borderColor, width:  0.5.w),),
+                  border: Border(
+                    right: BorderSide(color: borderColor, width: 1.w),
+                    bottom: BorderSide(color: borderColor, width: 0.5.w),
+                  ),
                 ),
                 child: Center(
                   child: Text(
@@ -172,40 +190,54 @@ class _TableClientWidgetState extends State<TableClientWidget> {
               width: 163.w,
               label: Container(
                 decoration: BoxDecoration(
-                  border: Border(right: BorderSide(color: borderColor, width:  1.w),
-                    bottom: BorderSide(color: borderColor, width:  0.5.w),),
+                  border: Border(
+                    right: BorderSide(color: borderColor, width: 1.w),
+                    bottom: BorderSide(color: borderColor, width: 0.5.w),
+                  ),
                 ),
                 child: Center(
-                  child: Text('gridColumn.idno'.tr(), style: textStyleDialogOrderTitle),
+                  child: Text(
+                    'gridColumn.idno'.tr(),
+                    style: textStyleDialogOrderTitle,
+                  ),
                 ),
               ),
             ),
             GridColumn(
-                columnName: 'tva',
-                width: 193.w,
-                label: Container(
-                  decoration: BoxDecoration(
-                    border: Border(
-                      right: BorderSide(color: borderColor, width:  1.w),
-                      bottom: BorderSide(color: borderColor, width:  0.5.w),
-                    ),
+              columnName: 'tva',
+              width: 193.w,
+              label: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    right: BorderSide(color: borderColor, width: 1.w),
+                    bottom: BorderSide(color: borderColor, width: 0.5.w),
                   ),
-                  child: Center(child: Text('gridColumn.tva'.tr(), style: textStyleDialogOrderTitle)),
-                )
+                ),
+                child: Center(
+                  child: Text(
+                    'gridColumn.tva'.tr(),
+                    style: textStyleDialogOrderTitle,
+                  ),
+                ),
+              ),
             ),
             GridColumn(
               columnName: 'outlans',
               label: Container(
                 decoration: BoxDecoration(
-                  border: Border(right: BorderSide(color: borderColor, width:  1.w),
-                    bottom: BorderSide(color: borderColor, width:  0.5.w),),
+                  border: Border(
+                    right: BorderSide(color: borderColor, width: 1.w),
+                    bottom: BorderSide(color: borderColor, width: 0.5.w),
+                  ),
                 ),
                 child: Center(
-                  child: Text('gridColumn.outlans'.tr(), style: textStyleDialogOrderTitle),
+                  child: Text(
+                    'gridColumn.outlans'.tr(),
+                    style: textStyleDialogOrderTitle,
+                  ),
                 ),
               ),
             ),
-
           ],
         ),
       ),

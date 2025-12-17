@@ -22,6 +22,7 @@ class AssortimentImgCubit extends Cubit<AssotrimentImgState>{
       );
 
       final imgResponse = await aslImg.postImg(orderData: imgBody.toJson());
+      print(imgResponse.images);
       print("${imgResponse.errorMessage} ClientDetailBloc");
       if(imgResponse.errorCode != 0){
         emit(ImgFailure(imgResponse.errorMessage.toString()));

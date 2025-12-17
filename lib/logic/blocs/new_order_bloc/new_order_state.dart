@@ -49,12 +49,25 @@ class NewOrderLineCountUpdated extends NewOrderState {
 }
 class NewOrderLineCount extends NewOrderState {}
 
-
-
 class NewOrderDeleted extends NewOrderState {}
 
 class NewOrderError extends NewOrderState {
   final String message;
 
   NewOrderError(this.message);
+}
+
+
+class AddComentSucces extends NewOrderState{}
+
+class AddComentError extends NewOrderState{
+  final String errorMesage;
+  AddComentError(this.errorMesage);
+}
+
+class CommentLoadingState extends NewOrderState {}
+
+class CommentLoadedState extends NewOrderState {
+  final String comment;
+  CommentLoadedState(this.comment);
 }

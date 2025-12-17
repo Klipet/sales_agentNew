@@ -82,7 +82,7 @@ class _AssortimentInfoUIState extends State<AssortimentInfoUI> {
                   if (state is ImgLoading) {
                     return LoadingWidget(width: 192.w, height: 192.h);
                   } else if (state is ImgSuccess) {
-                    return ContentImage(img: state.contragrnt.images);
+                    return ContentImage(img: state.imgResponse.images);
                   } if(state is ImgFailure){
                     return ContentImage(img: []);
                   }

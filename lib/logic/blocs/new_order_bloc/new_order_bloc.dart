@@ -23,10 +23,12 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     on<DeleteOrderEvent>(_onDeleteOrder);
     on<AddOrderOutlentEvent>(_onAddOrderOutlend);
     on<LoadLineCountEvent>(_onGetOrderLine);
+    on<AddCommentEvent>(_addComment);
+    on<LoadCommentEvent>(_getCommentEvent);
   }
 
   Future<void> _onGetOrderLine(
-      LoadLineCountEvent event,
+    LoadLineCountEvent event,
     Emitter<NewOrderState> emit,
   ) async {
     emit(NewOrderLineCount());
@@ -220,5 +222,29 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
       print('❌ Ошибка удаления заказа: $e');
       emit(NewOrderError('Ошибка удаления заказа: $e'));
     }
+  }
+
+  Future<void> _addComment(
+    AddCommentEvent event,
+    Emitter<NewOrderState> emit,
+  ) async {
+    emit(NewOrderLineCount());
+    final order = await repository.addCommentToOrder(
+      event.orderId,
+      event.comment,
+    );
+    if (order) {
+      emit(AddComentSucces());
+    } else {
+      emit(AddComentError('Что-то пошло не так в коменатрий'));
+    }
+  }
+
+  Future<void> _getCommentEvent(
+    LoadCommentEvent event,
+    Emitter<NewOrderState> emit,
+  ) async {
+    final orderComment = await repository.getCommentFromOrder(event.orderId);
+    emit(CommentLoadedState(orderComment));
   }
 }

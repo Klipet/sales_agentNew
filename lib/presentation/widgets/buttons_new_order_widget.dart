@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+import 'package:sales_agent/data/models_api/models_client/ourlets_response.dart';
 import 'package:sales_agent/data/providers/api_provider/order_post_api.dart';
 import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_bloc.dart';
 import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_state.dart';
@@ -14,15 +15,15 @@ import 'package:toastification/toastification.dart';
 import '../../core/colors_app.dart';
 import '../../core/constans.dart';
 import '../../core/styles_text.dart';
-import '../../data/models_api/models_client_detail/detail_outlands.dart';
 import '../../data/models_api/new_order_post/new_order_model_post_response_api.dart';
 import '../../data/models_db/model_db_clients/model_client_db.dart';
 import '../../data/providers/navigator_provider.dart';
 import '../../data/repositories/new_order_repositori.dart';
 import '../../logic/blocs/new_order_post_bloc/new_order_post_event.dart';
+import '../dialogs/dialog_comment.dart';
 class ButtonsNewOrderWidget extends StatelessWidget {
   final ModelClientDb? clientDb;
-  final DetailOutlands? outlands;
+  final OutletsResponse? outlands;
   final int? id;
   final Function(NewOrderModelPostResponseApi? response, bool save) onConfirm;
 
@@ -33,7 +34,7 @@ class ButtonsNewOrderWidget extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
-      //  BlocProvider(create: (_) => NewOrderBloc( NewOrderRepository(), context)),
+        BlocProvider(create: (_) => NewOrderBloc( NewOrderRepository(), context)),
         BlocProvider(create: (_) => NewOrderPostBloc(OrderPostApi(), NewOrderRepository()))
       ],
       child: BlocConsumer<NewOrderPostBloc, NewOrderPostState>(
@@ -49,11 +50,15 @@ class ButtonsNewOrderWidget extends StatelessWidget {
             return Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                SizedBox(width: 10.w,),
+                buttonAddCommentOrder(context, id ?? -1),
+                SizedBox(width: 10.w,),
                 buttonSaveOrder(context, onConfirm),
-                SizedBox(width: 16.w,),
+                SizedBox(width: 10.w,),
                 buttonSendServerOrder(context, id ?? -1),
-                SizedBox(width: 16.w,),
+                SizedBox(width: 10.w,),
                 buttonAddAsl(context, clientDb,outlands, id),
+
               ],
             );
           }
@@ -62,7 +67,7 @@ class ButtonsNewOrderWidget extends StatelessWidget {
   }
 }
 
-Widget buttonAddAsl(BuildContext context, ModelClientDb? clientDb, DetailOutlands? outlands, int? idDocument ){
+Widget buttonAddAsl(BuildContext context, ModelClientDb? clientDb, OutletsResponse? outlands, int? idDocument ){
   return GestureDetector(
     onTap: () {
       print("T");
@@ -80,7 +85,7 @@ Widget buttonAddAsl(BuildContext context, ModelClientDb? clientDb, DetailOutland
         Container(
           constraints: BoxConstraints(
             maxHeight: 50.h,
-            maxWidth: 316.w,
+            maxWidth: 310.w,
           ),
           //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
           alignment: Alignment.center,
@@ -123,7 +128,7 @@ Widget buttonSendServerOrder(BuildContext context, int id){
         Container(
           constraints: BoxConstraints(
             maxHeight: 50.h,
-            maxWidth: 316.w,
+            maxWidth: 310.w,
           ),
           //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
           alignment: Alignment.center,
@@ -163,7 +168,7 @@ Widget buttonSaveOrder(BuildContext context,  Function(NewOrderModelPostResponse
         Container(
           constraints: BoxConstraints(
             maxHeight: 50.h,
-            maxWidth: 265.w,
+            maxWidth: 255.w,
           ),
           //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
           alignment: Alignment.center,
@@ -180,6 +185,45 @@ Widget buttonSaveOrder(BuildContext context,  Function(NewOrderModelPostResponse
               SvgPicture.asset('assets/icons/dawn.svg'),
               SizedBox(width: 8.h),
               Text("Salvează șablon", style: textStyleBtAslAdd),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget buttonAddCommentOrder(BuildContext context, int id){
+  return  GestureDetector(
+    onTap: () {
+      dialogComment(context: context, order: id);
+    },
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        Container(
+          constraints: BoxConstraints(
+            maxHeight: 50.h,
+            maxWidth: 240.w,
+          ),
+          alignment: Alignment.center,
+          margin: EdgeInsets.only(bottom: 20.w),
+          decoration: BoxDecoration(
+            color: colorBtTotal,
+            borderRadius: BorderRadius.all(Radius.circular(100
+                .r)),
+            border: Border.all(color: borderColor, width: 1.w),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.mode_comment,
+                color: Colors.white,
+                size: 30.r,
+              ),
+              SizedBox(width: 8.h),
+              Text("Add comment", style: textStyleBtAslAdd),
             ],
           ),
         ),

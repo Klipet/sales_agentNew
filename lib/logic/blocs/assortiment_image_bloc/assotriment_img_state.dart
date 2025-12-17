@@ -7,8 +7,8 @@ class ImgInitial extends AssotrimentImgState {}
 class ImgLoading extends AssotrimentImgState {}
 
 class ImgSuccess extends AssotrimentImgState {
-  final AssortimentImgResponse contragrnt;
-  ImgSuccess(this.contragrnt);
+  final AssortimentImgResponse imgResponse;
+  ImgSuccess(this.imgResponse);
 }
 
 class ImgFailure extends AssotrimentImgState {

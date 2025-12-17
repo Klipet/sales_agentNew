@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import 'package:sales_agent/data/models_api/models_client_detail/detail_outlands.dart';
 import 'package:sales_agent/data/models_db/model_db_clients/model_outlens_db.dart';
 import 'package:sales_agent/presentation/screens/login_screen.dart';
 import 'package:sales_agent/presentation/toast/toast_response_new_order.dart';
@@ -14,6 +13,7 @@ import 'package:sales_agent/presentation/widgets/table_new_order_asl.dart';
 import '../../../core/colors_app.dart';
 import '../../../core/constans.dart';
 import '../../../core/styles_text.dart';
+import '../../../data/models_api/models_client/ourlets_response.dart';
 import '../../../data/models_api/new_order_post/new_order_model_post_response_api.dart';
 import '../../../data/models_db/model_db_clients/model_client_db.dart';
 
@@ -31,7 +31,7 @@ class FreeStepCreate extends StatefulWidget {
 
 class _FreeStepCreateState extends State<FreeStepCreate> {
   late ModelClientDb? clientDb;
-  late DetailOutlands? outlands;
+  late OutletsResponse? outlands;
   late int? idDocument;
 
   bool isLoaded = false;
@@ -54,7 +54,7 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
       final client = await navProvider.getPageData<ModelClientDb>(
         Constant().modelDB,
       );
-      final outlet = await navProvider.getPageData<DetailOutlands>(
+      final outlet = await navProvider.getPageData<OutletsResponse>(
         Constant().outlet,
       ) ?? null;
 
@@ -94,9 +94,9 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
           if (outlands == null ) SizedBox(height: 15.w),
           if (outlands != null )
             _infoClient(
-              name: outlands!.comment == ''
-                  ? outlands!.address
-                  : outlands!.comment,
+              name: outlands?.comment != ''
+                  ? outlands!.comment
+                  : outlands!.address,
               idnp: '',
               page: 7,
             ),

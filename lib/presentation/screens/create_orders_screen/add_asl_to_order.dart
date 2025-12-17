@@ -14,12 +14,16 @@ import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_event.dart';
 import 'package:sales_agent/presentation/widgets/table_assortiment_widghet.dart';
 import '../../../core/constans.dart';
 import '../../../core/styles_text.dart';
-import '../../../data/models_api/models_client_detail/detail_outlands.dart';
+
+import '../../../data/models_api/models_client/ourlets_response.dart';
 import '../../../data/models_db/model_db_clients/model_client_db.dart';
+import '../../../data/providers/api_provider/assortiment_img_api.dart';
 import '../../../data/providers/api_provider/assotriment_api.dart';
 import '../../../data/providers/navigator_provider.dart';
 import '../../../data/repositories/assortiment_repositori.dart';
+import '../../../data/repositories/login_repositori.dart';
 import '../../../logic/blocs/assortiment_blocs/assortiment_bloc.dart';
+import '../../../logic/blocs/assortiment_image_bloc/assortiment_img_cubit.dart';
 import '../../../logic/blocs/new_order_bloc/new_order_state.dart';
 import '../../dialogs/assotriment_info_order.dart';
 import '../../widgets/loading_widget.dart';
@@ -39,6 +43,10 @@ class AddAslToOrder extends StatelessWidget {
               AssortimentBloc(AssortimentApi(), AssortimentRepositori())
                 ..fetchAssortiment(),
         ),
+        BlocProvider(
+          create: (_) =>
+          AssortimentImgCubit(AssortimentImgApi(), LoginRepository()),
+        ),
       ],
       child: AddAslToOrderUI(),
     );
@@ -54,7 +62,7 @@ class AddAslToOrderUI extends StatefulWidget {
 
 class _AddAslToOrderState extends State<AddAslToOrderUI> {
   late ModelClientDb clientDb;
-  late DetailOutlands? outlands;
+  late OutletsResponse? outlands;
   late List<PriceLists>? priceLists;
   late int id;
   bool isLoaded = false;
@@ -82,7 +90,7 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
         listen: false,
       );
       final client = navProvider.getPageData<ModelClientDb>(Constant().modelDB);
-      final outlet = navProvider.getPageData<DetailOutlands>(Constant().outlet);
+      final outlet = navProvider.getPageData<OutletsResponse>(Constant().outlet);
       final idDoc = navProvider.getPageData(Constant().id);
       final price = await PriceRepositori().getPriceListsFromIsar(
         client!.pricelistUid ?? '',
@@ -93,7 +101,7 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
           clientDb = client;
           id = idDoc;
           context.read<NewOrderBloc>().add(LoadLineCountEvent(idDoc));
-          outlands = outlet ?? DetailOutlands(address: '', comment: '');
+          outlands = outlet ?? OutletsResponse(address: '', comment: '');
           priceLists = price;
           print('price: Order $priceLists');
           isLoaded = true;

@@ -5,33 +5,29 @@ import 'package:sales_agent/data/models_db/model_db_clients/model_outlens_db.dar
 import '../models_api/models_client/contragent_response.dart';
 import 'db_provider.dart';
 
-class ClientRepositori{
-
+class ClientRepositori {
   Future<void> saveClient(ContragentResponse client) async {
     final isar = await DbProvider.instance();
-     List<ModelOutlensDb> outlens = [];
+    List<ModelOutlensDb> outlens = [];
     final db = ModelClientDb(
       balance: client.balance ?? 0.0,
       code: client.code ?? '----',
       idnp: client.idnp ?? '----',
-      image: client.image ?? '----',
+      image: client.image ?? [],
       name: client.name ?? '----',
       pricelistUid: client.pricelistUid ?? '----',
       tvaCode: client.tvaCode ?? '----',
       uid: client.uid ?? '',
-
     );
-    if(client.outlets == null){
-
-    }else{
+    if (client.outlets == null) {
+    } else {
       outlens = client.outlets!.map((outlents) {
         return ModelOutlensDb(
-            address: outlents.address ?? '',
-            comment: outlents.comment ?? ''
+          address: outlents.address ?? '',
+          comment: outlents.comment ?? '',
         );
       }).toList();
     }
-
 
     await isar.writeTxn(() async {
       await isar.modelClientDbs.put(db); // сначала документ
@@ -42,8 +38,7 @@ class ClientRepositori{
     });
   }
 
-
-  Future<List<ModelClientDb>> getAllClients() async{
+  Future<List<ModelClientDb>> getAllClients() async {
     final isar = await DbProvider.instance();
     final client = await isar.modelClientDbs.where().findAll();
     return client;
@@ -59,7 +54,7 @@ class ClientRepositori{
     await isar.writeTxn(() => isar.modelOutlensDbs.clear());
   }
 
-  Future<List<ModelClientDb>> filterClient( String searchQuery,) async {
+  Future<List<ModelClientDb>> filterClient(String searchQuery) async {
     final isar = await DbProvider.instance();
 
     List<ModelClientDb> client;
@@ -79,13 +74,12 @@ class ClientRepositori{
   }
 
   Future<int> countOutlans(ModelClientDb clientDB) async {
-
     // нужно загрузить связи явно
     await clientDB.outlets.load();
     return clientDB.outlets.length;
   }
 
-  Future<ModelClientDb?> getClientByUuid(String uuid) async{
+  Future<ModelClientDb?> getClientByUuid(String uuid) async {
     final isar = await DbProvider.instance();
     final client = await isar.modelClientDbs
         .filter()
@@ -117,4 +111,33 @@ class ClientRepositori{
     }
   }
 
+  Future<ModelOutlensDb?> getOutletsOrder(
+    ModelClientDb client,
+    String orderAdres,
+  ) async {
+    try {
+      final isar = await DbProvider.instance();
+
+      final outlend = await isar.modelOutlensDbs
+          .filter()
+          .client((q) => q.idEqualTo(client.id)) // Точка принадлежит этому клиенту
+          .and()
+          .group((q) => q // Группируем условия OR
+          .addressEqualTo(orderAdres)
+          .or()
+          .commentContains(orderAdres)) // Contains вместо EqualTo для поиска
+          .findFirst();
+
+      if (outlend == null) {
+        print('Клиент с uuid $client не найден');
+        return null;
+      }
+
+      // Если outlets - это список (IsarLinks)
+      return outlend;
+    } catch (e) {
+      print('Ошибка при получении outlets: $e');
+      return null;
+    }
+  }
 }
