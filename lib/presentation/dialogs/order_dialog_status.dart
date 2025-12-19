@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,23 +27,21 @@ Future<bool?>orderDialogStatus ({
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.r),
         ),
-        content: Container(
-          alignment: Alignment.center,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset('assets/icons/trash_open.svg'),
-              SizedBox(height: 22.h),
-              SizedBox(
-                child: Text(
-                  'Sigur dorești să ștergi document?',
-                  style: textStyleTableDialogDelete,
-                  maxLines: 2,
-                ),
+        content: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SvgPicture.asset('assets/icons/trash_open.svg'),
+            SizedBox(height: 22.h),
+            Container(
+              alignment: Alignment.center,
+              child: Text(
+                'btClear.contentDoc'.tr(),
+                style: textStyleTableDialogDelete,
+                maxLines: 2,
+                textAlign: TextAlign.center,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
         actions: [
           GestureDetector(
@@ -60,7 +59,7 @@ Future<bool?>orderDialogStatus ({
                 border: Border.all(color: borderColor, width: 1),
                 borderRadius: BorderRadius.all(Radius.circular(25.r)),
               ),
-              child: Text('Nu', style: textStyleTableDialogDelete),
+              child: Text('btClear.no'.tr(), style: textStyleTableDialogDelete),
             ),
           ),
           GestureDetector(
@@ -81,7 +80,7 @@ Future<bool?>orderDialogStatus ({
                 borderRadius: BorderRadius.all(Radius.circular(25.r)),
               ),
               child: Text(
-                'Da, șterge',
+                'btClear.da'.tr(),
                 style: textStyleTableDialogDelete.copyWith(color: Colors.white),
               ),
             ),

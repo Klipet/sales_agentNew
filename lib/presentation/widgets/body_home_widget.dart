@@ -1,3 +1,4 @@
+import 'package:advanced_search/advanced_search.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -9,6 +10,7 @@ import 'package:sales_agent/data/repositories/orders_repositori.dart';
 import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
 import '../../data/providers/navigator_provider.dart';
+import '../dialogs/title_order_dialog.dart';
 
 class BodyHomeWidget extends StatefulWidget {
   const BodyHomeWidget({super.key});
@@ -52,7 +54,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
   Widget build(BuildContext context) {
     return Container(
         width: double.infinity,
- //     padding: EdgeInsets.only(left: 8.h),
+     //     padding: EdgeInsets.only(left: 8.h),
       decoration: BoxDecoration(
         color: containerColor,
         border: BoxBorder.all(color: borderColor, width: 1.w),
@@ -71,7 +73,10 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
                   'assets/icons/home/total.svg',
                   totalCount,
                 ),
-                buttonBodyCard('home.bodyBtTotal'.tr(), colorBtTotal),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 30.h),
+                  child: buttonBodyCard(text: 'home.bodyBtTotal'.tr(), color:  colorBtTotal, ordersState:  null, title: 'home.bodyTotal'.tr(),icon:  'assets/icons/home/total.svg' ),
+                ),
               ],
             ),
           ),
@@ -85,7 +90,10 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
                   'assets/icons/home/job.svg',
                   jobCount,
                 ),
-                buttonBodyCard('home.bodyBtJob'.tr(), colorBtJob),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 30.h),
+                  child: buttonBodyCard(text: 'home.bodyBtJob'.tr(), color:  colorBtJob, ordersState:  2, title: 'home.bodyJob'.tr(),icon:  'assets/icons/home/job.svg'),
+                ),
               ],
             ),
           ),
@@ -99,7 +107,10 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
                   'assets/icons/home/await.svg',
                   awaitCount,
                 ),
-                buttonBodyCard('home.bodyBtAwait'.tr(), colorBtAwait),
+                Padding(
+                  padding: EdgeInsets.only(bottom: 30.h),
+                  child: buttonBodyCard( text: 'home.bodyBtAwait'.tr(), color:  colorBtAwait, ordersState:  1, title: 'home.bodyAwait'.tr(),icon:  'assets/icons/home/await.svg'),
+                ),
               ],
             ),
           ),
@@ -113,7 +124,10 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
                   'assets/icons/home/save.svg',
                   saveCount,
                 ),
-                buttonBodyCard('home.bodyBtSave'.tr(), colorBtSave),
+                 Padding(
+                   padding: EdgeInsets.only(bottom: 30.h),
+                   child: buttonBodyCard( text: 'home.bodyBtSave'.tr(),color:  colorBtSave, ordersState:  0, title: 'home.bodySave'.tr(),icon:  'assets/icons/home/save.svg'),
+                 ),
               ],
             ),
           ),
@@ -123,40 +137,41 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
     );
   }
 
-  Widget buttonBodyCard(String text, HexColor color) {
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        width: 200.w,
-          constraints: BoxConstraints(
-              maxHeight: 53.h
-      ),
-          decoration: BoxDecoration(
-            color: color,
-            border: Border.all(color: borderColor, width: 1.w),
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(30.r),
-              bottomRight: Radius.circular(30.r),
-            ),
-          ),
-          margin: EdgeInsets.only(bottom: 30.h),
-          padding: EdgeInsets.symmetric(
-            vertical: 11.h * MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.3),
-            horizontal: 16.w, // добавляем горизонтальные отступы
-          ),
-          child:
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(text,
-                style: textStyleBodyBt,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.center,
-              textScaler: TextScaler.linear(
-                  MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.3)
+  Widget buttonBodyCard({required String text, required HexColor color, required String title,
+  required String icon, required int? ordersState}) {
+    return Material(
+      color: color,
+      borderRadius: BorderRadius.only(
+    bottomLeft: Radius.circular(30.r),
+    bottomRight: Radius.circular(30.r),
+    ),
+      animateColor: true,
+      child: InkWell(
+        highlightColor: color.withOpacity(0.2),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30.r),
+          bottomRight: Radius.circular(30.r),
+        ),
+        onTap: (){
+          showBlurDialogTotal(context: context, ordersState:  ordersState, title: title,icon:  icon);
+        },
+        child: SizedBox(
+          width: 200.w,
+            height: 53.h,
+            child:
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(text,
+                    style: textStyleBodyBt,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  textScaler: TextScaler.linear(
+                      MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.3)
+                  ),
+                ),
               ),
             ),
           ),
-        ),
     );
   }
 

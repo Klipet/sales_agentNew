@@ -251,7 +251,6 @@ class _TableAssortimentWidghetState extends State<TableAssortimentWidghet> {
               width: double.maxFinite,
               child: Row(
                 children: [
-
                   node.nodeData!.isFolder!
                   // Папки
                       ? !isSelected ? folderStandart(isSelected: isSelected,node: node ) : selectedFolder( context: context, isSelected: isSelected, node: node)

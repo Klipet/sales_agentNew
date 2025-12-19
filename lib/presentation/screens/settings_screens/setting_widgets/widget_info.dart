@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sales_agent/data/models_db/model_apikey.dart';
@@ -32,7 +33,7 @@ class _WidgetInfoState extends State<WidgetInfo> {
             if (!snapshot.hasData) {
               return const Text("Загрузка API KEY...");
             }
-            return textInfo('Cod Licență Sales Agent', snapshot.data ?? '' );
+            return textInfo('settings.licensia'.tr(), snapshot.data ?? '' );
           },
         ),
 

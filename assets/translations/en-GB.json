@@ -8,7 +8,7 @@
   "user": "User",
   "userHint": "User name",
   "pass": "Password",
-  "passHint": "Password123",
+  "passHint": "Password",
   "saveAuth": "Remember me",
   "connect": "Connect",
   "calendarComand": "Orders",
@@ -30,7 +30,10 @@
     "setting": "Settings"
   },
   "client": {
-    "title": "Clients:"
+    "title": "Clients:",
+    "name": "Legal name",
+    "sold": "Balance",
+    "address": "Address"
   },
 
   "home": {
@@ -112,5 +115,50 @@
     "error524": "Connection timeout expired (524). Please try again later.",
     "error525": "SSL certificate error (525). Please try again later.",
     "notFound": "I found nothing..."
+  },
+  "settings": {
+    "title": "Settings",
+    "licensia": "Sales Agent License Code",
+    "url": "URL",
+    "update": "Update server connection",
+    "save": "Keep the password saved on this device.",
+    "saveComment": "Save detailed comment",
+    "exit": "Log out"
+  },
+  "history": {
+    "title": "Client history"
+  },
+  "searchClient": "Client",
+  "searchClientHint": "Search by name or IDNO",
+
+  "newOrder": {
+    "edit": "Edit",
+   "outlent": "Select address:",
+    "newOrder": "Create order",
+    "btComment": "Add comment",
+    "btSablon": "Save template",
+    "btSend": "Send order",
+    "btAsl": "Add assortment",
+    "btReturn": "View order",
+    "serchAsl": "Search assortment",
+    "comment": "Comment",
+    "commHint": "Enter a comment for the order",
+    "commSave": "Save comment"
+  },
+  "newOrderdialog": {
+    "price": "Unit price",
+    "stok": "Stock",
+    "total": "Total:"
+  },
+  "imgError": "No images found...",
+  "outlandError": "Not found address......",
+  "errorStateDel": "The order is in progress or completed and cannot be deleted",
+  "errorStateEdit": "The order is in progress or completed and cannot be edited",
+
+  "btClear": {
+    "content": "Sigur dorești să ștergi poziția?",
+    "contentDoc": "Sigur dorești să ștergi Document?",
+    "no": "Nu",
+    "da": "Da, șterge"
   }
 }

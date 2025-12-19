@@ -229,7 +229,7 @@ class ClientDialogUI extends StatelessWidget {
              ),
              SizedBox(height: 16),
              Text(
-               'Nu am gasti adrese......'.tr(),
+               'outlandError'.tr(),
                style: TextStyle(
                  fontSize: 18,
                  color: Colors.grey[600],
@@ -257,6 +257,7 @@ class ClientDialogUI extends StatelessWidget {
                 page: 8,
               ),
             );
+            Navigator.pop(context);
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -264,7 +265,7 @@ class ClientDialogUI extends StatelessWidget {
               Container(
                 constraints: BoxConstraints(
                   maxHeight: 50.h,
-                  maxWidth: 200.w,
+                  maxWidth: 250.w,
                 ),
                 //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
                 alignment: Alignment.center,
@@ -282,12 +283,12 @@ class ClientDialogUI extends StatelessWidget {
                     Icon(
                       Icons.moped_sharp,
                       color: Colors.white,
-                      size: 24.r,
+                      size: 32.r,
                     ),
                     SizedBox(width: 8.h),
                     Text(
-                      "Creaza document",
-                      style: TextStyle(color: Colors.white),
+                      'newOrder.newOrder'.tr(),
+                      style: buttonTextStyle,
                     ),
                   ],
                 ),
@@ -334,7 +335,7 @@ class ClientDialogUI extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Denumire juridică',
+              'client.name'.tr(),
               style: textStyleDialogClientInfo.copyWith(
                 color: subTextColor,
                 fontSize: 12.sp,
@@ -396,7 +397,7 @@ class ClientDialogUI extends StatelessWidget {
               ),
               //  SizedBox(height: 10.h),
               Text(
-                'Sold',
+                'client.sold'.tr(),
                 style: textStyleDialogClientInfo.copyWith(
                   color: subTextColor,
                   fontSize: 12.sp,
@@ -452,7 +453,7 @@ class ClientDialogUI extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Adresa',
+            'client.address'.tr(),
             style: textStyleDialogClientInfo.copyWith(
               color: subTextColor,
               fontSize: 12.sp,

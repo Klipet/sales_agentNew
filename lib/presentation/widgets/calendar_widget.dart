@@ -142,7 +142,7 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 16.r, top: 5.r),
+                    padding: EdgeInsets.only(left: 16.w, top: 5.h),
                     child: Row(
                       children: [
                         Container(

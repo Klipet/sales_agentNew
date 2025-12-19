@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -135,10 +136,10 @@ Widget _infoAsl(ModelAssortimentDB asl) {
     child: Column(
       children: [
         Container(
-          margin: EdgeInsets.only(top: 16.h, left: 5.w, right: 5.h),
+          margin: EdgeInsets.only(top: 15.h, left: 5.w, right: 5.h),
           child: Row(
             children: [
-              Text('Preț unitar', style: textStyleRemainAddAssotrimentOrder.copyWith(color: subTextColor, fontSize: 22.sp),),
+              Text('newOrderdialog.price'.tr(), style: textStyleRemainAddAssotrimentOrder.copyWith(color: subTextColor, fontSize: 22.sp),),
               Spacer(),
               Text(asl.price!.toStringAsFixed(2), style: textStyleDialogAddAssortimentTotal.copyWith(fontSize: 22.sp),),
             ],
@@ -148,7 +149,7 @@ Widget _infoAsl(ModelAssortimentDB asl) {
           margin: EdgeInsets.only(bottom: 16.h, left: 5.w, right: 5.w, top: 16.h,),
           child: Row(
             children: [
-              Text('Stocuri', style: textStyleRemainAddAssotrimentOrder.copyWith(color: subTextColor, fontSize: 22.sp),),
+              Text('newOrderdialog.stok'.tr(), style: textStyleRemainAddAssotrimentOrder.copyWith(color: subTextColor, fontSize: 22.sp),),
               Spacer(),
               Text('${asl.remain!.toStringAsFixed(2)} ${asl.unitName}', style: textStyleRemainAddAssotrimentOrder.copyWith(fontSize: 22.sp),),
             ],
@@ -287,7 +288,7 @@ class _ContentImageState extends State<ContentImage> {
                     : Column(
                   children: [
                     SvgPicture.asset('assets/icons/info_asl/non_image.svg', ),
-                    Text('Nu s-au găsit imagini...', style: textStyleRemainAddAssotrimentOrder.copyWith(color: subTextColor, fontSize: 15.sp),),
+                    Text('imgError', style: textStyleRemainAddAssotrimentOrder.copyWith(color: subTextColor, fontSize: 15.sp),),
                   ],
                 ),
               ),

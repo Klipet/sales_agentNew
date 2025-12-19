@@ -12,13 +12,11 @@ import '../../data/providers/navigator_provider.dart';
 Widget btCreate({required BuildContext context}) {
   return GestureDetector(
     onTap: () {
-      print("create");
       Provider.of<NavigationProvider>(context, listen: false).goToPage(6);
     },
     child: Container(
       width: 272.w,
       height: 48.h,
-      //  padding: EdgeInsets.only(top: 8.h, bottom: 7.h),
       decoration: BoxDecoration(
         color: buttonColor,
         borderRadius: BorderRadius.all(Radius.circular(100.r)),

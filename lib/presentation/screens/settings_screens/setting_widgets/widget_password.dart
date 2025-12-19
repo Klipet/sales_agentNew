@@ -85,7 +85,7 @@ class _WidgetPasswordUIState extends State<WidgetPasswordUI> {
                 Padding(
                   padding: EdgeInsets.only(left: 8.0),
                   child: Text(
-                    'Păstrează parola salvată pe acest dispozitiv.',
+                    'settings.save'.tr(),
                     style: titleCardInfo.copyWith(color: textColor),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -122,7 +122,7 @@ class _WidgetPasswordUIState extends State<WidgetPasswordUI> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Delogare',
+                  'settings.exit'.tr(),
                   style: textStyleDelogare
                 ),
                 SizedBox(width: 8.w,),

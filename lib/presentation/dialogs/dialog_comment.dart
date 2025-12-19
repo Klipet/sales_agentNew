@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -109,12 +110,12 @@ class _DialogContentState extends State<DialogContent> {
         ),
         contentPadding: EdgeInsets.all(16.r),
         content:
-      //  contentSupra(context: context,
-      //      controllerTel: commentControllerTel,
-      //      controllerUser: commentControllerUser,
-      //      controllerComment: commentControllerComment,
-      //      order: widget.orderId),
-        contentSimp(context, commentController, widget.orderId),
+        contentSupra(context: context,
+            controllerTel: commentControllerTel,
+            controllerUser: commentControllerUser,
+            controllerComment: commentControllerComment,
+            order: widget.orderId),
+      //  contentSimp(context, commentController, widget.orderId),
       ),
     );
   }
@@ -261,7 +262,7 @@ class _DialogContentState extends State<DialogContent> {
       children: [
         Row(
           children: [
-            Text('Cemmentariu', style: textStyleDialogClient),
+            Text('newOrder.comment'.tr(), style: textStyleDialogClient),
             Spacer(),
             GestureDetector(
               onTap: () {
@@ -283,7 +284,7 @@ class _DialogContentState extends State<DialogContent> {
               return TextField(
                 controller: controller,
                 decoration: InputDecoration(
-                  hintText: 'Introduceți comentariul pentru comanda',
+                  hintText: 'newOrder.commHint'.tr(),
                   enabledBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: borderColor),
                     borderRadius: BorderRadius.circular(16.r),
@@ -328,7 +329,7 @@ class _DialogContentState extends State<DialogContent> {
                     Icon(Icons.save_as, color: Colors.white, size: 24.r),
                     SizedBox(width: 8.h),
                     Text(
-                      "Salvare commentariu",
+                      'newOrder.Save'.tr(),
                       style: TextStyle(color: Colors.white),
                     ),
                   ],

@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -105,7 +106,7 @@ class _WidgetUppdateUIState extends State<WidgetUppdateUI> {
             width: 1.r, // ширина 1px
           ),
           ),
-            child: Center(child: Text('Actualizare conexiune server', style: textStyleDialogAddAssortimentTotal.copyWith(fontSize: 18.sp),))),
+            child: Center(child: Text('settings.update'.tr(), style: textStyleDialogAddAssortimentTotal.copyWith(fontSize: 18.sp),))),
       ),
     );
   }

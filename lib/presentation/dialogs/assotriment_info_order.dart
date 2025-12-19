@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -51,13 +52,6 @@ Future<bool?> showAssortimentInfoOrder({
                 // Заголовок с иконкой и кнопкой закрытия
                 Row(
                   children: [
-                    SvgPicture.asset(
-                      'assets/icons/assortiment/box_asl.svg',
-                      width: 24.w,
-                      height: 24.h,
-                    ),
-                    SizedBox(width: 16.w),
-                    // Кнопка для просмотра изображения
                     GestureDetector(
                       onTap: () {
                         final state = context.read<AssortimentImgCubit>().state;
@@ -73,10 +67,9 @@ Future<bool?> showAssortimentInfoOrder({
                           // Меняем иконку в зависимости от состояния
                            if (state is ImgSuccess) {
                              if(state.imgResponse.images.isNotEmpty && state.imgResponse.images != [] ){
-                               return Icon(
-                                 Icons.photo_camera,
-                                 color: buttonColor, // Цвет если изображение есть
-                               );
+                               return SvgPicture.asset('assets/icons/photo.svg');
+                             }else{
+                               return SvgPicture.asset('assets/icons/non_photo.svg');
                              }
                           }
                           return SizedBox();
@@ -103,7 +96,7 @@ Future<bool?> showAssortimentInfoOrder({
                 Row(
                   children: [
                     Text(
-                      'Preț unitar',
+                      'newOrderdialog.price'.tr(),
                       style: textStyleAslTitle.copyWith(
                         decoration: TextDecoration.none,
                       ),
@@ -124,7 +117,7 @@ Future<bool?> showAssortimentInfoOrder({
                 Row(
                   children: [
                     Text(
-                      'Stocuri',
+                      'newOrderdialog.stok'.tr(),
                       style: textStyleAslTitle.copyWith(
                         decoration: TextDecoration.none,
                       ),

@@ -177,7 +177,7 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
                   SizedBox(height: 16),
                   Text(
                     'errors.notFound'.tr(),
-                    style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                    style: textStyleDialogClientInfo.copyWith(fontSize: 24.sp, color: subTextColor),
                   ),
                 ],
               ),

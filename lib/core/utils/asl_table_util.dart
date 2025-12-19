@@ -90,6 +90,19 @@ Widget selectedFolder({
               Container(
                 alignment: Alignment.centerLeft,
                 height: double.maxFinite,
+                width: 145.w,
+                padding: EdgeInsets.only(left: 16.w),
+                decoration: BoxDecoration(
+                  color: isSelected ? selectedColor : containerColor,
+                  border: Border(
+                    right: BorderSide(color: borderColor, width: 1.w),
+                  ),
+                ),
+                child: Text('gridColumn.cod'.tr(), style: textStyleAslTitle),
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                height: double.maxFinite,
                 width: 155.w,
                 padding: EdgeInsets.only(left: 16.w),
                 decoration: BoxDecoration(
@@ -101,7 +114,7 @@ Widget selectedFolder({
                 child: Text('gridColumn.price'.tr(), style: textStyleAslTitle),
               ),
               Container(
-                width: 133.w,
+                width: 110.w,
                 alignment: Alignment.centerLeft,
                 height: double.maxFinite,
                 padding: EdgeInsets.only(left: 16.w),
@@ -169,6 +182,23 @@ Widget aslContentWidget(String speciaPrice, {
               Container(
                 alignment: Alignment.centerLeft,
                 height: double.maxFinite,
+                width: 145.w,
+                padding: EdgeInsets.only(left: 10.w, right: 5.w),
+                decoration: BoxDecoration(
+                  color: isSelected ? selectedColor : containerColor,
+                  border: Border(
+                    right: BorderSide(color: borderColor, width: 1.w),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Text(node.nodeData!.code ?? '', style: textStyleAslContentSub),
+                  ],
+                ),
+              ),
+              Container(
+                alignment: Alignment.centerLeft,
+                height: double.maxFinite,
                 width: 155.w,
                 padding: EdgeInsets.only(left: 10.w, right: 5.w),
                 decoration: BoxDecoration(
@@ -186,7 +216,7 @@ Widget aslContentWidget(String speciaPrice, {
                 ),
               ),
               Container(
-                width: 133.w,
+                width: 110.w,
                 alignment: Alignment.centerLeft,
                 height: double.maxFinite,
                 padding: EdgeInsets.only(left: 16.w),

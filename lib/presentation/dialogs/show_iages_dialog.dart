@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:carousel_slider/carousel_controller.dart';
 import 'package:carousel_slider/carousel_options.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -34,12 +35,8 @@ void showImagesDialog(
             Padding(
               padding: EdgeInsets.all(12.r),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    'Imagini produs',
-                    style: textStyleTitleAddAssotrimentOrder,
-                  ),
-                  const Spacer(),
                   IconButton(
                     icon:  Icon(Icons.close, color: Colors.white,size: 52.r,),
                     onPressed: () => Navigator.pop(context),
@@ -183,7 +180,7 @@ class _ContentImageState extends State<ContentImage> {
                     : Column(
                   children: [
                     SvgPicture.asset('assets/icons/info_asl/non_image.svg', ),
-                    Text('Nu s-au găsit imagini...', style: textStyleRemainAddAssotrimentOrder.copyWith(color: subTextColor, fontSize: 15.sp),),
+                    Text('imgError'.tr(), style: textStyleRemainAddAssotrimentOrder.copyWith(color: subTextColor, fontSize: 15.sp),),
                   ],
                 ),
               ),

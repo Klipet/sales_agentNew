@@ -55,7 +55,10 @@
     "total": "Total:"
   },
   "client": {
-    "title": "Clienți:"
+    "title": "Clienți:",
+    "name":"Denumire juridică",
+    "sold": "Sold",
+    "address":"Adresa"
   },
 
   "pop": {
@@ -114,5 +117,50 @@
     "error524": "Timpul de așteptare al conexiunii a expirat (524). Încercați din nou mai târziu.",
     "error525": "Eroare de certificat SSL (525). Încercați din nou mai târziu.",
     "notFound": "Nu am găsit nimic..."
+  },
+  "settings": {
+    "title": "Setări",
+    "licensia": "Cod Licență Sales Agent",
+    "url": "URL",
+    "update": "Actualizare conexiune server",
+    "save": "Păstrează parola salvată pe acest dispozitiv.",
+    "saveComment": "Salvează comentariul detaliat",
+    "exit": "Delogare"
+  },
+  "history": {
+    "title": "Istoric  client"
+  },
+  "searchClient": "Client",
+  "searchClientHint": "Caută după denumire sau IDNO",
+  "newOrder": {
+    "edit": "Modifică",
+    "outlent": "Selectează adresa:",
+    "newOrder": "Creaza document",
+    "btComment": "Comentariu",
+    "btSablon": "Salvează șablon",
+    "btSend": "Transmite comanda",
+    "btAsl": "Adaugă asortiment",
+    "btReturn":"Vizualizează comanda",
+    "serchAsl": "Caută produs",
+    "comment": "Cemmentariu",
+    "commHint": "Introduceți comentariul pentru comanda",
+    "commSave": "Salvare commentariu"
+  },
+  "newOrderdialog": {
+    "price": "Preț unitar",
+    "stok": "Stocuri",
+    "total": "Total:"
+  },
+  "imgError":"Nu s-au găsit imagini...",
+  "outlandError": "Nu am gasti adrese......",
+  "errorStateDel": "Comanda este în lucru sau finisată, nu o puteți șterge",
+  "errorStateEdit": "Comanda este în lucru sau finisată, nu o puteți edita",
+
+  "btClear": {
+    "content": "Sigur dorești să ștergi poziția?",
+    "contentDoc":"Sigur dorești să ștergi document?",
+    "no": "Nu",
+    "da": "Da, șterge"
   }
+
 }

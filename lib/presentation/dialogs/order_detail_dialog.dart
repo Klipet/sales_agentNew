@@ -126,7 +126,7 @@ Future<bool?> showDetailOrder({
                           ToastResponseError(
                             context: context,
                             textError:
-                            'Comanda este în lucru sau finisată, nu o puteți edita',
+                            'errorStateEdit'.tr(),
                           ).showError();
                         }
                       } else if (value == 'delete') {
@@ -144,7 +144,7 @@ Future<bool?> showDetailOrder({
                                 ToastResponseError(
                                   context: context,
                                   textError:
-                                      'Comanda este în lucru sau finisată, nu o puteți șterge',
+                                      'errorStateDel'.tr(),
                                 ).showError();
                               }
                             }
@@ -153,7 +153,7 @@ Future<bool?> showDetailOrder({
                               ToastResponseError(
                                 context: context,
                                 textError:
-                                    'Comanda este în lucru sau finisată, nu o puteți șterge',
+                                'errorStateDel'.tr(),
                               ).showError();
                             }
                           }

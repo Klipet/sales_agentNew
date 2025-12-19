@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -174,7 +175,7 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              ediTextClient(controller, 'Caută produs'),
+              ediTextClient(controller, 'newOrder.serchAsl'.tr()),
               Spacer(),
               Stack(
                 children: [
@@ -209,7 +210,7 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  "Vizualizează comanda",
+                                  'newOrder.btReturn'.tr(),
                                   style: textStyleTitleAslAdd,
                                 ),
                                 SizedBox(width: 8.h),

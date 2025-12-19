@@ -1,4 +1,5 @@
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -70,7 +71,6 @@ class ButtonsNewOrderWidget extends StatelessWidget {
 Widget buttonAddAsl(BuildContext context, ModelClientDb? clientDb, OutletsResponse? outlands, int? idDocument ){
   return GestureDetector(
     onTap: () {
-      print("T");
       Provider.of<NavigationProvider>(
         context,
         listen: false,
@@ -105,7 +105,7 @@ Widget buttonAddAsl(BuildContext context, ModelClientDb? clientDb, OutletsRespon
                 size: 32.r,
               ),
               SizedBox(width: 8.h),
-              Text("Adaugă asortiment", style: textStyleBtAslAdd),
+              Text('newOrder.btAsl'.tr(), style: textStyleBtAslAdd),
             ],
           ),
         ),
@@ -148,7 +148,7 @@ Widget buttonSendServerOrder(BuildContext context, int id){
                 size: 32.r,
               ),
               SizedBox(width: 8.h),
-              Text("Transmite comanda", style: textStyleBtAslAdd),
+              Text('newOrder.btSend'.tr(), style: textStyleBtAslAdd),
             ],
           ),
         ),
@@ -184,7 +184,7 @@ Widget buttonSaveOrder(BuildContext context,  Function(NewOrderModelPostResponse
             children: [
               SvgPicture.asset('assets/icons/dawn.svg'),
               SizedBox(width: 8.h),
-              Text("Salvează șablon", style: textStyleBtAslAdd),
+              Text('newOrder.btSablon'.tr(), style: textStyleBtAslAdd),
             ],
           ),
         ),
@@ -223,7 +223,7 @@ Widget buttonAddCommentOrder(BuildContext context, int id){
                 size: 30.r,
               ),
               SizedBox(width: 8.h),
-              Text("Add comment", style: textStyleBtAslAdd),
+              Text('newOrder.btComment'.tr(), style: textStyleBtAslAdd),
             ],
           ),
         ),

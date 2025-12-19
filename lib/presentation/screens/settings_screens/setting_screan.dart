@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sales_agent/presentation/screens/settings_screens/setting_widgets/widget_info.dart';
 import 'package:sales_agent/presentation/screens/settings_screens/setting_widgets/widget_language.dart';
 import 'package:sales_agent/presentation/screens/settings_screens/setting_widgets/widget_password.dart';
 import 'package:sales_agent/presentation/screens/settings_screens/setting_widgets/widget_uppdate.dart';
+import 'package:sales_agent/presentation/widgets/new_order_title_widget.dart';
 import 'package:sales_agent/presentation/widgets/title_home_widget.dart';
 
 import '../../../core/colors_app.dart';
@@ -20,6 +22,7 @@ class SettingScrean extends StatefulWidget {
 class _SettingScreanState extends State<SettingScrean> {
   @override
   Widget build(BuildContext context) {
+    final languageCode = context.locale.languageCode;
     return Scaffold(
       body: Column(
         children: [
@@ -35,9 +38,8 @@ class _SettingScreanState extends State<SettingScrean> {
                   textHeightBehavior: TextHeightBehavior(
                       applyHeightToFirstAscent: false
                   ),
-                  'Setări',
-                  style: primaFontOrders,
-                  //  textAlign: TextAlign.left,
+                  'settings.title'.tr(),
+                  style: primaFontOrders.copyWith(fontSize: (languageCode == 'ru'|| languageCode == 'en') ? 65.sp : 80.sp),
                 ),
               ),
               Spacer(),

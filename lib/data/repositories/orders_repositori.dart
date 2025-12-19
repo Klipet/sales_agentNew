@@ -71,6 +71,20 @@ class OrdersRepositori {
 
     return count;
   }
+  Future<List<ModelDocumentDb>> getOrdersByState(int? state) async {
+    final isar = await DbProvider.instance();
+    if(state == null){
+      final orders = await isar.modelDocumentDbs.where().findAll();
+      return orders;
+    }else {
+      final orders = await isar.modelDocumentDbs
+          .filter()
+          .stateEqualTo(state) // фильтр по статусу
+          .findAll();
+      return orders;
+    }
+
+  }
 
   Future<List<ModelDocumentDb>> getOrders() async {
     final isar = await DbProvider.instance();

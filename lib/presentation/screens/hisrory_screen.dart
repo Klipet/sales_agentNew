@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -45,7 +46,7 @@ class _HistortyScreenState extends State<HistortyScreen> {
     return Scaffold(
       body: Column(
         children: [
-          NewOrderTitleWidget(title: 'Istoric comezi',),
+          NewOrderTitleWidget(title: 'history.title'.tr(),),
           SizedBox(height: 15.h),
           Container(
             constraints: BoxConstraints(maxHeight: 127.h),
@@ -62,9 +63,9 @@ class _HistortyScreenState extends State<HistortyScreen> {
               children: [
                 Container(
                   padding: EdgeInsets.only(left: 12.w, bottom: 10),
-                  child: Text('Client', style: textStyleSerachTitle),
+                  child: Text('searchClient'.tr(), style: textStyleSerachTitle),
                 ),
-                ediTextClient(context, 'Caută după denumire sau IDNO'),
+                ediTextClient(context, 'searchClientHint'.tr()),
               ],
             ),
           ),

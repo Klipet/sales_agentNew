@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -146,7 +147,7 @@ class _CounterWidgetState extends State<CounterWidget> {
       return  Row(
         children: [
           Text(
-            'Total:',
+            'newOrderdialog.total'.tr(),
             style: textStyleDialogAddAssortimentTotal
           ),
           Spacer(),
@@ -160,7 +161,7 @@ class _CounterWidgetState extends State<CounterWidget> {
       return  Row(
         children: [
           Text(
-              'Total:',
+              'newOrderdialog.total'.tr(),
               style: textStyleDialogAddAssortimentTotalNegative
           ),
           Spacer(),
@@ -199,7 +200,7 @@ class _CounterWidgetState extends State<CounterWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     _CounterButton(
-                      icon: Icons.remove,
+                      icon: Icons.remove_rounded,
                       onPressed: _decrement,
                     ),
                     Container(
@@ -242,7 +243,7 @@ class _CounterWidgetState extends State<CounterWidget> {
                       ),
                     ),
                     _CounterButton(
-                      icon: Icons.add,
+                      icon: Icons.add_rounded,
                       onPressed: _increment,
                     ),
                   ],

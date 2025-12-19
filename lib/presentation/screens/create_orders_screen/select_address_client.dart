@@ -99,7 +99,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
           SizedBox(height: 15.h),
             Padding(
               padding: EdgeInsets.only(left: 35.h),
-              child:clientDb.outlets.isNotEmpty ? Text('Selectează adresa:'): SizedBox(),
+              child:clientDb.outlets.isNotEmpty ? Text('newOrder.outlent'.tr()): SizedBox(),
             ),
           infoOutlans(),
         ],
@@ -148,7 +148,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                     height: 20.h,
                   ),
                   SizedBox(width: 8.h),
-                  Text("Modifică"),
+                  Text('newOrder.edit'.tr()),
                 ],
               ),
             ),
@@ -290,7 +290,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                         Container(
                           constraints: BoxConstraints(
                             maxHeight: 50.h,
-                            maxWidth: 200.w,
+                            maxWidth: 310.w,
                           ),
                           //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
                           alignment: Alignment.center,
@@ -308,12 +308,12 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                               Icon(
                                 Icons.queue_play_next_outlined,
                                 color: Colors.white,
-                                size: 24.r,
+                                size: 32.r,
                               ),
                               SizedBox(width: 8.h),
                               Text(
-                                "Creaza document",
-                                style: TextStyle(color: Colors.white),
+                                'newOrder.newOrder'.tr(),
+                                style: textStyleBtAslAdd,
                               ),
                             ],
                           ),

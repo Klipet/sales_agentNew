@@ -64,12 +64,8 @@ class NewOrderRepository {
 
   }) async {
     final isar = await DbProvider.instance();
-    final deliveryAddress = outlet?.comment == true
-        ? outlet!.comment
-        : outlet?.address == true
-        ? outlet!.address
-        : 'Адрес не указан';
-
+    final String? deliveryAddress = outlet?.comment != '' ? outlet!.comment : outlet?.address;
+print(deliveryAddress);
     // Создаём заказ
     await isar.writeTxn(() async {
       // Получаем существующий заказ

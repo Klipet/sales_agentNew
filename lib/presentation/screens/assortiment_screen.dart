@@ -83,23 +83,19 @@ class _AssortimentUIState extends State<AssortimentUI> {
         }
 
         if (state is AssortimentSuccess) {
+          final languageCode = context.locale.languageCode;
           return Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
                 children: [
                   SizedBox(width: 40.w),
                   SizedBox(
                     height: 100.h,
                     child: Text(
-                      textHeightBehavior: TextHeightBehavior(
-                          applyHeightToFirstAscent: false
-                      ),
                       "asl.title".tr(),
-                      style: primaFontOrders,
-                    //  textAlign: TextAlign.left,
+                      style: primaFontOrders.copyWith(fontSize: languageCode == 'ru' ? 65.sp : 80.sp),
                     ),
                   ),
                   Spacer(),

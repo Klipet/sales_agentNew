@@ -92,9 +92,9 @@ class _FirstStepCreateUIState extends State<FirstStepCreateUI> {
                   children: [
                     Container(
                       padding: EdgeInsets.only(left: 12.w, bottom: 10),
-                      child: Text('Client', style: textStyleSerachTitle),
+                      child: Text('searchClient'.tr(), style: textStyleSerachTitle),
                     ),
-                    ediTextClient(context, 'Caută după denumire sau IDNO'),
+                    ediTextClient(context, 'searchClientHint'.tr()),
                   ],
                 ),
               ),

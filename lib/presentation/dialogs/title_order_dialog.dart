@@ -1,29 +1,50 @@
-import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:glassmorphism/glassmorphism.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-import 'package:sales_agent/core/colors_app.dart';
-import 'package:sales_agent/data/repositories/orders_repositori.dart';
-import 'package:sales_agent/presentation/widgets/loading_widget.dart';
-
+import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
-import '../../core/utils/convert_data.dart';
 import '../../data/models_db/model_db_orders/model_document_db.dart';
+import '../../data/repositories/orders_repositori.dart';
+import '../widgets/loading_widget.dart';
 import 'order_detail_dialog.dart';
 
-void showBlurDialogCalendar(
-  BuildContext context,
-  DateTime day,
-  List<int> orders,
-) {
-  final formatDay = DateFormat('dd.MM.yyyy').format(day);
+void showBlurDialogTotal(
+{ required  BuildContext context,
+  required  int? ordersState,
+  required  String title,
+  required  String icon}
+    ) {
   showDialog(
     context: context,
     barrierDismissible: true,
     // полупрозрачный фон
     builder: (context) {
+      String statusKey(int state) {
+        switch (state) {
+          case 0:
+            return 'home.bodySave'.tr();
+          case 1:
+            return 'home.bodyAwait'.tr();
+          case 2:
+            return 'home.bodyJob'.tr();
+          default:
+            return 'home.bodyUnknown'.tr();
+        }
+      }
+      Color colorKey(int state) {
+        switch (state) {
+          case 0:
+            return colorBtSave;
+          case 1:
+            return colorBtAwait;
+          case 2:
+            return colorBtJob;
+          default:
+            return Colors.transparent;
+        }
+      }
       return AlertDialog(
         contentPadding: EdgeInsets.zero,
         actionsPadding: EdgeInsets.zero,
@@ -40,12 +61,9 @@ void showBlurDialogCalendar(
             children: [
               Row(
                 children: [
-                  Text(
-                    formatDay.toString(),
-                    style: textStyleDialogday.copyWith(
-                      decoration: TextDecoration.none,
-                    ),
-                  ),
+                  SvgPicture.asset(icon),
+                  SizedBox(width:10.w),
+                  Text(title, style: textStyleBodyTitle,),
                   Spacer(),
                   GestureDetector(
                     onTap: () {
@@ -67,7 +85,7 @@ void showBlurDialogCalendar(
               SizedBox(height: 8.h),
               Expanded(
                 child: FutureBuilder<List<ModelDocumentDb>>(
-                  future: OrdersRepositori().loadOrdersForDay(day),
+                  future: OrdersRepositori().getOrdersByState(ordersState ?? null),
                   // функция, которая берёт заказы из базы
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
@@ -125,16 +143,16 @@ void showBlurDialogCalendar(
                                         order.code,
                                         style: textStyleDialogInfoClient
                                             .copyWith(
-                                              decoration: TextDecoration.none,
-                                            ),
+                                          decoration: TextDecoration.none,
+                                        ),
                                       ),
                                       Spacer(),
                                       Text(
                                         order.clientName.toString(),
                                         style: textStyleDialogInfoClient
                                             .copyWith(
-                                              decoration: TextDecoration.none,
-                                            ),
+                                          decoration: TextDecoration.none,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -145,42 +163,46 @@ void showBlurDialogCalendar(
                                   children: [
                                     Column(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.end,
+                                      MainAxisAlignment.end,
                                       crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      CrossAxisAlignment.start,
                                       children: [
+                                        Container(
+                                          width: 350.w,
+                                          child: Text(
+                                            'dialog.address'.tr(
+                                              namedArgs: {
+                                                'address': order.deliveryAddress
+                                                    .toString(),
+                                              },
+                                            ),
+                                            style: textStyleDialogInfoOrder
+                                                .copyWith(
+                                              decoration:
+                                              TextDecoration.none,
+                                            ),
+                                            maxLines: 1,
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
                                         Text(
-                                          'dialog.address'.tr(
+                                          ordersState == null ?
+                                          'dialog.status'.tr(
                                             namedArgs: {
-                                              'address': order.deliveryAddress
-                                                  .toString(),
+                                              'status': 'home.bodyJob'
+                                                  .tr(),
+                                            },
+                                          )
+                                          :'dialog.status'.tr(
+                                            namedArgs: {
+                                              'status': statusKey(order.state),
                                             },
                                           ),
                                           style: textStyleDialogInfoOrder
                                               .copyWith(
-                                                decoration:
-                                                    TextDecoration.none,
-                                              ),
-                                        ),
-                                        Text(
-                                          order.state == 2
-                                              ? 'dialog.status'.tr(
-                                                  namedArgs: {
-                                                    'status': 'home.bodyJob'
-                                                        .tr(),
-                                                  },
-                                                )
-                                              : 'dialog.status'.tr(
-                                                  namedArgs: {
-                                                    'status': 'home.bodyAwait'
-                                                        .tr(),
-                                                  },
-                                                ),
-                                          style: textStyleDialogInfoOrder
-                                              .copyWith(
-                                                decoration:
-                                                    TextDecoration.none,
-                                              ),
+                                            decoration:
+                                            TextDecoration.none,
+                                          ),
                                         ),
                                         Text(
                                           'dialog.sum'.tr(
@@ -190,9 +212,9 @@ void showBlurDialogCalendar(
                                           ),
                                           style: textStyleDialogInfoOrder
                                               .copyWith(
-                                                decoration:
-                                                    TextDecoration.none,
-                                              ),
+                                            decoration:
+                                            TextDecoration.none,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -211,9 +233,7 @@ void showBlurDialogCalendar(
                                         height: 48.h,
                                         width: 155.w,
                                         decoration: BoxDecoration(
-                                          color: order.state == 2
-                                              ? colorBtJob
-                                              : colorBtAwait,
+                                          color: colorKey(order.state),
                                           border: Border.all(
                                             color: borderColor,
                                             width: 1,
@@ -247,6 +267,7 @@ void showBlurDialogCalendar(
           ),
         ),
       );
+
     },
   );
 }

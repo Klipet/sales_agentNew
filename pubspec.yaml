@@ -107,5 +107,7 @@ flutter:
       - assets/icons/info_asl/arrow_right.svg
       - assets/icons/info_asl/non_image.svg
       - assets/icons/close.svg
+      - assets/icons/non_photo.svg
+      - assets/icons/photo.svg
 
 

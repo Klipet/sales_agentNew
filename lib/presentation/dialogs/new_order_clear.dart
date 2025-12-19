@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,20 +17,27 @@ Future<bool?> showDeleteConfirmation ({
         backgroundColor: Colors.white,
         actionsPadding: EdgeInsets.only(bottom: 16.h),
         actionsAlignment: MainAxisAlignment.center,
-        constraints: BoxConstraints(maxWidth: 353.w, maxHeight: 224.h),
+        constraints: BoxConstraints(maxWidth: 353.w, maxHeight: 270.h,),
+        contentPadding: EdgeInsets.only(top: 16.h, left: 16.h, right: 16.h),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.r),
         ),
         content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SvgPicture.asset('assets/icons/trash_open.svg'),
             SizedBox(height: 22.h),
             Text(
-              'Sigur dorești să ștergi poziția?',
+              'btClear.content'.tr(),
+              textAlign: TextAlign.center,
               style: textStyleTableDialogDelete,
+              maxLines: 2,
             ),
+            SizedBox(height: 22.h),
           ],
         ),
+
         actions: [
           GestureDetector(
             onTap: () => Navigator.of(contextDigital).pop(false),
@@ -46,7 +54,7 @@ Future<bool?> showDeleteConfirmation ({
                 border: Border.all(color: borderColor, width: 1),
                 borderRadius: BorderRadius.all(Radius.circular(25.r)),
               ),
-              child: Text('Nu', style: textStyleTableDialogDelete),
+              child: Text('btClear.no'.tr(), style: textStyleTableDialogDelete),
             ),
           ),
           GestureDetector(
@@ -66,7 +74,7 @@ Future<bool?> showDeleteConfirmation ({
                 borderRadius: BorderRadius.all(Radius.circular(25.r)),
               ),
               child: Text(
-                'Da, șterge',
+                'btClear.da'.tr(),
                 style: textStyleTableDialogDelete.copyWith(color: Colors.white),
               ),
             ),
