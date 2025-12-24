@@ -18,10 +18,11 @@ class OrderLinesDataSource extends DataGridSource {
         cells: [
           DataGridCell<int>(columnName: 'nr', value: line.lineNumber),
           DataGridCell<String>(columnName: 'denumire', value: line.assortimentName),
+          DataGridCell<String>(columnName: 'cod', value: line.assortimentCode),
           DataGridCell<double>(columnName: 'cant', value: line.count),
           DataGridCell<double>(columnName: 'pret', value: line.price),
           DataGridCell<double>(columnName: 'suma', value: line.sum),
-          DataGridCell<int>(columnName: 'stocuri', value: line.id),
+
         ],
       );
     }).toList();

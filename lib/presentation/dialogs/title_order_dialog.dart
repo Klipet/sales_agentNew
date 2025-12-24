@@ -30,7 +30,7 @@ void showBlurDialogTotal(
           case 2:
             return 'home.bodyJob'.tr();
           default:
-            return 'home.bodyUnknown'.tr();
+            return 'home.bodyComplete'.tr();
         }
       }
       Color colorKey(int state) {
@@ -42,7 +42,7 @@ void showBlurDialogTotal(
           case 2:
             return colorBtJob;
           default:
-            return Colors.transparent;
+            return colorBtTotal;
         }
       }
       return AlertDialog(
@@ -186,18 +186,7 @@ void showBlurDialogTotal(
                                           ),
                                         ),
                                         Text(
-                                          ordersState == null ?
-                                          'dialog.status'.tr(
-                                            namedArgs: {
-                                              'status': 'home.bodyJob'
-                                                  .tr(),
-                                            },
-                                          )
-                                          :'dialog.status'.tr(
-                                            namedArgs: {
-                                              'status': statusKey(order.state),
-                                            },
-                                          ),
+                                          statusKey(order.state),
                                           style: textStyleDialogInfoOrder
                                               .copyWith(
                                             decoration:

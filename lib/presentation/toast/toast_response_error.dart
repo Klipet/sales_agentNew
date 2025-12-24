@@ -29,12 +29,13 @@ class ToastResponseError{
 
   void showUpdate() {
     CustomToast.showCustom(
+      width: 565.w,
+      height: 160.h,
       context: context,
       onDismiss: () {},
       builder: (context, dismiss) {
         return SizedBox(
-          width: 565.w,
-          height: 160.h,
+
           child: _contentToastUpdate(dismiss),
         );
       },
@@ -43,12 +44,13 @@ class ToastResponseError{
 
   void showUpdateSucces() {
     CustomToast.showCustom(
+      width: 565.w,
+      height: 160.h,
       context: context,
+        margin: EdgeInsets.only(top: 50.r),
       onDismiss: () {},
       builder: (context, dismiss) {
         return SizedBox(
-          width: 565.w,
-          height: 160.h,
           child: _contentToastUpdateSucces(dismiss),
         );
       },

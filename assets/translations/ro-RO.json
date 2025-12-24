@@ -8,7 +8,7 @@
   "user": "Utilizator",
   "userHint": "Utilizator name",
   "pass": "Parola",
-  "passHint": "Password123",
+  "passHint": "Password",
   "saveAuth": "Reține datele de autentificare",
   "connect": "Conectare",
   "orders": "Comenzi:",
@@ -161,6 +161,36 @@
     "contentDoc":"Sigur dorești să ștergi document?",
     "no": "Nu",
     "da": "Da, șterge"
+  },
+  "toast": {
+    "errorAsl": "Nu am reușit să încarc și să salvez asortimentul.",
+    "update": "Datele se sincronizează, așteptați",
+    "updateSuccess": "Datele au fost actualizate cu succes",
+    "updateFault": "Datele nu au fost actualizate",
+    "netError": "Nu există conexiune la internet.",
+    "loginError":"Eroare de autentificare: nu există conexiune la internet.",
+    "loginNotMatch": "Numele de utilizator sau parola nu coincid.",
+    "loadError": "Eroare de încărcare. {document}",
+    "loadSuccess": "Datele au fost actualizate cu succes. {documents}",
+    "sendSuccess": "Comanda a fost transmisă cu succes!",
+    "sendError": "Transmiterea a eșuat!",
+    "sendErrorSub": "Comanda a fost salvată în șabloane, încercați să o transmiteți mai târziu.",
+    "sendErrorToken": "Comanda a fost salvată în șabloane, token a o experat",
+    "saveTemp": "Șablonul a fost salvat cu succes!"
+  },
+  "documents": {
+    "asl": "Assortiment",
+    "doc": "Documente",
+    "client": "Clienți",
+    "price": "Prețuri"
+  },
+  "comment": {
+    "title": "Cemmentariu",
+    "tel": "Telefon",
+    "hintTel": "Introduceți numerul la telefon",
+    "person": "Persoană",
+    "hintPerson": "Introduceți numele persoanei",
+    "comment": "Commentariu",
+    "hintComment": "Introduceți commentariu"
   }
-
 }

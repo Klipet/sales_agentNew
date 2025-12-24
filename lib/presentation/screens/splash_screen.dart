@@ -5,12 +5,15 @@ import 'package:bloc/bloc.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sales_agent/data/providers/api_provider/splash_api.dart';
 import 'package:sales_agent/data/repositories/apikey_repositori.dart';
 import 'package:sales_agent/logic/blocs/splash_bloc/splash_bloc.dart';
 import 'package:sales_agent/presentation/screens/activation_screen.dart';
 import 'package:sales_agent/presentation/toast/toast_response_error.dart';
 
+import '../../core/styles_text.dart';
 import '../../data/providers/internet_provider.dart';
 import '../../logic/blocs/splash_bloc/splash_event.dart';
 import '../../logic/blocs/splash_bloc/splash_state.dart';
@@ -38,16 +41,6 @@ class SplashScreenUI extends StatefulWidget {
 class _SplashScreenUIState extends State<SplashScreenUI> {
 
 
-  static const colorizeColors = [
-    Colors.green,
-    Colors.blue,
-    Colors.white,
-    Colors.red,
-  ];
-  static const colorizeTextStyle = TextStyle(
-    fontSize: 90.0,
-    fontFamily: 'RobotoBolt',
-  );
   @override
   void initState() {
     super.initState();
@@ -60,45 +53,43 @@ class _SplashScreenUIState extends State<SplashScreenUI> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: BlocListener<SplashBloc, SplashState>(
-          listener: (context, state) {
-            if (state is SplashSuccess) {
+      body: BlocListener<SplashBloc, SplashState>(
+        listener: (context, state) {
+          if (state is SplashSuccess) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginScreen()),
+              (Route<dynamic> route) => false,
+            );
+          } else if (state is SplashError) {
+            print(state.errorMessage);
+            if(state.errorMessage == ""){
+              ToastResponseError(context: context, textError: 'toast.netError'.tr()).showErrorConnect();
               Navigator.pushAndRemoveUntil(
                 context,
                 MaterialPageRoute(builder: (context) => const LoginScreen()),
-                (Route<dynamic> route) => false,
+                    (Route<dynamic> route) => false,
               );
-            } else if (state is SplashError) {
-              print(state.errorMessage);
-              if(state.errorMessage == ""){
-                ToastResponseError(context: context, textError: 'Нет подключения к интернету').showErrorConnect();
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginScreen()),
-                      (Route<dynamic> route) => false,
-                );
-              }else{
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ActivationScreen()),
-                      (Route<dynamic> route) => false,
-                );
-              }
+            }else{
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const ActivationScreen()),
+                    (Route<dynamic> route) => false,
+              );
             }
-          },
-          child:  AnimatedTextKit(
-              animatedTexts: [
-                ColorizeAnimatedText(
-                  'SALES AGENT',
-                  textStyle: colorizeTextStyle,
-                  colors: colorizeColors,
-                ),
-              ],
-              isRepeatingAnimation: true,
-              pause: const Duration(microseconds: 900),
-            )
-        ),
+          }
+        },
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset('assets/icons/splash_logo.svg', width: 352.w, height: 352.h,),
+              SizedBox(height: 16.h,),
+              Text('SALES AGENT',
+                  style: primareFont),
+            ],
+          ),
+        )
       ),
     );
   }

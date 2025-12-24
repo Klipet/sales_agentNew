@@ -1,0 +1,18 @@
+icons_launcher:
+  image_path: "assets/icon/logo.png"  # Путь к вашей иконке (1024x1024 рекомендуется)
+  platforms:
+    android:
+      enable: true
+      # adaptive_background_color: '#ffffff'  # Для adaptive icon
+      # adaptive_foreground_image: 'assets/icon/foreground.png'
+      # adaptive_background_image: 'assets/icon/background.png'
+    ios:
+      enable: false
+    web:
+      enable: false
+    windows:
+      enable: true
+    macos:
+      enable: false
+    linux:
+      enable: false

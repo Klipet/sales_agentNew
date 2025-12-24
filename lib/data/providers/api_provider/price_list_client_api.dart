@@ -17,12 +17,12 @@ class PriceListClientApi {
       final baseUrl = url!.endsWith("/") ? url : "$url/";
       final urlPars = Uri.parse(baseUrl)
           .resolve('json/GetClientPriceLists?tokenUid=$token');
-      final ordersResponse = await http.get(urlPars).timeout(Duration(seconds: 5));
+      final ordersResponse = await http.get(urlPars).timeout(Duration(minutes: 1));
       if(ordersResponse.statusCode == 200){
         final response = jsonDecode(ordersResponse.body);
-        print(response);
+  //      print(response);
         final dataResponse = ClientPrices.fromJson(response);
-        print(dataResponse.priceLists);
+  //      print(dataResponse.priceLists);
         return dataResponse;
       }else{
         throw Exception("Ошибка PriceListClientApi: ${ordersResponse.statusCode}");

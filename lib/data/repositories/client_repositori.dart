@@ -9,6 +9,7 @@ class ClientRepositori {
   Future<void> saveClient(ContragentResponse client) async {
     final isar = await DbProvider.instance();
     List<ModelOutlensDb> outlens = [];
+
     final db = ModelClientDb(
       balance: client.balance ?? 0.0,
       code: client.code ?? '----',
@@ -19,9 +20,8 @@ class ClientRepositori {
       tvaCode: client.tvaCode ?? '----',
       uid: client.uid ?? '',
     );
-    if (client.outlets == null) {
-    } else {
-      outlens = client.outlets!.map((outlents) {
+    if (client.outlets != null) {
+      outlens = client.outlets.map((outlents) {
         return ModelOutlensDb(
           address: outlents.address ?? '',
           comment: outlents.comment ?? '',

@@ -212,7 +212,7 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                       Container(
                         constraints: BoxConstraints(
                           maxHeight: 50.h,
-                          maxWidth: 147.w,
+                          maxWidth: 310.w,
                         ),
                         //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
                         alignment: Alignment.center,
@@ -228,14 +228,14 @@ class _TwoStepCreateUIState extends State<TwoStepCreateUI>
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.skip_next_outlined,
+                              Icons.queue_play_next_outlined,
                               color: Colors.white,
-                              size: 24.r,
+                              size: 32.r,
                             ),
                             SizedBox(width: 8.h),
                             Text(
-                              "Urmatore pagina",
-                              style: TextStyle(color: Colors.white),
+                              'newOrder.newOrder'.tr(),
+                              style: textStyleBtAslAdd,
                             ),
                           ],
                         ),

@@ -44,9 +44,10 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
       emit(UpadeOutlandsCreating());
       final id = await repository.addOutland(
         orderId: event.id!,
-        outlet: event.outlet,
+        outlet: event.outlet ?? null,
       );
       emit(NewOrderCreated(id));
+      if(event.outlet != null|| event.modelOutlensDb != null){
       Provider.of<NavigationProvider>(context, listen: false).goToPageAndSave(
         event.page!,
         data: {
@@ -55,6 +56,16 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
           Constant().outlet: event.outlet ?? event.modelOutlensDb,
         },
       );
+      }else{
+        Provider.of<NavigationProvider>(context, listen: false).goToPageAndSave(
+          event.page!,
+          data: {
+            Constant().modelDB: event.client,
+            Constant().id: id,
+         //  Constant().outlet: event.outlet ?? event.modelOutlensDb,
+          },
+        );
+      }
     } catch (e) {
       print('❌ Ошибка добавления адреса: $e');
       emit(NewOrderError('Ошибка создания заказа: $e'));

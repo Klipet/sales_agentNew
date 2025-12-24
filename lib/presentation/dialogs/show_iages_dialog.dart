@@ -111,12 +111,12 @@ class _ContentImageState extends State<ContentImage> {
                   },
                   child: SvgPicture.asset('assets/icons/info_asl/arrow_left.svg', color: images.isNotEmpty ? Colors.white : borderColor, width: 70.r,height: 70.r,)),
               Container(
-              //  margin: EdgeInsets.symmetric(horizontal: 48.h),
-              //  padding: EdgeInsets.symmetric(horizontal: 32.h, vertical: 16.w),
-              //  decoration: BoxDecoration(
-              //    border: BoxBorder.all(color: borderColor, width: 1.w),
-              //    borderRadius: BorderRadius.all(Radius.circular(15.r)),
-              //  ),
+                margin: images.isEmpty ? EdgeInsets.symmetric(horizontal: 48.h) : EdgeInsets.zero,
+                padding:images.isEmpty ? EdgeInsets.symmetric(horizontal: 32.h, vertical: 16.w) : EdgeInsets.zero,
+                decoration: images.isEmpty ? BoxDecoration(
+                  border: BoxBorder.all(color: borderColor, width: 1.w),
+                  borderRadius: BorderRadius.all(Radius.circular(15.r)),
+                ): null,
                 child: images.isNotEmpty
                     ? Stack(
                   alignment: Alignment.bottomCenter,

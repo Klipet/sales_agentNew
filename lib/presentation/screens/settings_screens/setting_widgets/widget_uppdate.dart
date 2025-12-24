@@ -121,7 +121,7 @@ class _WidgetUppdateUIState extends State<WidgetUppdateUI> {
     context.read<ClientsCubit>().fetchClients();
     context.read<PriceCubit>().fetchPriceList();
 
-    ToastResponseError(context: context, textError: 'Datele se sincronizează, așteptați').showUpdate();
+    ToastResponseError(context: context, textError: 'toast.update'.tr()).showUpdate();
   }
 
   void _onModuleLoaded(String moduleName) {
@@ -132,12 +132,12 @@ class _WidgetUppdateUIState extends State<WidgetUppdateUI> {
     print('✅ $moduleName загружен ($_loadedCount/$_totalCount)');
 
     if (_loadedCount == _totalCount) {
-      ToastResponseError(context: context, textError: 'Datele au fost actualizate cu succes').showUpdateSucces();
+      ToastResponseError(context: context, textError: 'toast.updateSuccess'.tr()).showUpdateSucces();
     }
   }
 
   void _onModuleError(String moduleName, String error) {
-    ToastResponseError(context: context, textError: 'Datele nu au fost actualizate').showError();
+    ToastResponseError(context: context, textError: 'toast.updateFault'.tr()).showError();
   }
 }
 

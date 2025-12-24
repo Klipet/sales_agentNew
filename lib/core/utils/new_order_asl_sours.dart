@@ -11,17 +11,43 @@ import '../styles_text.dart';
 
 class NewOrderAslSours extends DataGridSource {
   final Function(int lineId)? onDelete;
-  final Function(int lineId, double currentCount)? onIncrement;
-  final Function(int lineId, double currentCount)? onDecrement;
+  final Function(int lineId, double currentCount, ModelLinesDb item)?
+  onIncrement;
+  final Function(int lineId, double currentCount, ModelLinesDb item)?
+  onDecrement;
+  final Function(int lineId, double newValue, ModelLinesDb item)?
+  onSetValue;
 
-  NewOrderAslSours({this.onDelete, this.onIncrement, this.onDecrement});
+
+  NewOrderAslSours({
+    this.onDelete,
+    this.onIncrement,
+    this.onDecrement,
+    this.onSetValue,
+
+  });
+  final Map<int, TextEditingController> _controllers = {};
 
   List<DataGridRow> _rows = [];
   List<ModelLinesDb> _lineList = [];
 
+  TextEditingController _getController(ModelLinesDb line) {
+    return _controllers.putIfAbsent(
+      line.id,
+          () => TextEditingController(
+        text: (line.count ?? 0).toStringAsFixed(2),
+      ),
+    );
+  }
+
   void updateData(List<ModelLinesDb> line) {
     _lineList = line;
-    print(line);
+    for (final l in line) {
+      final controller = _controllers[l.id];
+      if (controller != null) {
+        controller.text = (l.count ?? 0).toStringAsFixed(2);
+      }
+    }
     _rows = line.map((line) {
       return DataGridRow(
         cells: [
@@ -32,6 +58,7 @@ class NewOrderAslSours extends DataGridSource {
           ),
           DataGridCell<double>(columnName: 'count', value: line.count ?? 0.0),
           DataGridCell<double>(columnName: 'price', value: line.price ?? 0.0),
+          DataGridCell<double>(columnName: 'priceSp', value: line.priceSpecial ?? 0.0),
           DataGridCell<double>(columnName: 'sum', value: line.sum ?? 0.0),
           DataGridCell<ModelLinesDb>(columnName: 'actions', value: line),
         ],
@@ -99,7 +126,7 @@ class NewOrderAslSours extends DataGridSource {
                     print(
                       "➖ Decrement tapped: id=${line.id}, count=${line.count}",
                     );
-                    onDecrement?.call(line.id, line.count ?? 0.0);
+                    onDecrement?.call(line.id, line.count ?? 0.0, line);
                   },
                   child: Container(
                     width: 50.w,
@@ -113,17 +140,31 @@ class NewOrderAslSours extends DataGridSource {
                 // Количество
                 Spacer(),
                 Container(
-                  //  width: 50.w,
+                  width: 90.w,
                   alignment: Alignment.center,
-                  child: Text(
-                    line.count.toStringAsFixed(2) ?? '0',
+                  child: TextField(
+                    controller: _getController(line),
+                    textAlign: TextAlign.center,
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     style: textStyleTableCount,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      isDense: true,
+                    ),
+                    onSubmitted: (value) {
+                      final parsed = double.tryParse(value.replaceAll(',', '.'));
+                      if (parsed != null) {
+                        // ✅ Правильный вызов с 3 параметрами
+                        onSetValue?.call(line.id, parsed, line);
+                      }
+                    },
                   ),
                 ),
                 // Кнопка плюс
                 Spacer(),
                 GestureDetector(
-                  onTap: () => onIncrement?.call(line.id, line.count ?? 0.0),
+                  onTap: () =>
+                      onIncrement?.call(line.id, line.count ?? 0.0, line),
                   child: Container(
                     width: 50.w,
                     height: 50.h,
@@ -136,6 +177,40 @@ class NewOrderAslSours extends DataGridSource {
               ],
             ),
           );
+        }if (cell.columnName == 'price') {
+          // получаем value из priceSp
+          final priceSpValue = row.getCells().firstWhere(
+                (c) => c.columnName == 'priceSp',
+          ).value as double?;
+          final price = row.getCells().firstWhere(
+                (c) => c.columnName == 'price',
+          ).value as double?;
+          if(priceSpValue == price){
+
+          return Container(
+            alignment: Alignment.centerRight,
+            padding: EdgeInsets.only(right: 16.r),
+            decoration: BoxDecoration(
+              color: containerColor,
+              border: borderSideTable(cell),
+            ),
+            child: Text(
+              priceSpValue!.toStringAsFixed(2),
+              style: textStyleDialogOrderContent.copyWith(color: Colors.red),
+            ),
+          );}else{
+            return Container(
+                alignment: Alignment.centerRight,
+                padding: EdgeInsets.only(right: 16.r),
+                decoration: BoxDecoration(
+                  color: containerColor,
+                  border: borderSideTable(cell),
+                ),
+                child: Text(
+                  price!.toStringAsFixed(2),
+                  style: textStyleDialogOrderContent,
+                ));
+          }
         }
         return newOrderTable(cell, isFirst);
       }).toList(),

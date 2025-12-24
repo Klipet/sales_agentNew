@@ -66,7 +66,7 @@ class _AssortimentUIState extends State<AssortimentUI> {
           ToastResponseError(context: context, textError: state.message).showError();
         }
         if(state is AssortimentFailureNonInternet){
-          ToastResponseError(context: context, textError: 'я не смог загрузить и сохранить ассортимент').showError();
+          ToastResponseError(context: context, textError: 'toast.errorAsl'.tr()).showError();
         }
       },
       builder: (context, state) {

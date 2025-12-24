@@ -36,7 +36,12 @@ class _CounterWidgetState extends State<CounterWidget> {
   @override
   void initState() {
     super.initState();
-    _controller.text = widget.asl.nonWhole! ? '1.00' : '1';
+    if(widget.asl.remain! > 1){
+      _controller.text = widget.asl.nonWhole! ? '1.00' : '1';
+    }else{
+      _controller.text = widget.asl.nonWhole! ? widget.asl.remain!.toStringAsFixed(2) : '1';
+    }
+
 
     _focusNode.addListener(() {
       if (_focusNode.hasFocus) {
@@ -95,7 +100,7 @@ class _CounterWidgetState extends State<CounterWidget> {
   }
 
   void _onTextChanged(String value) {
-    if (value.isEmpty) {
+    if (value.isEmpty ) {
       setState(() => count = 1);
       return;
     }
@@ -133,7 +138,7 @@ class _CounterWidgetState extends State<CounterWidget> {
         return '${sum.toStringAsFixed(2)} MDL';
       }
     }else{
-      sum = widget.prices!.price * count;
+      sum = widget.prices!.price * double.parse(_controller.text);
       if (widget.asl.nonWhole!) {
         return '${sum.toStringAsFixed(2)} MDL';
       } else {
@@ -181,20 +186,24 @@ class _CounterWidgetState extends State<CounterWidget> {
     return Column(
       children: [
         // Total Section
-        SizedBox(height: 5.h),
+        SizedBox(height: 16.h),
         _textTotalColor(),
         // Counter Container
-        SizedBox(height: 5.h),
+        SizedBox(height: 16.h),
         Row(
           children: [
             Material(
               color: Colors.transparent,
               child: Container(
-                height: 64.h,
-                width: 290.w,
+                height: 80.h,
+                width: 350.w,
                 decoration: BoxDecoration(
-                  color: borderColor,
-                  borderRadius: BorderRadius.circular(10.r),
+                  color: titleColorText,
+                  borderRadius: BorderRadius.circular(15.r),
+                  border: BoxBorder.all(
+                    color: borderColor,
+                    width: 1.w
+                  ),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -204,7 +213,7 @@ class _CounterWidgetState extends State<CounterWidget> {
                       onPressed: _decrement,
                     ),
                     Container(
-                      width: 190.w,
+                      width: 210.w,
                       alignment: Alignment.center,
                       child: TextField(
                         controller: _controller,
@@ -220,8 +229,8 @@ class _CounterWidgetState extends State<CounterWidget> {
                             FilteringTextInputFormatter.digitsOnly,
                           LengthLimitingTextInputFormatter(10),
                         ],
-                        style: GoogleFonts.poppins(
-                          fontSize: 30.sp,
+                        style: GoogleFonts.montserrat(
+                          fontSize: 48.sp,
                           fontWeight: FontWeight.w600,
                           color: Colors.black,
                           decoration: TextDecoration.none,
@@ -252,11 +261,18 @@ class _CounterWidgetState extends State<CounterWidget> {
             ),
             Spacer(),
             Container(
-              height: 64.h,
-              width: 64.w,
-              decoration: BoxDecoration(
-                color: borderColor,
-                borderRadius: BorderRadius.circular(10.r),
+              height: 80.h,
+              width: 80.w,
+              decoration: count > 0.0 ? BoxDecoration(
+                color:   buttonColor,
+                borderRadius: BorderRadius.circular(15.r),
+              ) : BoxDecoration(
+                color: titleColorText,
+                border: BoxBorder.all(
+                  color: borderColor,
+                  width: 1
+                ),
+                borderRadius: BorderRadius.circular(15.r),
               ),
               child: Material(
                 color: Colors.transparent,
@@ -266,12 +282,11 @@ class _CounterWidgetState extends State<CounterWidget> {
                       ? () {
                     _focusNode.unfocus();
                     widget.onConfirm(count, sum);
-                  }
-                      : null,
+                  } : null,
                   child: Icon(
-                    Icons.check_outlined,
-                    size: 50.r,
-                    color: textColor,
+                    Icons.check_rounded,
+                    size: 65.r,
+                    color: count > 0 ?  titleColorText : subTextColor ,
                   ),
                 ),
               ),
@@ -295,7 +310,7 @@ class _CounterButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 64.h,
+      height: 70.h,
       alignment: Alignment.center,
       child: Material(
         color: Colors.transparent,
@@ -304,7 +319,7 @@ class _CounterButton extends StatelessWidget {
           onTap: onPressed,
           child: Icon(
             icon,
-            size: 50.r,
+            size: 60.r,
             color: Colors.black,
           ),
         ),

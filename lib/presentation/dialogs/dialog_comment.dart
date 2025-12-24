@@ -31,7 +31,9 @@ class DialogCommentUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => NewOrderBloc(NewOrderRepository(), context)..add(LoadCommentEvent(orderId)),
+      create: (_) =>
+          NewOrderBloc(NewOrderRepository(), context)
+            ..add(LoadCommentEvent(orderId)),
       child: DialogContent(orderId: orderId),
     );
   }
@@ -49,10 +51,9 @@ class DialogContent extends StatefulWidget {
 class _DialogContentState extends State<DialogContent> {
   final TextEditingController commentController = TextEditingController();
   final TextEditingController commentControllerTel = TextEditingController();
-  final TextEditingController commentControllerComment = TextEditingController();
+  final TextEditingController commentControllerComment =
+      TextEditingController();
   final TextEditingController commentControllerUser = TextEditingController();
-
-
 
   @override
   void dispose() {
@@ -104,32 +105,35 @@ class _DialogContentState extends State<DialogContent> {
         backgroundColor: containerColor,
         constraints: BoxConstraints(
           maxWidth: 800.w,
-          maxHeight: 450.h,
+          maxHeight: 500.h,
           minWidth: 800.w,
-          minHeight: 450.h,
+          minHeight: 500.h,
         ),
         contentPadding: EdgeInsets.all(16.r),
-        content:
-        contentSupra(context: context,
-            controllerTel: commentControllerTel,
-            controllerUser: commentControllerUser,
-            controllerComment: commentControllerComment,
-            order: widget.orderId),
-      //  contentSimp(context, commentController, widget.orderId),
+        content: contentSupra(
+          context: context,
+          controllerTel: commentControllerTel,
+          controllerUser: commentControllerUser,
+          controllerComment: commentControllerComment,
+          order: widget.orderId,
+        ),
+        //  contentSimp(context, commentController, widget.orderId),
       ),
     );
   }
 
-  Widget contentSupra(
-  {required BuildContext context,
+  Widget contentSupra({
+    required BuildContext context,
     required TextEditingController controllerTel,
     required TextEditingController controllerUser,
-    required TextEditingController controllerComment, required int order,}){
+    required TextEditingController controllerComment,
+    required int order,
+  }) {
     return Column(
       children: [
         Row(
           children: [
-            Text('Cemmentariu', style: textStyleDialogClient),
+            Text('comment.title'.tr(), style: textStyleDialogClient),
             Spacer(),
             GestureDetector(
               onTap: () {
@@ -140,43 +144,43 @@ class _DialogContentState extends State<DialogContent> {
           ],
         ),
         Container(
-          child: BlocBuilder<NewOrderBloc, NewOrderState>(builder: (context, state){
-            if (state is CommentLoadingState) {
-              return Center(child: CircularProgressIndicator());
-            }
-            return Column(
-              children: [
-                // Поле: Телефон
-                _buildTextField(
-                  controller: controllerTel,
-                  label: 'Telefon',
-                  hint: 'Introduceți telefonul',
-                ),
+          child: BlocBuilder<NewOrderBloc, NewOrderState>(
+            builder: (context, state) {
+              if (state is CommentLoadingState) {
+                return Center(child: CircularProgressIndicator());
+              }
+              return Column(
+                children: [
+                  // Поле: Телефон
+                  _buildTextField(
+                    controller: controllerTel,
+                    label: 'comment.tel'.tr(),
+                    hint: 'comment.hintTel'.tr(),
+                  ),
 
-                // Поле: Человек
-                _buildTextField(
-                  controller: controllerUser,
-                  label: 'Persoană',
-                  hint: 'Introduceți numele persoanei',
-                ),
-                // Поле: Адрес
-                _buildTextField(
-                  controller: controllerComment,
-                  label: 'Commentariu',
-                  hint: 'Introduceți adresa',
-                  maxLines: 3,
-                ),
-              ],
-            );
-          }),
+                  // Поле: Человек
+                  _buildTextField(
+                    controller: controllerUser,
+                    label: 'comment.person'.tr(),
+                    hint: 'comment.hintPerson'.tr(),
+                  ),
+                  // Поле: Адрес
+                  _buildTextField(
+                    controller: controllerComment,
+                    label: 'comment.comment'.tr(),
+                    hint: 'comment.hintComment'.tr(),
+                    maxLines: 3,
+                  ),
+                ],
+              );
+            },
+          ),
         ),
         Spacer(),
         GestureDetector(
           onTap: () {
             final comment = _buildComment();
-            context.read<NewOrderBloc>().add(
-              AddCommentEvent(order,comment),
-            );
+            context.read<NewOrderBloc>().add(AddCommentEvent(order, comment));
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -197,7 +201,7 @@ class _DialogContentState extends State<DialogContent> {
                     Icon(Icons.save_as, color: Colors.white, size: 24.r),
                     SizedBox(width: 8.h),
                     Text(
-                      "Salvare commentariu",
+                      'newOrder.commSave'.tr(),
                       style: TextStyle(color: Colors.white),
                     ),
                   ],
@@ -206,7 +210,6 @@ class _DialogContentState extends State<DialogContent> {
             ],
           ),
         ),
-
       ],
     );
   }
@@ -220,20 +223,17 @@ class _DialogContentState extends State<DialogContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: subTextColor,
-            fontSize: 16.sp,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        SizedBox(height: 6.h),
+        SizedBox(height: 16.h),
+        Text(label, style: textStyleAslTitle),
+        SizedBox(height: 5.h),
         TextField(
           controller: controller,
           maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hint,
+            hintStyle: textStyleDialogOrderData.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: borderColor),
               borderRadius: BorderRadius.circular(16.r),
@@ -248,16 +248,30 @@ class _DialogContentState extends State<DialogContent> {
               horizontal: 12.w,
               vertical: 12.h,
             ),
+            suffixIcon: maxLines > 1
+                ? IconButton(
+                    color: colorBtJob,
+                    icon: Icon(Icons.keyboard_hide, size: 35.r),
+                    onPressed: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                  )
+                : null,
           ),
+
+          onSubmitted: (value) {
+            FocusScope.of(context).unfocus();
+          },
         ),
       ],
     );
   }
 
-
-
-
-  Widget contentSimp(BuildContext context, TextEditingController controller, int order,) {
+  Widget contentSimp(
+    BuildContext context,
+    TextEditingController controller,
+    int order,
+  ) {
     return Column(
       children: [
         Row(

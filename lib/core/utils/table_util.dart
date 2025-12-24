@@ -9,7 +9,7 @@ import '../colors_app.dart';
 import '../styles_text.dart';
 
 Alignment textAlignContent(DataGridCell<dynamic> cell) {
-  if (cell.columnName == 'denumire') {
+  if (cell.columnName == 'denumire' || cell.columnName == 'cod') {
     return Alignment.centerLeft;
   } else if (cell.columnName == 'nr') {
     return Alignment.center;
@@ -18,7 +18,7 @@ Alignment textAlignContent(DataGridCell<dynamic> cell) {
 }
 
 EdgeInsets textPaddingContent(DataGridCell<dynamic> cell) {
-  if (cell.columnName == 'denumire') {
+  if (cell.columnName == 'denumire'|| cell.columnName == 'cod') {
     return EdgeInsets.only(left: 8.r);
   } else if (cell.columnName == 'nr') {
     return EdgeInsets.zero;
@@ -170,16 +170,6 @@ Widget newOrderTable(DataGridCell<dynamic> cell, bool isFirst){
           border: borderSideTable(cell)
       ),
       child: Text(cell.value,style: textStyleDialogOrderContent),
-    );
-  }if(cell.columnName == 'price'){
-    return Container(
-      alignment: Alignment.centerRight,
-      padding: EdgeInsets.only(right: 16.r),
-      decoration: BoxDecoration(
-          color: containerColor,
-          border: borderSideTable(cell)
-      ),
-      child: Text(cell.value.toStringAsFixed(2),style: textStyleDialogOrderContent),
     );
   }if(cell.columnName == 'sum'){
     return Container(

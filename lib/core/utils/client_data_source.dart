@@ -18,10 +18,10 @@ class ClientDataSource extends DataGridSource{
     _clientList = client;
     _rows = client.map((client) {
       return DataGridRow(cells: [
-        DataGridCell<String>(columnName: 'cod', value: client.code ?? '----'),
-        DataGridCell<String>(columnName: 'name', value: client.name ?? '----'),
-        DataGridCell<String>(columnName: 'idno', value: client.idnp ?? '----'),
-        DataGridCell<String>(columnName: 'tva', value: client.tvaCode?? '----'),
+        DataGridCell<String>(columnName: 'cod', value: (client.code ?? '').isEmpty ? '----' : client.code),
+        DataGridCell<String>(columnName: 'name', value: (client.name ?? '').isEmpty ? '----' : client.name),
+        DataGridCell<String>(columnName: 'idno', value: (client.idnp ?? '').isEmpty ? '----' : client.idnp),
+        DataGridCell<String>(columnName: 'tva', value: (client.tvaCode ?? '').isEmpty ? '----' : client.tvaCode),
         DataGridCell<int>(columnName: 'outlans', value: client.outlets.length ?? 0),
 
       ]);

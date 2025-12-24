@@ -52,33 +52,48 @@ const ModelLinesDbSchema = CollectionSchema(
       name: r'lineUuid',
       type: IsarType.string,
     ),
-    r'price': PropertySchema(
+    r'nonWhole': PropertySchema(
       id: 7,
+      name: r'nonWhole',
+      type: IsarType.bool,
+    ),
+    r'price': PropertySchema(
+      id: 8,
       name: r'price',
       type: IsarType.double,
     ),
+    r'priceSpecial': PropertySchema(
+      id: 9,
+      name: r'priceSpecial',
+      type: IsarType.double,
+    ),
     r'processedCount': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'processedCount',
       type: IsarType.double,
     ),
+    r'remain': PropertySchema(
+      id: 11,
+      name: r'remain',
+      type: IsarType.double,
+    ),
     r'sum': PropertySchema(
-      id: 9,
+      id: 12,
       name: r'sum',
       type: IsarType.double,
     ),
     r'uid': PropertySchema(
-      id: 10,
+      id: 13,
       name: r'uid',
       type: IsarType.string,
     ),
     r'unitName': PropertySchema(
-      id: 11,
+      id: 14,
       name: r'unitName',
       type: IsarType.string,
     ),
     r'unitUid': PropertySchema(
-      id: 12,
+      id: 15,
       name: r'unitUid',
       type: IsarType.string,
     )
@@ -134,12 +149,15 @@ void _modelLinesDbSerialize(
   writer.writeDouble(offsets[4], object.count);
   writer.writeLong(offsets[5], object.lineNumber);
   writer.writeString(offsets[6], object.lineUuid);
-  writer.writeDouble(offsets[7], object.price);
-  writer.writeDouble(offsets[8], object.processedCount);
-  writer.writeDouble(offsets[9], object.sum);
-  writer.writeString(offsets[10], object.uid);
-  writer.writeString(offsets[11], object.unitName);
-  writer.writeString(offsets[12], object.unitUid);
+  writer.writeBool(offsets[7], object.nonWhole);
+  writer.writeDouble(offsets[8], object.price);
+  writer.writeDouble(offsets[9], object.priceSpecial);
+  writer.writeDouble(offsets[10], object.processedCount);
+  writer.writeDouble(offsets[11], object.remain);
+  writer.writeDouble(offsets[12], object.sum);
+  writer.writeString(offsets[13], object.uid);
+  writer.writeString(offsets[14], object.unitName);
+  writer.writeString(offsets[15], object.unitUid);
 }
 
 ModelLinesDb _modelLinesDbDeserialize(
@@ -157,12 +175,15 @@ ModelLinesDb _modelLinesDbDeserialize(
   object.id = id;
   object.lineNumber = reader.readLong(offsets[5]);
   object.lineUuid = reader.readString(offsets[6]);
-  object.price = reader.readDouble(offsets[7]);
-  object.processedCount = reader.readDouble(offsets[8]);
-  object.sum = reader.readDouble(offsets[9]);
-  object.uid = reader.readString(offsets[10]);
-  object.unitName = reader.readString(offsets[11]);
-  object.unitUid = reader.readString(offsets[12]);
+  object.nonWhole = reader.readBool(offsets[7]);
+  object.price = reader.readDouble(offsets[8]);
+  object.priceSpecial = reader.readDouble(offsets[9]);
+  object.processedCount = reader.readDouble(offsets[10]);
+  object.remain = reader.readDouble(offsets[11]);
+  object.sum = reader.readDouble(offsets[12]);
+  object.uid = reader.readString(offsets[13]);
+  object.unitName = reader.readString(offsets[14]);
+  object.unitUid = reader.readString(offsets[15]);
   return object;
 }
 
@@ -188,16 +209,22 @@ P _modelLinesDbDeserializeProp<P>(
     case 6:
       return (reader.readString(offset)) as P;
     case 7:
-      return (reader.readDouble(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 8:
       return (reader.readDouble(offset)) as P;
     case 9:
       return (reader.readDouble(offset)) as P;
     case 10:
-      return (reader.readString(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 11:
-      return (reader.readString(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 12:
+      return (reader.readDouble(offset)) as P;
+    case 13:
+      return (reader.readString(offset)) as P;
+    case 14:
+      return (reader.readString(offset)) as P;
+    case 15:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1152,6 +1179,16 @@ extension ModelLinesDbQueryFilter
     });
   }
 
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      nonWholeEqualTo(bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'nonWhole',
+        value: value,
+      ));
+    });
+  }
+
   QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition> priceEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -1206,6 +1243,72 @@ extension ModelLinesDbQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'price',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      priceSpecialEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'priceSpecial',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      priceSpecialGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'priceSpecial',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      priceSpecialLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'priceSpecial',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      priceSpecialBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'priceSpecial',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1272,6 +1375,70 @@ extension ModelLinesDbQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'processedCount',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition> remainEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'remain',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      remainGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'remain',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      remainLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'remain',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition> remainBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'remain',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -1864,6 +2031,18 @@ extension ModelLinesDbQuerySortBy
     });
   }
 
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> sortByNonWhole() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nonWhole', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> sortByNonWholeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nonWhole', Sort.desc);
+    });
+  }
+
   QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> sortByPrice() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'price', Sort.asc);
@@ -1873,6 +2052,19 @@ extension ModelLinesDbQuerySortBy
   QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> sortByPriceDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'price', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> sortByPriceSpecial() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priceSpecial', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy>
+      sortByPriceSpecialDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priceSpecial', Sort.desc);
     });
   }
 
@@ -1887,6 +2079,18 @@ extension ModelLinesDbQuerySortBy
       sortByProcessedCountDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'processedCount', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> sortByRemain() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remain', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> sortByRemainDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remain', Sort.desc);
     });
   }
 
@@ -2046,6 +2250,18 @@ extension ModelLinesDbQuerySortThenBy
     });
   }
 
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> thenByNonWhole() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nonWhole', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> thenByNonWholeDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'nonWhole', Sort.desc);
+    });
+  }
+
   QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> thenByPrice() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'price', Sort.asc);
@@ -2055,6 +2271,19 @@ extension ModelLinesDbQuerySortThenBy
   QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> thenByPriceDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'price', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> thenByPriceSpecial() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priceSpecial', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy>
+      thenByPriceSpecialDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priceSpecial', Sort.desc);
     });
   }
 
@@ -2069,6 +2298,18 @@ extension ModelLinesDbQuerySortThenBy
       thenByProcessedCountDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'processedCount', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> thenByRemain() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remain', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> thenByRemainDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'remain', Sort.desc);
     });
   }
 
@@ -2174,9 +2415,21 @@ extension ModelLinesDbQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QDistinct> distinctByNonWhole() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'nonWhole');
+    });
+  }
+
   QueryBuilder<ModelLinesDb, ModelLinesDb, QDistinct> distinctByPrice() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'price');
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QDistinct> distinctByPriceSpecial() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'priceSpecial');
     });
   }
 
@@ -2184,6 +2437,12 @@ extension ModelLinesDbQueryWhereDistinct
       distinctByProcessedCount() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'processedCount');
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QDistinct> distinctByRemain() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'remain');
     });
   }
 
@@ -2269,9 +2528,21 @@ extension ModelLinesDbQueryProperty
     });
   }
 
+  QueryBuilder<ModelLinesDb, bool, QQueryOperations> nonWholeProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'nonWhole');
+    });
+  }
+
   QueryBuilder<ModelLinesDb, double, QQueryOperations> priceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'price');
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, double, QQueryOperations> priceSpecialProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'priceSpecial');
     });
   }
 
@@ -2279,6 +2550,12 @@ extension ModelLinesDbQueryProperty
       processedCountProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'processedCount');
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, double, QQueryOperations> remainProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'remain');
     });
   }
 

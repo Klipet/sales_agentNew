@@ -82,6 +82,8 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
   int _loadedCount = 0;
   final int _totalCount = 4; // Количество блоков
 
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
@@ -94,7 +96,13 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
   void dispose() {
     super.dispose();
   }
-
+  void _setLoading(bool value) {
+    if (_isLoading != value) {
+      setState(() {
+        _isLoading = value;
+      });
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -104,9 +112,9 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
             if (state is LoginFailure) {
               print(state.message);
               if(state.message == ''){
-                _onModuleError('Login','LoginFailure: Nu este conectiune cu internet');
+                _onModuleError('Login','toast.loginError'.tr());
               }else if(state.message == 'login nu concide'){
-                _onModuleErrorAuth('Login','Login sau parola nu concide');
+                _onModuleErrorAuth('Login','toast.loginNotMatch'.tr());
               }
             } else if (state is LoginSuccess) {
               // Сбрасываем счётчик модулей
@@ -120,49 +128,62 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
         BlocListener<AssortimentBloc, AssortimentState>(
           listener: (context, state) {
             if (state is AssortimentSuccess) {
-              _onModuleLoaded('Ассортимент');
+
+              _onModuleLoaded('documents.asl');
             } else if (state is AssortimentFailure) {
-              _onModuleError('Ассортимент', state.message);
+              _onModuleError('Ассортимент', 'toast.loadError'.tr(namedArgs: { 'documents':'documents.asl'.tr()}));
+            }else if(state is AssortimentLoading){
+              _setLoading(true);
             }
           },
         ),
         BlocListener<DocumentsCubit, DocumentState>(
           listener: (context, state) {
             if (state is OrdersLoaded) {
-              _onModuleLoaded('Документы');
+              LoadingWidget(width: 464.w, height: 448.h);
+              _onModuleLoaded('documents.doc');
             } else if (state is OrdersError) {
-              _onModuleError('Документы', 'Ошибка загрузки');
+              _onModuleError('Документы', 'toast.loadError'.tr(namedArgs: {'documents': 'documents.doc'.tr()}));
+            }
+            else if(state is OrdersLoading){
+              _setLoading(true);
             }
           },
         ),
         BlocListener<ClientsCubit, ClientsState>(
           listener: (context, state) {
             if (state is ClientsLoaded) {
-              _onModuleLoaded('Клиенты');
+              LoadingWidget(width: 464.w, height: 448.h);
+              _onModuleLoaded('documents.client');
             } else if (state is ClientsError) {
-              _onModuleError('Клиенты', 'Ошибка загрузки');
+              _onModuleError('Клиенты', 'toast.loadError'.tr(namedArgs: {'documents': 'documents.client'.tr()}));
+            }
+            else if(state is ClientsLoading){
+              _setLoading(true);
             }
           },
         ),
         BlocListener<PriceCubit, PriceState>(
           listener: (context, state) {
             if (state is PriceLoaded) {
-              _onModuleLoaded('Цены');
+              LoadingWidget(width: 464.w, height: 448.h);
+              _onModuleLoaded('documents.price');
             } else if (state is PriceError) {
-              _onModuleError('Цены', 'Ошибка загрузки');
+              _onModuleError('Цены', 'toast.loadError'.tr(namedArgs: {'documents': 'documents.price'.tr()}));
+            }else if(state is PriceLoading){
+              _setLoading(true);
             }
           },
         ),
       ],
       child: BlocBuilder<LoginBloc, LoginState>(
         builder: (context, loginState) {
-          final clientsState = context.watch<ClientsCubit>().state;
           // Показ загрузки
           if (loginState is LoginLoading) {
             if(_loadedCount != _totalCount){
               return LoadingWidget(width: 464.w, height: 448.h);
             }
-          }
+          } if(!_isLoading){
           return ConstrainedBox(
             constraints: BoxConstraints(maxHeight: 464.h, maxWidth: 448.w),
             child: Container(
@@ -279,7 +300,10 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
               ),
             ),
           );
-        },
+        }else{
+            return LoadingWidget(width: 464.w, height: 448.h);
+          }
+          },
       ),
     );
   }
@@ -358,7 +382,7 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
       context.read<ClientsCubit>().fetchClients();
       context.read<PriceCubit>().fetchPriceList();
     } else {
-      _onModuleError('все модули', 'Datele nu au fost actualizate');
+      _onModuleError('все модули', 'toast.updateFault'.tr());
     }
 
     //  ToastResponseError(context: context, textError: 'Datele se sincronizează, așteptați').showUpdate();
@@ -369,17 +393,19 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
       _loadedCount++;
     });
 
-    print('✅ $moduleName загружен ($_loadedCount/$_totalCount)');
+    print('✅ ${moduleName.tr()} загружен ($_loadedCount/$_totalCount)');
+
     ToastResponseError(
       context: context,
-      textError: 'Datele au fost actualizate cu succes $moduleName',
-    ).showUpdate();
-
+      textError: 'toast.loadSuccess'.tr(namedArgs: {
+        'documents' : moduleName.tr()
+      } ),
+    ).showUpdateSucces();
 
     if (_loadedCount == _totalCount) {
       ToastResponseError(
         context: context,
-        textError: 'Datele au fost actualizate cu succes',
+        textError: 'toast.updateSuccess'.tr(),
       ).showUpdateSucces();
 
       Navigator.pushAndRemoveUntil(

@@ -21,10 +21,14 @@ class AssortimentBloc extends Cubit<AssortimentState>{
       }else{
         await assortimentRepositori.deleteAssortiment();
         await assortimentRepositori.saveAssortiment(asl);
-        emit(AssortimentSuccess(asl));
+        if(!isClosed){
+          emit(AssortimentSuccess(asl));
+        }
       }
     }catch(e){
-      emit(AssortimentFailure("я не смог загрузить и сохранить ассортимент"));
+      if(!isClosed){
+        emit(AssortimentFailure("я не смог загрузить и сохранить ассортимент"));
+      }
     }
   }
 

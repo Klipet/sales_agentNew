@@ -3,13 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:isar/isar.dart';
+import 'package:pinput/pinput.dart';
+import 'package:sales_agent/data/models_db/model_db_orders/model_lines_db.dart';
 import 'package:sales_agent/data/repositories/new_order_repositori.dart';
+import 'package:sales_agent/presentation/toast/toast_response_error.dart';
 import 'package:syncfusion_flutter_core/theme.dart';
 import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 
 import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
 import '../../core/utils/new_order_asl_sours.dart';
+import '../../packages/toast_costom.dart';
 import '../dialogs/new_order_clear.dart';
 
 class TableNewOrderAsl extends StatefulWidget {
@@ -26,6 +30,7 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
   final newRepo = NewOrderRepository();
   bool _isLoading = true;
   bool _isEmptyLine = true;
+  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -34,6 +39,7 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
       onDelete: _deleteLine,
       onIncrement: _incrementCount,
       onDecrement: _decrementCount,
+      onSetValue: _setCount,
     );
     _loadLines();
   }
@@ -56,7 +62,7 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
         _dataSource.updateData(lines);
         _isLoading = false;
       });
-    }else{
+    } else {
       setState(() {
         _isEmptyLine = true;
         _dataSource.updateData(lines);
@@ -68,17 +74,18 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
     print("🗑️ _deleteLine CALLED: lineId=$lineId");
 
     try {
-      final bool? deleted =  await showDeleteConfirmation(
-        context: context);
+      final bool? deleted = await showDeleteConfirmation(context: context);
       if (deleted == true) {
-        await newRepo.removeLineFromOrder(orderId: widget.orderId, lineId: lineId);
-        if(mounted){
+        await newRepo.removeLineFromOrder(
+          orderId: widget.orderId,
+          lineId: lineId,
+        );
+        if (mounted) {
           setState(() {});
           await _loadLines();
-        }else{
+        } else {
           print("🗑️ ne не обновил: lineId=$lineId");
         }
-
       }
     } catch (e) {
       if (mounted) {
@@ -92,15 +99,91 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
     }
   }
 
-  Future<void> _incrementCount(int lineId, double currentCount) async {
+  Future<void> _setCount(int lineId, double newValue, ModelLinesDb item) async {
     try {
+      final minValue = item.nonWhole ? 0.01 : 1.0;
+      final maxValue = item.remain;
+
+      if (newValue < minValue) {
+        print('object1 $minValue');
+        await newRepo.updateLineQuantity(
+          orderId: widget.orderId,
+          lineId: lineId,
+          newQuantity: minValue,
+        );
+
+        if (mounted) {
+          await _loadLines();
+        }
+        ToastResponseError(
+          context: context,
+          textError: 'Минимум: $minValue',
+        ).showError();
+        return;
+      }
+
+      if (newValue > maxValue) {
+        print('object $maxValue');
+        newValue = item.remain;
+        await newRepo.updateLineQuantity(
+          orderId: widget.orderId,
+          lineId: lineId,
+          newQuantity: newValue,
+        );
+
+        if (mounted) {
+          await _loadLines();
+        }
+        ToastResponseError(
+          context: context,
+          textError: 'Максимум: $maxValue',
+        ).showError();
+        return;
+      }
+
       await newRepo.updateLineQuantity(
         orderId: widget.orderId,
         lineId: lineId,
-        newQuantity: currentCount + 1,
+        newQuantity: newValue,
       );
+
       if (mounted) {
-        await _loadLines(); // ✅ Обновляем таблицу
+        await _loadLines();
+      }
+    } catch (e) {
+      ToastResponseError(
+        context: context,
+        textError: 'Ошибка ввода',
+      ).showError();
+    }
+  }
+
+  Future<void> _incrementCount(
+    int lineId,
+    double currentCount,
+    ModelLinesDb item,
+  ) async {
+    try {
+      final step = item.nonWhole ? 0.01 : 1.0;
+      final nextCount = currentCount + step;
+
+      print('$nextCount <= ${item.remain}, ${item.nonWhole}');
+
+      if (nextCount <= item.remain) {
+        await newRepo.updateLineQuantity(
+          orderId: widget.orderId,
+          lineId: lineId,
+          newQuantity: double.parse(nextCount.toStringAsFixed(2)),
+        );
+
+        if (mounted) {
+          await _loadLines();
+        }
+      } else {
+        ToastResponseError(
+          context: context,
+          textError: 'Максимум: ${item.remain}',
+        ).showError();
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -109,52 +192,45 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
     }
   }
 
-  Future<void> _decrementCount(int lineId, double currentCount) async {
-    if (currentCount <= 1) {
-      print("⚠️ Cannot decrement below 1");
-      if (mounted) {
-       // ScaffoldMessenger.of(context).showSnackBar(
-       //   const SnackBar(
-       //     content: Text('Cantitatea minimă este 1'),
-       //     backgroundColor: Colors.orange,
-       //   ),
-       // );
-      }
-      return;
-    }
-
+  Future<void> _decrementCount(
+    int lineId,
+    double currentCount,
+    ModelLinesDb item,
+  ) async {
     try {
-      await newRepo.updateLineQuantity(
-        orderId: widget.orderId,
-        lineId: lineId,
-        newQuantity: currentCount - 1,
-      );
-      if (mounted) {
-        await _loadLines();
+      final step = item.nonWhole ? 0.01 : 1.0;
+      final minValue = item.nonWhole ? 0.01 : 1.0;
+      final nextCount = currentCount - step;
+
+      print('$nextCount >= $minValue');
+
+      if (nextCount >= minValue) {
+        await newRepo.updateLineQuantity(
+          orderId: widget.orderId,
+          lineId: lineId,
+          newQuantity: double.parse(nextCount.toStringAsFixed(2)),
+        );
+
+        if (mounted) {
+          await _loadLines();
+        }
       } else {
-        print("❌ Widget not mounted");
+        ToastResponseError(
+          context: context,
+          textError: 'Минимальное количество: $minValue',
+        ).showError();
       }
     } catch (e) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Eroare: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Eroare: $e'), backgroundColor: Colors.red),
+      );
     }
-
   }
 
   double _calculateTotalSum() {
     double total = 0;
     for (var line in _dataSource.lineList) {
-      // Вариант 1: если есть готовое поле sum
       total += line.sum ?? 0;
-
-      // Вариант 2: если нужно вычислить (раскомментируйте если нужно)
-      // total += (line.count ?? 0) * (line.price ?? 0);
     }
     return total;
   }
@@ -177,7 +253,10 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
                   SizedBox(height: 16),
                   Text(
                     'errors.notFound'.tr(),
-                    style: textStyleDialogClientInfo.copyWith(fontSize: 24.sp, color: subTextColor),
+                    style: textStyleDialogClientInfo.copyWith(
+                      fontSize: 24.sp,
+                      color: subTextColor,
+                    ),
                   ),
                 ],
               ),
@@ -248,13 +327,18 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
                   ),
                   GridColumn(
                     columnName: 'price',
-                    width: 179.w,
+                    width: 170.w,
                     label: Center(
                       child: Text(
                         'order.price'.tr(),
                         style: textStyleDialogOrderTitle,
                       ),
                     ),
+                  ),
+                  GridColumn(
+                    columnName: 'priceSp',
+                    width: 0,
+                    label: SizedBox(),
                   ),
                   GridColumn(
                     columnName: 'sum',

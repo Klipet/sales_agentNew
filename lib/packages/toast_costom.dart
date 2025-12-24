@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomToast {
-  static OverlayEntry? _overlayEntry;
-  static bool _isVisible = false;
+  static final List<_ToastEntry> _toastEntries = [];
+  static  double _toastHeight = 160.h;
+  static const double _toastSpacing = 8.0;
 
   /// Показать custom toast
   static void showCustom({
@@ -16,145 +18,78 @@ class CustomToast {
     double? height,
     VoidCallback? onDismiss,
   }) {
-    // Закрываем предыдущий toast если он есть
-    if (_isVisible) {
-      dismiss();
-    }
-
     final overlay = Overlay.of(context);
 
-    _overlayEntry = OverlayEntry(
-      builder: (context) => _ToastWidget(
-        builder: builder,
-        alignment: alignment,
-        animationDuration: animationDuration,
-        autoCloseDuration: autoCloseDuration,
-        margin: margin,
-        width: width,
-        height: height,
-        onDismiss: () {
-          dismiss();
-          onDismiss?.call();
-        },
-      ),
+    final toastEntry = _ToastEntry();
+
+    toastEntry.overlayEntry = OverlayEntry(
+      builder: (context) =>
+          _ToastWidget(
+            builder: builder,
+            alignment: alignment,
+            animationDuration: animationDuration,
+            autoCloseDuration: autoCloseDuration,
+            margin: margin,
+            width: width,
+            height: height,
+            toastEntry: toastEntry,
+            onDismiss: () {
+              _removeToast(toastEntry);
+              onDismiss?.call();
+            },
+          ),
     );
 
-    _isVisible = true;
-    overlay.insert(_overlayEntry!);
+    _toastEntries.add(toastEntry);
+    overlay.insert(toastEntry.overlayEntry!);
+
+    // Обновляем позиции всех toast
+    _updateAllToasts();
   }
 
-  /// Закрыть текущий toast
-  static void dismiss() {
-    if (_isVisible && _overlayEntry != null) {
-      _overlayEntry?.remove();
-      _overlayEntry = null;
-      _isVisible = false;
+  /// Удалить конкретный toast
+  static void _removeToast(_ToastEntry toastEntry) {
+    if (_toastEntries.contains(toastEntry)) {
+      toastEntry.overlayEntry?.remove();
+      _toastEntries.remove(toastEntry);
+
+      // Обновляем позиции оставшихся toast
+      _updateAllToasts();
     }
   }
 
-  /// Показать toast с успехом
-  static void showSuccess({
-    required BuildContext context,
-    required String message,
-    Duration autoCloseDuration = const Duration(seconds: 5),
-    AlignmentGeometry alignment = Alignment.bottomRight,
-    double? width,
-    double? height,
-  }) {
-    showCustom(
-      context: context,
-      alignment: alignment,
-      autoCloseDuration: autoCloseDuration,
-      width: width,
-      height: height,
-      builder: (context, dismiss) {
-        return _DefaultToastContent(
-          message: message,
-          icon: Icons.check_circle,
-          iconColor: Colors.green,
-          onClose: dismiss,
-        );
-      },
-    );
+  /// Обновить позиции всех toast
+  static void _updateAllToasts() {
+    for (int i = 0; i < _toastEntries.length; i++) {
+      _toastEntries[i].index = i;
+      _toastEntries[i].overlayEntry?.markNeedsBuild();
+    }
   }
 
-  /// Показать toast с ошибкой
-  static void showError({
-    required BuildContext context,
-    required String message,
-    Duration autoCloseDuration = const Duration(seconds: 5),
-    AlignmentGeometry alignment = Alignment.bottomRight,
-    double? width,
-    double? height,
-  }) {
-    showCustom(
-      context: context,
-      alignment: alignment,
-      autoCloseDuration: autoCloseDuration,
-      width: width,
-      height: height,
-      builder: (context, dismiss) {
-        return _DefaultToastContent(
-          message: message,
-          icon: Icons.error,
-          iconColor: Colors.red,
-          onClose: dismiss,
-        );
-      },
-    );
+  /// Закрыть все toast
+  static void dismissAll() {
+    for (var entry in _toastEntries) {
+      entry.overlayEntry?.remove();
+    }
+    _toastEntries.clear();
   }
 
-  /// Показать toast с предупреждением
-  static void showWarning({
-    required BuildContext context,
-    required String message,
-    Duration autoCloseDuration = const Duration(seconds: 5),
-    AlignmentGeometry alignment = Alignment.bottomRight,
-    double? width,
-    double? height,
-  }) {
-    showCustom(
-      context: context,
-      alignment: alignment,
-      autoCloseDuration: autoCloseDuration,
-      width: width,
-      height: height,
-      builder: (context, dismiss) {
-        return _DefaultToastContent(
-          message: message,
-          icon: Icons.warning,
-          iconColor: Colors.orange,
-          onClose: dismiss,
-        );
-      },
-    );
+  /// Закрыть последний toast
+  static void dismiss() {
+    if (_toastEntries.isNotEmpty) {
+      _removeToast(_toastEntries.last);
+    }
   }
 
-  /// Показать toast с информацией
-  static void showInfo({
-    required BuildContext context,
-    required String message,
-    Duration autoCloseDuration = const Duration(seconds: 5),
-    AlignmentGeometry alignment = Alignment.bottomRight,
-    double? width,
-    double? height,
-  }) {
-    showCustom(
-      context: context,
-      alignment: alignment,
-      autoCloseDuration: autoCloseDuration,
-      width: width,
-      height: height,
-      builder: (context, dismiss) {
-        return _DefaultToastContent(
-          message: message,
-          icon: Icons.info,
-          iconColor: Colors.blue,
-          onClose: dismiss,
-        );
-      },
-    );
+  /// Вычислить offset для toast по индексу
+  static double _calculateOffset(int index, int totalToasts) {
+    return (totalToasts - 1 - index) * (_toastHeight - _toastSpacing);
   }
+}
+/// Класс для хранения информации о toast
+class _ToastEntry {
+  OverlayEntry? overlayEntry;
+  int index = 0;
 }
 
 /// Внутренний виджет для отображения toast
@@ -166,6 +101,7 @@ class _ToastWidget extends StatefulWidget {
   final EdgeInsets margin;
   final double? width;
   final double? height;
+  final _ToastEntry toastEntry;
   final VoidCallback onDismiss;
 
   const _ToastWidget({
@@ -174,6 +110,7 @@ class _ToastWidget extends StatefulWidget {
     required this.animationDuration,
     required this.autoCloseDuration,
     required this.margin,
+    required this.toastEntry,
     required this.onDismiss,
     this.width,
     this.height,
@@ -218,7 +155,9 @@ class _ToastWidgetState extends State<_ToastWidget>
 
   void _close() async {
     await _controller.reverse();
-    widget.onDismiss();
+    if (mounted) {
+      widget.onDismiss();
+    }
   }
 
   @override
@@ -240,79 +179,36 @@ class _ToastWidgetState extends State<_ToastWidget>
       );
     }
 
+    // Вычисляем смещение вверх для текущего toast
+    final offset = CustomToast._calculateOffset(
+      widget.toastEntry.index,
+      CustomToast._toastEntries.length,
+    );
+
     return Material(
       color: Colors.transparent,
       child: Align(
         alignment: widget.alignment,
         child: Padding(
-          padding: widget.margin,
-          child: FadeTransition(
-            opacity: _fadeAnimation,
-            child: SlideTransition(
-              position: _slideAnimation,
-              child: content,
-            ),
+          padding: EdgeInsets.only(
+            left: widget.margin.left,
+            top: widget.margin.top,
+            right: widget.margin.right,
+            bottom: widget.margin.bottom + offset,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-/// Дефолтный контент для toast
-class _DefaultToastContent extends StatelessWidget {
-  final String message;
-  final IconData icon;
-  final Color iconColor;
-  final VoidCallback onClose;
-
-  const _DefaultToastContent({
-    required this.message,
-    required this.icon,
-    required this.iconColor,
-    required this.onClose,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
-        border: Border.all(color: Colors.grey.shade300),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: iconColor, size: 24),
-          const SizedBox(width: 12),
-          Flexible(
-            child: Text(
-              message,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black87,
+          child: AnimatedSlide(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+            offset: Offset(0, 0),
+            child: FadeTransition(
+              opacity: _fadeAnimation,
+              child: SlideTransition(
+                position: _slideAnimation,
+                child: content,
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          GestureDetector(
-            onTap: onClose,
-            child: Icon(
-              Icons.close,
-              size: 20,
-              color: Colors.grey.shade600,
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

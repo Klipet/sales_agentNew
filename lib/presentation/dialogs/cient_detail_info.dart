@@ -126,7 +126,7 @@ class ClientDialogUI extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(top: 16.h),
-          padding: EdgeInsets.all(16.r),
+          padding: EdgeInsets.only(left:15.r ,bottom: 15.r, right: 10.r, top: 15.r),
           decoration: BoxDecoration(
             border: Border.all(color: borderColor, width: 1.w),
             borderRadius: BorderRadius.all(Radius.circular(15.r)),
@@ -385,15 +385,20 @@ class ClientDialogUI extends StatelessWidget {
                   fontSize: 12.sp,
                 ),
               ),
-              Text(
-                (clientApi?.tvaCode == ''
-                        ? nullStringTVA
-                        : clientApi?.tvaCode) ??
-                    (clientDb?.tvaCode == ''
-                        ? nullStringTVA
-                        : clientDb?.tvaCode) ??
-                    nullStringTVA,
-                style: textStyleDialogClientInfo,
+              SizedBox(
+                width: 100.w,
+                child: Text(
+                  (clientApi?.tvaCode == ''
+                          ? nullStringTVA
+                          : clientApi?.tvaCode) ??
+                      (clientDb?.tvaCode == ''
+                          ? nullStringTVA
+                          : clientDb?.tvaCode) ??
+                      nullStringTVA,
+                  style: textStyleDialogClientInfo,
+                  maxLines: 1,
+                  overflow: TextOverflow.visible,
+                ),
               ),
               //  SizedBox(height: 10.h),
               Text(
@@ -403,16 +408,21 @@ class ClientDialogUI extends StatelessWidget {
                   fontSize: 12.sp,
                 ),
               ),
-              Text(
-                (clientApi?.balance.toString() == ''
-                        ? '0.0'
-                        : clientApi?.balance.toString()) ??
-                    (clientDb?.balance.toString() == ''
-                        ? '0.0'
-                        : clientDb?.balance.toString()) ??
-                    '0.0',
-                style: textStyleDialogClientInfo.copyWith(
-                  color: colorSold(clientApi, clientDb),
+              SizedBox(
+                width: 110.w,
+                child: Text(
+                  (clientApi?.balance.toString() == ''
+                          ? '0.0'
+                          : clientApi?.balance.toString()) ??
+                      (clientDb?.balance.toString() == ''
+                          ? '0.0'
+                          : clientDb?.balance.toString()) ??
+                      '0.0',
+                  style: textStyleDialogClientInfo.copyWith(
+                    color: colorSold(clientApi, clientDb),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
                 ),
               ),
             ],

@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:sales_agent/core/colors_app.dart';
+import 'package:sales_agent/packages/chek_version.dart';
 import 'package:sales_agent/presentation/screens/activation_screen.dart';
 import 'package:sales_agent/presentation/screens/splash_screen.dart';
 import 'package:sales_agent/routes/app_pouts.dart';
@@ -44,10 +45,9 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    checkVersion();
     return ScreenUtilInit(
       designSize: const Size(1280, 800),
       minTextAdapt: true,

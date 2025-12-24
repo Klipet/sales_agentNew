@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -14,12 +15,14 @@ class ToastResponseNewOrder {
 
   void toastSucces() {
     CustomToast.showCustom(
+      width: 565.w,
+      height:160.h,
       context: context,
       onDismiss: () {},
       builder: (context, dismiss) {
         return SizedBox(
-          width: 565.w,
-          height: 160.h,
+        //  width: 565.w,
+        //  height: 160.h,
           child: contentToastSucces(dismiss),
         );
       },
@@ -28,12 +31,14 @@ class ToastResponseNewOrder {
 
   void toastError() {
     CustomToast.showCustom(
+      width: 565.w,
+      height: 241.h,
       context: context,
       onDismiss: () {},
       builder: (context, dismiss) {
         return SizedBox(
-          width: 565.w,
-          height: 241.h,
+        //  width: 565.w,
+        //  height: 241.h,
           child: contentToastError(dismiss),
         );
       },
@@ -88,7 +93,7 @@ class ToastResponseNewOrder {
           SizedBox(width: 16.w),
           Expanded(
             child: Text(
-              'Comanda a fost transmisă cu succes!',
+              'toast.sendSuccess'.tr(),
               maxLines: 2,
               textAlign: TextAlign.center,
               style: textStyleDialogAddAssortimentTotal.copyWith(
@@ -137,7 +142,7 @@ class ToastResponseNewOrder {
               children: [
                 SizedBox(height: 19.h),
                 Text(
-                  'Transmiterea a eșuat! ',
+                  'toast.sendError'.tr(),
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: textStyleDialogAddAssortimentTotal.copyWith(
@@ -146,7 +151,7 @@ class ToastResponseNewOrder {
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  'Comanda a fost salvată în șabloane, încercați să o transmiteți mai târziu.',
+                  'toast.sendErrorSub'.tr(),
                   textAlign: TextAlign.center,
                   style: textStyleDialogAddAssortimentTotal.copyWith(
                     fontSize: 25.sp,
@@ -196,7 +201,7 @@ class ToastResponseNewOrder {
               children: [
                 SizedBox(height: 19.h),
                 Text(
-                  'Transmiterea a eșuat! ',
+                  'toast.sendError'.tr(),
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: textStyleDialogAddAssortimentTotal.copyWith(
@@ -205,7 +210,7 @@ class ToastResponseNewOrder {
                 ),
                 SizedBox(height: 10.h),
                 Text(
-                  'Comanda a fost salvată în șabloane, token a o experat',
+                  'toast.sendErrorToken'.tr(),
                   textAlign: TextAlign.center,
                   style: textStyleDialogAddAssortimentTotal.copyWith(
                     fontSize: 25.sp,
@@ -251,7 +256,7 @@ class ToastResponseNewOrder {
           SvgPicture.asset('assets/icons/toast/save_order.svg'),
           Expanded(
             child: Text(
-              'Șablonul a fost salvat cu succes!',
+              'toast.saveTemp'.tr(),
               maxLines: 2,
               textAlign: TextAlign.center,
               style: textStyleDialogAddAssortimentTotal.copyWith(

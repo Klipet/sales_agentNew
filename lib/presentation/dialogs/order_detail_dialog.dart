@@ -312,6 +312,16 @@ Future<bool?> showDetailOrder({
                                 ),
                               ),
                               GridColumn(
+                                columnName: 'cod',
+                                width: 150.w,
+                                label: Center(
+                                  child: Text(
+                                    'order.code'.tr(),
+                                    style: textStyleDialogOrderTitle,
+                                  ),
+                                ),
+                              ),
+                              GridColumn(
                                 columnName: 'cant',
                                 width: 90.w,
                                 label: Center(
@@ -333,7 +343,7 @@ Future<bool?> showDetailOrder({
                               ),
                               GridColumn(
                                 columnName: 'suma',
-                                width: 90.w,
+                             //  width: 90.w,
                                 label: Center(
                                   child: Text(
                                     'order.sum'.tr(),
@@ -341,15 +351,15 @@ Future<bool?> showDetailOrder({
                                   ),
                                 ),
                               ),
-                              GridColumn(
-                                columnName: 'stocuri',
-                                label: Center(
-                                  child: Text(
-                                    'order.stock'.tr(),
-                                    style: textStyleDialogOrderTitle,
-                                  ),
-                                ),
-                              ),
+                            //  GridColumn(
+                            //    columnName: 'stocuri',
+                            //    label: Center(
+                            //      child: Text(
+                            //        'order.stock'.tr(),
+                            //        style: textStyleDialogOrderTitle,
+                            //      ),
+                            //    ),
+                            //  ),
                             ],
                           ),
                         ),

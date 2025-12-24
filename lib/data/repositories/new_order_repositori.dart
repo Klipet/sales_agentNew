@@ -64,8 +64,10 @@ class NewOrderRepository {
 
   }) async {
     final isar = await DbProvider.instance();
-    final String? deliveryAddress = outlet?.comment != '' ? outlet!.comment : outlet?.address;
-print(deliveryAddress);
+    String? deliveryAddress;
+    if(outlet != null){
+     deliveryAddress = outlet.comment != '' ? outlet.comment : outlet.address;
+    }
     // Создаём заказ
     await isar.writeTxn(() async {
       // Получаем существующий заказ
@@ -134,6 +136,7 @@ print(deliveryAddress);
       // Определяем цену
       final price = priceSelected?.price ?? item.price ?? 0.0;
 
+      final specilPrice = priceSelected?.price ?? 0.0;
       // Считаем сумму
       final sum = price * quantity;
 
@@ -151,23 +154,22 @@ print(deliveryAddress);
         ..count = quantity
         ..unitName = item.unitName ?? 'шт'
         ..price = price
+        ..priceSpecial = specilPrice
         ..sum = sum
         ..uid = '00000000-0000-0000-0000-000000000000'
         ..unitUid = ''
         ..lineUuid = item.pricelineUid ?? '00000000-0000-0000-0000-000000000000'
         ..processedCount = quantity
+        ..nonWhole = item.nonWhole ?? false
+        ..remain = item.remain ?? 0.0
         ..unitName = item.unitName ?? '';
-      // Сохраняем строку
 
-
-      print('что-то тут не так');
       await isar.modelLinesDbs.put(orderLine);
       // Связываем со заказом
       order.lines.add(orderLine);
       await order.lines.save();
       // Обновляем общую сумму заказа
       order.sum += sum;
-    //  order.tranmit = false;
       // Сохраняем заказ
       await isar.modelDocumentDbs.put(order);
     });

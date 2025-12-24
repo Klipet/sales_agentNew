@@ -14,11 +14,14 @@ class ModelLinesDb {
   late double count;
   late int lineNumber;
   late double price;
+  late double priceSpecial;
   late double processedCount;
   late double sum;
   late String uid;
   late String lineUuid;
   late String unitName;
   late String unitUid;
+  late bool nonWhole;
+  late double remain;
   final document = IsarLink<ModelDocumentDb>();
 }
