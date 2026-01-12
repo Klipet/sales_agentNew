@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_keyboard_visibility/flutter_keyboard_visibility.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/data/repositories/new_order_repositori.dart';
 import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_bloc.dart';
@@ -18,7 +21,7 @@ Future dialogComment({required BuildContext context, required int order}) {
     context: context,
     barrierDismissible: false,
     builder: (context) {
-      return DialogCommentUI(orderId: order);
+      return  DialogCommentUI(orderId: order);
     },
   );
 }
@@ -51,16 +54,27 @@ class DialogContent extends StatefulWidget {
 class _DialogContentState extends State<DialogContent> {
   final TextEditingController commentController = TextEditingController();
   final TextEditingController commentControllerTel = TextEditingController();
-  final TextEditingController commentControllerComment =
-      TextEditingController();
+  final TextEditingController commentControllerComment = TextEditingController();
   final TextEditingController commentControllerUser = TextEditingController();
+  final FocusNode telFocus = FocusNode();
+  final FocusNode commentFocus = FocusNode();
+  final FocusNode userFocus = FocusNode();
 
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   void dispose() {
     commentController.dispose();
     commentControllerTel.dispose();
     commentControllerComment.dispose();
     commentControllerUser.dispose();
+
+    telFocus.dispose();
+    userFocus.dispose();
+    commentFocus.dispose();
+
     super.dispose();
   }
 
@@ -95,30 +109,36 @@ class _DialogContentState extends State<DialogContent> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<NewOrderBloc, NewOrderState>(
-      listener: (context, state) {
-        if (state is CommentLoadedState) {
-          print(state.comment);
-          _loadComment(state.comment);
-        }
-      },
-      child: AlertDialog(
-        backgroundColor: containerColor,
-        constraints: BoxConstraints(
-          maxWidth: 800.w,
-          maxHeight: 500.h,
-          minWidth: 800.w,
-          minHeight: 500.h,
+        listener: (context, state) {
+          if (state is CommentLoadedState) {
+            print(state.comment);
+            _loadComment(state.comment);
+          }
+        },
+      
+        child: AlertDialog(
+          constraints:  BoxConstraints(
+            maxWidth: 800.w,
+          //  minHeight: 450.h,
+          //  maxHeight: 450.h,
+            minWidth: 800.w,
+          ),
+          backgroundColor: containerColor,
+          content: SafeArea(
+            child: SingleChildScrollView(
+              child: contentSupra(
+                  context: context,
+                  controllerTel: commentControllerTel,
+                  controllerUser: commentControllerUser,
+                  controllerComment: commentControllerComment,
+                  order: widget.orderId,
+                  focusNode: telFocus,
+              ),
+            )
+                  //  contentSimp(context, commentController, widget.orderId)
+
+          ),
         ),
-        contentPadding: EdgeInsets.all(16.r),
-        content: contentSupra(
-          context: context,
-          controllerTel: commentControllerTel,
-          controllerUser: commentControllerUser,
-          controllerComment: commentControllerComment,
-          order: widget.orderId,
-        ),
-        //  contentSimp(context, commentController, widget.orderId),
-      ),
     );
   }
 
@@ -127,90 +147,102 @@ class _DialogContentState extends State<DialogContent> {
     required TextEditingController controllerTel,
     required TextEditingController controllerUser,
     required TextEditingController controllerComment,
+    required FocusNode focusNode,
     required int order,
   }) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text('comment.title'.tr(), style: textStyleDialogClient),
-            Spacer(),
-            GestureDetector(
-              onTap: () {
-                Navigator.pop(context);
-              },
-              child: SvgPicture.asset('assets/icons/close.svg'),
-            ),
-          ],
-        ),
-        Container(
-          child: BlocBuilder<NewOrderBloc, NewOrderState>(
-            builder: (context, state) {
-              if (state is CommentLoadingState) {
-                return Center(child: CircularProgressIndicator());
-              }
-              return Column(
-                children: [
-                  // Поле: Телефон
-                  _buildTextField(
-                    controller: controllerTel,
-                    label: 'comment.tel'.tr(),
-                    hint: 'comment.hintTel'.tr(),
-                  ),
-
-                  // Поле: Человек
-                  _buildTextField(
-                    controller: controllerUser,
-                    label: 'comment.person'.tr(),
-                    hint: 'comment.hintPerson'.tr(),
-                  ),
-                  // Поле: Адрес
-                  _buildTextField(
-                    controller: controllerComment,
-                    label: 'comment.comment'.tr(),
-                    hint: 'comment.hintComment'.tr(),
-                    maxLines: 3,
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-        Spacer(),
-        GestureDetector(
-          onTap: () {
-            final comment = _buildComment();
-            context.read<NewOrderBloc>().add(AddCommentEvent(order, comment));
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+    PhoneNumber number = PhoneNumber(
+      isoCode: 'MD', // MD / RO / RU — подставь нужное
+    );
+    return  Column(
+        children: [
+          Row(
             children: [
-              Container(
-                constraints: BoxConstraints(maxHeight: 50.h, maxWidth: 200.w),
-                //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
-                alignment: Alignment.center,
-                //   margin: EdgeInsets.only(bottom: 0.w),
-                decoration: BoxDecoration(
-                  color: buttonColor,
-                  borderRadius: BorderRadius.all(Radius.circular(100.r)),
-                  border: Border.all(color: borderColor, width: 1.w),
-                ),
+              Text('comment.title'.tr(), style: textStyleDialogClient),
+              Spacer(),
+              GestureDetector(
+                onTap: () {
+                  final comment = _buildComment();
+                  context.read<NewOrderBloc>().add(
+                    AddCommentEvent(order, comment),
+                  );
+                  Navigator.pop(context);
+                },
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Icon(Icons.save_as, color: Colors.white, size: 24.r),
-                    SizedBox(width: 8.h),
-                    Text(
-                      'newOrder.commSave'.tr(),
-                      style: TextStyle(color: Colors.white),
+                    Container(
+                      constraints: BoxConstraints(
+                        maxHeight: 50.h,
+                        maxWidth: 100.w,
+                      ),
+                      //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
+                      alignment: Alignment.center,
+                      //   margin: EdgeInsets.only(bottom: 0.w),
+                      decoration: BoxDecoration(
+                        color: buttonColor,
+                        borderRadius: BorderRadius.all(Radius.circular(100.r)),
+                        border: Border.all(color: borderColor, width: 1.w),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.save_outlined,
+                            color: Colors.white,
+                            size: 24.r,
+                          ),
+                          //  SizedBox(width: 8.h),
+                          //  Text('comment.btSave'.tr(), style: buttonTextStyle),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
+              Spacer(),
+              GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: SvgPicture.asset('assets/icons/close.svg'),
+              ),
             ],
           ),
-        ),
-      ],
+           BlocBuilder<NewOrderBloc, NewOrderState>(
+              builder: (context, state) {
+                if (state is CommentLoadingState) {
+                  return Center(child: CircularProgressIndicator());
+                }
+                return Column(
+                  children: [
+                    // Поле: Телефон
+                    _buildTextFieldTel(
+                      controller: controllerTel,
+                      label: 'comment.tel'.tr(),
+                      hint: 'comment.hintTel'.tr(),
+                      isoCode: number,
+                    ),
+
+                    // Поле: Человек
+                    _buildTextField(
+                      controller: controllerUser,
+                      label: 'comment.person'.tr(),
+                      hint: 'comment.hintPerson'.tr(),
+                    ),
+                    // Поле: Comment
+
+                    _buildTextField(
+                    controller: controllerComment,
+                    label: 'comment.comment'.tr(),
+                    hint: 'comment.hintComment'.tr(),
+                    maxLines: 3,
+
+                    ),
+                  ],
+                );
+              },
+            ),
+        ],
     );
   }
 
@@ -218,21 +250,24 @@ class _DialogContentState extends State<DialogContent> {
     required TextEditingController controller,
     required String label,
     required String hint,
+    FocusNode? focusNode,
     int maxLines = 1,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
         SizedBox(height: 16.h),
         Text(label, style: textStyleAslTitle),
         SizedBox(height: 5.h),
         TextField(
           controller: controller,
+
           maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: textStyleDialogOrderData.copyWith(
-              fontWeight: FontWeight.w600,
+              fontWeight: FontWeight.w200,
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: borderColor),
@@ -262,6 +297,56 @@ class _DialogContentState extends State<DialogContent> {
           onSubmitted: (value) {
             FocusScope.of(context).unfocus();
           },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTextFieldTel({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required PhoneNumber isoCode,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 16.h),
+        Text(label, style: textStyleAslTitle),
+        SizedBox(height: 5.h),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: borderColor, width: 1),
+            borderRadius: BorderRadius.all(Radius.circular(16.r)),
+            color: primariColor,
+          ),
+          child: InternationalPhoneNumberInput(
+            initialValue: isoCode,
+            onInputChanged: (PhoneNumber value) {
+              //  controller.text = value.phoneNumber.toString();
+              print('onInputChanged: ${value.phoneNumber}');
+            },
+            selectorConfig: SelectorConfig(
+              showFlags: true,
+            ),
+            ignoreBlank: true,
+            autoValidateMode: AutovalidateMode.disabled,
+            textFieldController: controller,
+            formatInput: false,
+            keyboardType: const TextInputType.numberWithOptions(
+              signed: false,
+              decimal: false,
+            ),
+            inputDecoration: InputDecoration(
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              hintText: hint,
+              hintStyle: textStyleDialogOrderData.copyWith(
+                fontWeight: FontWeight.w200,
+              ),
+            ),
+          ),
         ),
       ],
     );

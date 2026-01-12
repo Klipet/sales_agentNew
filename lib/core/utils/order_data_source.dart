@@ -24,7 +24,7 @@ class OrderDataSource extends DataGridSource {
             columnName: 'address', value: order.deliveryAddress),
         DataGridCell<String>(
             columnName: 'status', value: order.state.toString()),
-        DataGridCell<double>(columnName: 'sum', value: order.sum),
+        DataGridCell<double>(columnName: 'sum', value: double.tryParse(order.sum.toStringAsFixed(2))),
       ]);
     }).toList();
 
@@ -44,7 +44,20 @@ class OrderDataSource extends DataGridSource {
     return DataGridRowAdapter(
       cells: row.getCells().map((cell) {
         cell.value.toString();
-        return Container(
+        if(cell.columnName == 'sum'){
+          return
+            Container(
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 25.r),
+              decoration: BoxDecoration(
+                  color: containerColor,
+                  border: borderSideTable(cell)
+              ),
+              child: textContentTable(cell),
+            );
+        }
+       else{ return
+          Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.only(left: 8.r),
           decoration: BoxDecoration(
@@ -52,7 +65,7 @@ class OrderDataSource extends DataGridSource {
               border: borderSideTable(cell)
           ),
           child: textContentTable(cell),
-        );
+        );}
       }).toList(),
     );
   }

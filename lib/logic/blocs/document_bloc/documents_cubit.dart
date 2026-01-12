@@ -12,15 +12,13 @@ class DocumentsCubit extends Cubit<DocumentState> {
   DocumentsCubit(this.ordersApi, this.ordersRepository) : super(OrdersInitial());
 
   Future<void> fetchOrders() async {
-  //  print("1");
     emit(OrdersLoading());
-  //  print("2");
     try {
       await ordersRepository.deleteOrdersWhereUuidNotEmpty();
       final orders = await ordersApi.getOrders();
       if (orders != null) {
-        for (var modelDoc in orders) {
-          await ordersRepository.saveOrders(modelDoc);
+        for(var doc in orders){
+          await ordersRepository.saveOrders(doc);
         }
         emit(OrdersLoaded(orders));
       } else {

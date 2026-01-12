@@ -147,11 +147,17 @@ void showBlurDialogTotal(
                                         ),
                                       ),
                                       Spacer(),
-                                      Text(
-                                        order.clientName.toString(),
-                                        style: textStyleDialogInfoClient
-                                            .copyWith(
-                                          decoration: TextDecoration.none,
+                                      Container(
+                                        width: 350.w,
+                                        alignment: Alignment.centerRight,
+                                        child: Text(
+                                          order.clientName.toString(),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: textStyleDialogInfoClient
+                                              .copyWith(
+                                            decoration: TextDecoration.none,
+                                          ),
                                         ),
                                       ),
                                     ],

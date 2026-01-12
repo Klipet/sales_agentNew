@@ -15,8 +15,10 @@ import '../../logic/blocs/assortiment_image_bloc/assotriment_img_state.dart';
 import '../../logic/blocs/new_order_bloc/new_order_bloc.dart';
 import '../../logic/blocs/new_order_bloc/new_order_event.dart';
 import '../../logic/blocs/new_order_bloc/new_order_state.dart';
+import '../../packages/content_image.dart';
 import '../widgets/counter_widget.dart';
 import '../widgets/loading_widget.dart';
+import 'assortiment_info.dart';
 
 Future<bool?> showAssortimentInfoOrder({
   required BuildContext context,
@@ -151,7 +153,7 @@ Widget _price({required Prices? prices, required ModelAssortimentDB asl}) {
         children: [
           Text(
             prices == null ?
-            'newOrderdialog.price'.tr() : 'Preț special',
+            'newOrderdialog.price'.tr() : 'newOrderdialog.spPrice'.tr(),
             style: textStyleAslTitle.copyWith(
               decoration: TextDecoration.none,
               fontSize: 22.sp,

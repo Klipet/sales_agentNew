@@ -377,7 +377,7 @@ Future<bool?> showDetailOrder({
                             ),
                             SizedBox(width: 5.w),
                             Text(
-                              "${order.sum.toString()} MDL",
+                              "${order.sum.toStringAsFixed(2)} MDL",
                               style: textStyleDialogOrderSum,
                             ),
                           ],

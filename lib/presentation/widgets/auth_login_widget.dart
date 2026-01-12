@@ -376,14 +376,15 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
     setState(() {
       _loadedCount = 0;
     });
-    if (widget.connectInternet) {
+    print('_refreshAllData: internet ${widget.connectInternet}');
+  //  if (widget.connectInternet) {
       context.read<AssortimentBloc>().fetchAssortiment();
       context.read<DocumentsCubit>().fetchOrders();
       context.read<ClientsCubit>().fetchClients();
       context.read<PriceCubit>().fetchPriceList();
-    } else {
-      _onModuleError('все модули', 'toast.updateFault'.tr());
-    }
+ //   } else {
+  //    _onModuleError('все модули', 'toast.updateFault'.tr());
+ //   }
 
     //  ToastResponseError(context: context, textError: 'Datele se sincronizează, așteptați').showUpdate();
   }

@@ -155,9 +155,10 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
         onTap: (){
           showBlurDialogTotal(context: context, ordersState:  ordersState, title: title,icon:  icon);
         },
-        child: SizedBox(
+        child: Container(
           width: 200.w,
             height: 53.h,
+            padding: EdgeInsets.all(10.r),
             child:
             FittedBox(
               fit: BoxFit.scaleDown,
@@ -165,9 +166,8 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
                     style: textStyleBodyBt,
                   overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
-                  textScaler: TextScaler.linear(
-                      MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.3)
-                  ),
+                  maxLines: 2,
+                 // textScaler: TextScaler.linear(MediaQuery.of(context).textScaleFactor.clamp(1.0, 1.3)),
                 ),
               ),
             ),

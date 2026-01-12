@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:sales_agent/data/providers/api_provider/login_api.dart';
 import 'package:sales_agent/data/repositories/login_repositori.dart';
 import '../../../data/repositories/apikey_repositori.dart';

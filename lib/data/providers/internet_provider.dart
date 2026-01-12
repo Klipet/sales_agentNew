@@ -1,12 +1,14 @@
 import 'dart:async';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+
+import 'package:observe_internet_connectivity/observe_internet_connectivity.dart';
+
 
 class InternetCheckService {
   static final InternetCheckService _instance = InternetCheckService._internal();
   factory InternetCheckService() => _instance;
   InternetCheckService._internal();
 
-  final _checker = InternetConnection();
+  final _checker = InternetConnectivity();
   Timer? _timer;
 
   bool hasConnection = true;
@@ -24,12 +26,13 @@ class InternetCheckService {
   }
 
   Future<void> _check() async {
-    final result = await _checker.hasInternetAccess;
-
-    if (result != hasConnection) {
-      hasConnection = result;
-      _controller.add(result);
-    }
+    final result = await _checker.observeInternetConnection.listen((onData){
+      if(!onData){
+        print('No Internet Connection');
+      }
+    });
+    await Future.delayed(const Duration(seconds: 10 ));
+    result.cancel();
   }
 
   Future<bool> checkNow() async {

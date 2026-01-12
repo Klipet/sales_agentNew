@@ -8,11 +8,8 @@ import 'package:provider/provider.dart';
 import 'package:sales_agent/data/models_api/models_client/ourlets_response.dart';
 import 'package:sales_agent/data/providers/api_provider/order_post_api.dart';
 import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_bloc.dart';
-import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_state.dart';
 import 'package:sales_agent/logic/blocs/new_order_post_bloc/new_order_post_bloc.dart';
 import 'package:sales_agent/logic/blocs/new_order_post_bloc/new_order_post_state.dart';
-import 'package:sales_agent/presentation/toast/toast_response_new_order.dart';
-import 'package:toastification/toastification.dart';
 import '../../core/colors_app.dart';
 import '../../core/constans.dart';
 import '../../core/styles_text.dart';
@@ -196,7 +193,13 @@ Widget buttonSaveOrder(BuildContext context,  Function(NewOrderModelPostResponse
 Widget buttonAddCommentOrder(BuildContext context, int id){
   return  GestureDetector(
     onTap: () {
-      dialogComment(context: context, order: id);
+   //   dialogComment(context: context, order: id);
+
+      showDialog(
+          context: context,
+          builder: (context) => DialogCommentUI(orderId: id,)
+      );
+
     },
     child: Row(
       mainAxisAlignment: MainAxisAlignment.end,

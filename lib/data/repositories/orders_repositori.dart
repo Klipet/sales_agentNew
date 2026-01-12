@@ -47,6 +47,9 @@ class OrdersRepositori {
         ..sum = lines.sum
         ..uid = lines.uid
         ..lineUuid = ''
+        ..nonWhole = false
+        ..remain = 0.0
+        ..priceSpecial = 0.0
         ..unitName = lines.unitName
         ..unitUid = lines.unitUid;
     }).toList();

@@ -1,5 +1,4 @@
 import 'package:bloc/bloc.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
 import 'package:sales_agent/data/providers/api_provider/assotriment_api.dart';
 import 'package:sales_agent/data/repositories/assortiment_repositori.dart';
 import 'package:sales_agent/logic/blocs/assortiment_blocs/assortiment_state.dart';
@@ -21,14 +20,15 @@ class AssortimentBloc extends Cubit<AssortimentState>{
       }else{
         await assortimentRepositori.deleteAssortiment();
         await assortimentRepositori.saveAssortiment(asl);
-        if(!isClosed){
-          emit(AssortimentSuccess(asl));
-        }
+      //  if(!isClosed){
+
+      //  }
+        emit(AssortimentSuccess(asl));
       }
     }catch(e){
-      if(!isClosed){
+    //  if(!isClosed){
         emit(AssortimentFailure("я не смог загрузить и сохранить ассортимент"));
-      }
+    //  }
     }
   }
 

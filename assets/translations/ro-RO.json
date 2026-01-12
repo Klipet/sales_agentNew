@@ -144,12 +144,14 @@
     "serchAsl": "Caută produs",
     "comment": "Cemmentariu",
     "commHint": "Introduceți comentariul pentru comanda",
-    "commSave": "Salvare commentariu"
+    "commSave": "Salvare commentariu",
+    "btOrder": "Comandă"
   },
   "newOrderdialog": {
     "price": "Preț unitar",
     "stok": "Stocuri",
-    "total": "Total:"
+    "total": "Total:",
+    "spPrice": "Preț special"
   },
   "imgError":"Nu s-au găsit imagini...",
   "outlandError": "Nu am gasti adrese......",
@@ -191,6 +193,7 @@
     "person": "Persoană",
     "hintPerson": "Introduceți numele persoanei",
     "comment": "Commentariu",
-    "hintComment": "Introduceți commentariu"
+    "hintComment": "Introduceți commentariu",
+    "btSave": "Salvare"
   }
 }

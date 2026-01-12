@@ -1,5 +1,5 @@
 icons_launcher:
-  image_path: "assets/icon/logo.png"  # Путь к вашей иконке (1024x1024 рекомендуется)
+  image_path: "assets/icons/logo.png"  # Путь к вашей иконке (1024x1024 рекомендуется)
   platforms:
     android:
       enable: true

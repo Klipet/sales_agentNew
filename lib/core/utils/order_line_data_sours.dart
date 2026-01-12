@@ -21,7 +21,7 @@ class OrderLinesDataSource extends DataGridSource {
           DataGridCell<String>(columnName: 'cod', value: line.assortimentCode),
           DataGridCell<double>(columnName: 'cant', value: line.count),
           DataGridCell<double>(columnName: 'pret', value: line.price),
-          DataGridCell<double>(columnName: 'suma', value: line.sum),
+          DataGridCell<double>(columnName: 'suma', value: double.tryParse(line.sum.toStringAsFixed(2))),
 
         ],
       );

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:observe_internet_connectivity/observe_internet_connectivity.dart';
 import 'package:sales_agent/presentation/toast/toast_response_error.dart';
 import 'package:sales_agent/presentation/widgets/auth_login_widget.dart';
 
@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> internetCheck() async {
-    final resault = await InternetConnection().hasInternetAccess;
+    final resault = await InternetConnectivity().hasInternetConnection;
     setState(() {
       isConnected = resault;
     });

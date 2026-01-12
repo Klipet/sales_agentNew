@@ -13,6 +13,7 @@ import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
 import '../../data/models_api/models_client/ourlets_response.dart';
 import '../../data/models_db/model_db_clients/model_client_db.dart';
+import '../../data/models_db/model_db_clients/model_outlens_db.dart';
 import '../../data/providers/api_provider/client_detail_api.dart';
 import '../../data/providers/navigator_provider.dart';
 import '../../data/repositories/client_repositori.dart';
@@ -74,7 +75,7 @@ class ClientDialogUI extends StatelessWidget {
       ),
       actionsAlignment: MainAxisAlignment.start,
       contentPadding: EdgeInsets.all(16.r),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.r)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.r)),
       content: BlocBuilder<ClientDetailBloc, ClientDetailState>(
         builder: (BuildContext context, ClientDetailState state) {
           if (state is ClientDetailSuccess) {
@@ -126,7 +127,12 @@ class ClientDialogUI extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.only(top: 16.h),
-          padding: EdgeInsets.only(left:15.r ,bottom: 15.r, right: 10.r, top: 15.r),
+          padding: EdgeInsets.only(
+            left: 15.r,
+            bottom: 15.r,
+            right: 5.r,
+            top: 15.r,
+          ),
           decoration: BoxDecoration(
             border: Border.all(color: borderColor, width: 1.w),
             borderRadius: BorderRadius.all(Radius.circular(15.r)),
@@ -154,44 +160,7 @@ class ClientDialogUI extends StatelessWidget {
                         : address ?? 'Нет данных';
                     return BlocBuilder<NewOrderBloc, NewOrderState>(
                       builder: (context, state) {
-                        return GestureDetector(
-                          onTap: () {
-                            try {
-                              if (outletsDb != null ||
-                                  clientApi!.outlets.isNotEmpty) {
-                                context.read<NewOrderBloc>().add(
-                                  CreateOrderEvent(
-                                    client:
-                                        clientDb ??
-                                        ModelClientDb(
-                                          balance: clientApi!.balance,
-                                          code: clientApi.code,
-                                          idnp: clientApi.idnp,
-                                          image: clientApi.image,
-                                          name: clientApi.name,
-                                          pricelistUid: clientApi.pricelistUid,
-                                          tvaCode: clientApi.tvaCode,
-                                          uid: clientApi.uid,
-                                        ),
-                                    outlet:
-                                        clientApi?.outlets[index] ??
-                                        OutletsResponse(
-                                          address: address ?? '',
-                                          comment: comment ?? '',
-                                        ),
-                                    page: 8,
-                                  ),
-                                );
-                                Navigator.pop(context);
-                              } else {}
-                            } catch (e) {
-                              // Если bloc недоступен, просто закрываем диалог
-                              print('NwOrderBloc not aevailable: $e');
-                              //  Navigator.pop(context);
-                            }
-                          },
-                          child: _outlandContent(outletAddress),
-                        );
+                        return _outlandContent(index: index, outlend: outletsDb![index], context: context, address: outletAddress, comment: comment, clientApi: clientApi, clientDb: clientDb);
                       },
                     ); // Замените на ваш виджет
                   },
@@ -212,38 +181,33 @@ class ClientDialogUI extends StatelessWidget {
     required BuildContext context,
     required ClientDetail? clientApi,
     required ModelClientDb? clientDb,
-  }) {
-
-    return Column(
+  }) {return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: 20.h,),
-         Column(
-           mainAxisAlignment: MainAxisAlignment.center,
-           children: [
-             SvgPicture.asset(
-               'assets/icons/empti.svg',
-               width: 446.w,
-               height: 259.h,
-             ),
-             SizedBox(height: 16),
-             Text(
-               'outlandError'.tr(),
-               style: TextStyle(
-                 fontSize: 18,
-                 color: Colors.grey[600],
-               ),
-             ),
-           ],
-         ),
-        SizedBox(height: 80.h,),
+        SizedBox(height: 20.h),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              'assets/icons/empti.svg',
+              width: 446.w,
+              height: 259.h,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'outlandError'.tr(),
+              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+            ),
+          ],
+        ),
+        SizedBox(height: 110.h),
         GestureDetector(
           onTap: () {
             context.read<NewOrderBloc>().add(
               CreateOrderEvent(
                 client:
-                clientDb ??
+                    clientDb ??
                     ModelClientDb(
                       balance: clientApi!.balance,
                       code: clientApi.code,
@@ -264,32 +228,27 @@ class ClientDialogUI extends StatelessWidget {
             children: [
               Container(
                 constraints: BoxConstraints(
-                  maxHeight: 50.h,
-                  maxWidth: 250.w,
+                  maxHeight: 48.h,
+                  maxWidth: 187.w,
+                  minHeight: 48.h,
+                  minWidth: 187.w,
                 ),
-                //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
-                alignment: Alignment.center,
-                margin: EdgeInsets.only(bottom: 20.w),
                 decoration: BoxDecoration(
                   color: buttonColor,
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(100.r),
-                  ),
-                  border: Border.all(color: borderColor, width: 1.w),
+                  borderRadius: BorderRadius.all(Radius.circular(100.r)),
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.moped_sharp,
+                    SvgPicture.asset(
+                      'assets/icons/add.svg',
                       color: Colors.white,
-                      size: 32.r,
+                      width: 20.w,
+                      height: 20.h,
                     ),
-                    SizedBox(width: 8.h),
-                    Text(
-                      'newOrder.newOrder'.tr(),
-                      style: buttonTextStyle,
-                    ),
+                    SizedBox(width: 11.w),
+                    Text('newOrder.btOrder'.tr(), style: textStyleBodyBtCreate),
                   ],
                 ),
               ),
@@ -373,7 +332,7 @@ class ClientDialogUI extends StatelessWidget {
         ),
         Spacer(),
         Container(
-          margin: EdgeInsets.only(right: 60.r),
+          margin: EdgeInsets.only(right: 50.r),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -386,7 +345,7 @@ class ClientDialogUI extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: 100.w,
+              //  width: 110.w,
                 child: Text(
                   (clientApi?.tvaCode == ''
                           ? nullStringTVA
@@ -409,7 +368,7 @@ class ClientDialogUI extends StatelessWidget {
                 ),
               ),
               SizedBox(
-                width: 110.w,
+              //  width: 110.w,
                 child: Text(
                   (clientApi?.balance.toString() == ''
                           ? '0.0'
@@ -434,22 +393,34 @@ class ClientDialogUI extends StatelessWidget {
 
   Color colorSold(ClientDetail? clientApi, ModelClientDb? clientDb) {
     if (clientApi != null) {
-      if (clientApi.balance != null && clientApi!.balance.isNegative) {
+      if (clientApi.balance != null && clientApi.balance.isNegative) {
         return Colors.redAccent;
-      } else {
+      } else if(clientApi.balance == 0.0){
         return Colors.black;
+      } else {
+        return Colors.green;
       }
     } else if (clientDb != null) {
       if (clientDb.balance != null && clientDb.balance!.isNegative) {
         return Colors.redAccent;
-      } else {
+      }else if(clientDb.balance == 0.0){
         return Colors.black;
+      }  else {
+        return Colors.green;
       }
     }
     return Colors.blue;
   }
 
-  Widget _outlandContent(String outlend) {
+  Widget _outlandContent({
+    required ModelOutlensDb outlend,
+    required BuildContext context,
+    required String? address,
+    required String? comment,
+    required int index,
+    required ClientDetail? clientApi,
+    required ModelClientDb? clientDb
+  }) {
     return Container(
       width: double.maxFinite,
       margin: EdgeInsets.only(top: 16.h),
@@ -458,18 +429,85 @@ class ClientDialogUI extends StatelessWidget {
         border: Border.all(color: borderColor, width: 1.w),
         borderRadius: BorderRadius.all(Radius.circular(15.r)),
       ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+
+      child: Row(
         children: [
-          Text(
-            'client.address'.tr(),
-            style: textStyleDialogClientInfo.copyWith(
-              color: subTextColor,
-              fontSize: 12.sp,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'client.address'.tr(),
+                style: textStyleDialogClientInfo.copyWith(
+                  color: subTextColor,
+                  fontSize: 12.sp,
+                ),
+              ),
+              Text(address ?? comment!, style: textStyleDialogClientInfo),
+            ],
+          ),
+          Spacer(),
+          GestureDetector(
+            onTap: () {
+              try {
+                if (outlend != null || clientApi!.outlets.isNotEmpty) {
+                  context.read<NewOrderBloc>().add(
+                    CreateOrderEvent(
+                      client:
+                          clientDb ??
+                          ModelClientDb(
+                            balance: clientApi!.balance,
+                            code: clientApi.code,
+                            idnp: clientApi.idnp,
+                            image: clientApi.image,
+                            name: clientApi.name,
+                            pricelistUid: clientApi.pricelistUid,
+                            tvaCode: clientApi.tvaCode,
+                            uid: clientApi.uid,
+                          ),
+                      outlet: clientApi!.outlets[index] ??
+                          OutletsResponse(
+                            address: address ?? '',
+                            comment: comment ?? '',
+                          ),
+                      page: 8,
+                    ),
+                  );
+                  Navigator.pop(context);
+                } else {}
+              } catch (e) {
+                // Если bloc недоступен, просто закрываем диалог
+                print('NwOrderBloc not aevailable: $e');
+                //  Navigator.pop(context);
+              }
+            },
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: 48.h,
+                maxWidth: 187.w,
+                minHeight: 48.h,
+                minWidth: 187.w,
+              ),
+              decoration: BoxDecoration(
+                color: buttonColor,
+                borderRadius: BorderRadius.all(Radius.circular(100.r)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(
+                    'assets/icons/add.svg',
+                    color: Colors.white,
+                    width: 20.w,
+                    height: 20.h,
+                  ),
+                  SizedBox(width: 11.w),
+                  Text('newOrder.btOrder'.tr(), style: textStyleBodyBtCreate),
+                ],
+              ),
             ),
           ),
-          Text(outlend, style: textStyleDialogClientInfo),
         ],
       ),
     );

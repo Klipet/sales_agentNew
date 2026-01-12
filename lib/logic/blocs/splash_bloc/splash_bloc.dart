@@ -1,5 +1,5 @@
 import 'package:bloc/bloc.dart';
-import 'package:internet_connection_checker_plus/internet_connection_checker_plus.dart';
+import 'package:observe_internet_connectivity/observe_internet_connectivity.dart';
 import 'package:sales_agent/data/providers/api_provider/splash_api.dart';
 import 'package:sales_agent/data/repositories/apikey_repositori.dart';
 import 'package:sales_agent/logic/blocs/splash_bloc/splash_event.dart';
@@ -16,7 +16,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
     on<GetUrlEvent>((event, emit) async {
       emit(SplashLoad());
       try {
-        final bool isConnected = await InternetConnection().hasInternetAccess;
+        final bool isConnected = await InternetConnectivity().hasInternetConnection;
         final repoApikey = await repository.getApiKey();
       //  print('SplashBloc: repoApikey = $repoApikey');
 

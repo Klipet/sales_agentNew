@@ -44,7 +44,7 @@ void showImagesDialog(
                 ],
               ),
             ),
-            Expanded(child: ContentImage(img: images))
+            Expanded(child: ContentImageBig(img: images))
 
           ],
         ),
@@ -52,15 +52,15 @@ void showImagesDialog(
     },
   );
 }
-class ContentImage extends StatefulWidget {
+class ContentImageBig extends StatefulWidget {
   final List<ImageItem> img;
-  const ContentImage({super.key, required this.img});
+  const ContentImageBig({super.key, required this.img});
 
   @override
-  State<ContentImage> createState() => _ContentImageState();
+  State<ContentImageBig> createState() => _ContentImageBigState();
 }
 
-class _ContentImageState extends State<ContentImage> {
+class _ContentImageBigState extends State<ContentImageBig> {
 
   List<Uint8List> images = [];
   int _currentIndex = 0;
