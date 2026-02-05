@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:number_pad_keyboard/number_pad_keyboard.dart';
 import 'package:pinput/pinput.dart';
+import 'package:sales_agent/core/colors_app.dart';
 import 'package:sales_agent/data/providers/api_provider/activarion_api.dart';
 import 'package:sales_agent/data/repositories/apikey_repositori.dart';
 import 'package:sales_agent/logic/blocs/activation_blocs/activation_bloc.dart';
@@ -14,6 +17,7 @@ import 'package:sales_agent/logic/blocs/activation_blocs/activation_state.dart';
 import 'package:sales_agent/presentation/screens/login_screen.dart';
 
 import '../../logic/blocs/activation_blocs/activation_event.dart';
+import '../toast/toast_response_error.dart';
 
 class ActivationScreen extends StatelessWidget {
   const ActivationScreen({super.key});
@@ -36,13 +40,14 @@ class ActivationScreenUi extends StatefulWidget {
 
 class _ActivationScreenUiState extends State<ActivationScreenUi> {
   final TextEditingController _controller = TextEditingController();
-
+  String errorText = '';
+  bool error = false;
   String code = '';
   bool isHeid = false;
   final defaultPinTheme = PinTheme(
     width: 56.w,
     height: 56.h,
-    textStyle:  TextStyle(
+    textStyle: TextStyle(
       fontSize: 20.sp,
       color: Color.fromRGBO(30, 60, 87, 1),
       fontWeight: FontWeight.w600,
@@ -52,17 +57,45 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
       borderRadius: BorderRadius.circular(3),
     ),
   );
-
-  final putTheme = PinTheme(
+  final focusPinTheme = PinTheme(
     width: 56.w,
     height: 56.h,
-    textStyle:  TextStyle(
+    textStyle: TextStyle(
       fontSize: 20.sp,
       color: Color.fromRGBO(30, 60, 87, 1),
       fontWeight: FontWeight.w600,
     ),
     decoration: BoxDecoration(
-      border: Border.all(color: Colors.black),
+      border: Border.all(color: buttonColor),
+      borderRadius: BorderRadius.circular(3),
+    ),
+  );
+
+  final putTheme = PinTheme(
+    width: 56.w,
+    height: 56.h,
+    textStyle: TextStyle(
+      fontSize: 25.sp,
+      color: buttonColor,
+      fontWeight: FontWeight.w700,
+    ),
+    decoration: BoxDecoration(
+      border: Border.all(color: buttonColor),
+      //      color: questionsGroupColor,
+      borderRadius: BorderRadius.circular(3),
+    ),
+  );
+
+  final errorPinPutTema = PinTheme(
+    width: 56.w,
+    height: 56.h,
+    textStyle: TextStyle(
+      fontSize: 25.sp,
+      color: Colors.red,
+      fontWeight: FontWeight.w700,
+    ),
+    decoration: BoxDecoration(
+      border: Border.all(color: Colors.red),
       //      color: questionsGroupColor,
       borderRadius: BorderRadius.circular(3),
     ),
@@ -78,19 +111,27 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
             MaterialPageRoute(builder: (_) => const LoginScreen()),
           );
         } else if (state is ActivationFailure) {
-        //  print("Error: ${state.message}");
-          _showMesageError(state.message);
+          print("Error: ${state.message}");
+          setState(() {
+            error = true;
+          });
+          // _showMesageError(state.message);
+          ToastResponseError(
+            context: context,
+            textError: state.message,
+          ).showError();
         }
       },
       builder: (context, state) {
-        String? errorText;
-        if (state is ActivationFailure) {
-          errorText = state.message;
-        }
         return Scaffold(
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              SvgPicture.asset(
+                'assets/icons/splash_logo.svg',
+                width: 150.w,
+                height: 150.h,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -100,37 +141,47 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
                       //const SizedBox(height: 64),
                       Text(
                         'licenseCode'.tr(),
-                        style:  TextStyle(
-                          fontFamily: 'RobotoBlack',
+                        style: GoogleFonts.montserrat(
                           fontSize: 48.sp,
                           color: Colors.black,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
-                       SizedBox(height: 24.h),
+                      SizedBox(height: 20.h),
                       Text(
                         'codeDigits'.tr(),
-                        style:  TextStyle(
-                          fontFamily: 'RobotoRegular',
+                        style: GoogleFonts.montserrat(
                           fontSize: 32.sp,
                           color: Colors.black,
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                       SizedBox(height: 32.h),
+                      SizedBox(height: 30.h),
                       Pinput(
+                        forceErrorState: error,
                         closeKeyboardWhenCompleted: true,
                         keyboardAppearance: Brightness.dark,
                         autofocus: true,
                         length: 8,
                         defaultPinTheme: defaultPinTheme,
+                        errorPinTheme: errorPinPutTema,
                         pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
                         controller: _controller,
                         showCursor: false,
                         readOnly: true,
                         submittedPinTheme: putTheme,
+                        onChanged: (value) {
+                          if (error) {
+                            setState(() {
+                              error = false;
+                            });
+                          }
+                        },
+                        onLongPress: () {
+                          _controller.clear();
+                        },
                       ),
-                       SizedBox(height: 10.h),
+                      SizedBox(height: 10.h),
                       _keybord(),
                       if (errorText != null) ...[],
                     ],
@@ -146,19 +197,16 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
 
   Widget _keybord() {
     return ConstrainedBox(
-      constraints: BoxConstraints(
-          maxWidth: 450.w,
-          maxHeight:300.h,
-      ),
+      constraints: BoxConstraints(maxWidth: 450.w, maxHeight: 300.h),
       child: NumberPadKeyboard(
         backgroundColor: Colors.transparent,
         deleteIconSize: 50.r,
-        numberStyle:  TextStyle(
+        numberStyle: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 30.sp,
         ),
-        enterButtonTextStyle:  TextStyle(
+        enterButtonTextStyle: TextStyle(
           color: Colors.black,
           fontWeight: FontWeight.bold,
           fontSize: 25.sp,
@@ -182,10 +230,15 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
           context.read<ActivationBloc>().add(
             FetchActivationData(_controller.text),
           );
-        //  print(_controller.text.toString());
+          //  print(_controller.text.toString());
         },
       ),
     );
+  }
+
+  Widget erorrMessage() {
+    print('error');
+    return SizedBox();
   }
 
   _showMesageError(String errorText) {

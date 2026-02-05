@@ -116,7 +116,8 @@
     "error521": "Serverul este deconectat (521). Încercați din nou mai târziu.",
     "error524": "Timpul de așteptare al conexiunii a expirat (524). Încercați din nou mai târziu.",
     "error525": "Eroare de certificat SSL (525). Încercați din nou mai târziu.",
-    "notFound": "Nu am găsit nimic..."
+    "notFound": "Nu am găsit nimic...",
+    "errorCode": "Activarea nu există"
   },
   "settings": {
     "title": "Setări",

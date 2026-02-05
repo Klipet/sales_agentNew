@@ -114,7 +114,8 @@
     "error521": "Server is offline (521). Please try again later.",
     "error524": "Connection timeout expired (524). Please try again later.",
     "error525": "SSL certificate error (525). Please try again later.",
-    "notFound": "I found nothing..."
+    "notFound": "I found nothing...",
+    "errorCode": "Activation code not exist"
   },
   "settings": {
     "title": "Settings",
