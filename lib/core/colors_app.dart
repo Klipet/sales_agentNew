@@ -18,3 +18,6 @@ HexColor colorBtAwait = HexColor('#50BFC6');
 HexColor colorBtSave = HexColor('#99EAD7');
 HexColor colorTextBlack = HexColor('#040D12');
 HexColor btSelectedColor = HexColor('#1D4F58');
+HexColor selectedColor = HexColor('#DEDEDE');
+HexColor priceColor = HexColor('#E52B13');
+//HexColor selectedColor = HexColor('#00000012');

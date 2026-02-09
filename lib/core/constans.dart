@@ -19,9 +19,15 @@ class Constant{
   final String API_LICENSE = "https://api.edi.md/ISLicenseService/json/";
   final String API_DEV_LICENSE = "https://dev.edi.md";
 
-  final int QUEUE = 1;
-  final int SAVE = 0;
-  final int PROCESSING = 2;
-  final int READY = 3;
+  final int SABLON = 0;
+  final int ASTEPTARE = 1;
+  final int INLUCRU = 2;
+  final int GATA = 3;
+
+
+
+  final String modelDB = 'modelDB';
+  final String outlet = 'outlet';
+  final String id = 'idDocument';
 
 }

@@ -93,16 +93,3 @@ List<PopupMenuEntry<String>> popMenuSetting(BuildContext context) {
     ),
   ];
 }
-
-//  PopupMenuButton<String>(
-//  color: containerColor,
-//  shape: RoundedRectangleBorder(
-//    side: BorderSide(color: borderColor, width: 1.w),
-//    borderRadius: BorderRadius.circular(15.r),
-//  ),
-//  offset: Offset(-15.w, 45.h),
-//  onSelected: (value) {
-//    print("Выбрано: $value");
-//  },
-//
-//  itemBuilder: (BuildContext context) =>

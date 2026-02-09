@@ -43,7 +43,7 @@ class SplashApi{
 
       final data = jsonDecode(response.body);
       final responseData = ModelResponseUrl.fromJson(data);
-      print(responseData);
+     // print(responseData);
       return responseData;
 
     }else if (response.statusCode == 500) {
@@ -158,7 +158,7 @@ class SplashApi{
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Error fetching public IP: $e');
+     //   print('Error fetching public IP: $e');
       }
       return 'Unknown';
     }

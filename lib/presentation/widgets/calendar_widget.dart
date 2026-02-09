@@ -1,12 +1,16 @@
+import 'dart:async';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:sales_agent/core/colors_app.dart';
+import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../core/styles_text.dart';
+import '../../data/repositories/db_provider.dart';
 import '../../data/repositories/orders_repositori.dart';
 import '../dialogs/calendar_day_dialog.dart';
 
@@ -21,41 +25,49 @@ class _CalendarWidgetState extends State<CalendarWidget> {
   final reposetoryOrder = OrdersRepositori();
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
+  StreamSubscription? _ordersSubscription;
   Map<DateTime, List<int>> _ordersByDate = {};
-
-
 
   @override
   void initState() {
     super.initState();
+    _setupOrdersListener();
     _loadOrders();
+  }
+
+  Future<void> _setupOrdersListener() async {
+    final isar = await DbProvider.instance();
+
+    // Слушаем любые изменения в коллекции заказов
+    _ordersSubscription = isar.modelDocumentDbs
+        .watchLazy()
+        .listen((_) {
+      if (!mounted) return;
+      // База изменилась, перезагружаем данные
+      print('🔄 Обнаружены изменения в базе, обновляем список...');
+      _loadOrders();
+    });
   }
 
   Future<void> _loadOrders() async {
     final data = await reposetoryOrder.loadOrdersGroupedByDate();
     setState(() {
       _ordersByDate = data;
-      print(data);
+      //  print(data);
     });
   }
 
-//  List<int> _getEventsForDay(DateTime day) {
-//    final key = DateTime(day.year, day.month, day.day);
-//    return _ordersByDate[key] ?? [];
-//  }
-
-
-  Widget oerderStatus(HexColor color, int count){
+  Widget orderStatus(HexColor color, int count) {
     return Container(
       width: 53.w,
       height: 24.h,
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(7.r),
-        ),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(7.r)),
       ),
-      child: Center(child: Text(count.toString(), style: textStyleCalendarCount,)),
+      child: Center(
+        child: Text(count.toString(), style: textStyleCalendarCount),
+      ),
     );
   }
 
@@ -108,15 +120,15 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         defaultBuilder: (context, day, focusedDay) {
           final dateKey = DateTime(day.year, day.month, day.day);
           final dayOrders = _ordersByDate[dateKey] ?? [];
-          final processingCount = dayOrders.where((s) => s == 2).length;
-          final queueCount = dayOrders.where((s) => s == 1).length;
-          //  final events = _getEventsForDay(day);
+          final awaitingCount = dayOrders.where((s) => s == 1).length;
+          final workingCount = dayOrders.where((s) => s == 2).length;
 
           return GestureDetector(
-            onTap: (){
-              _ordersByDate[dateKey] != null?
-              showBlurDialogCalendar(context, dateKey, dayOrders): false;
-              print('Нажали на дату defaultBuilder $dateKey → заказы: $dayOrders');
+            onTap: () {
+              _ordersByDate[dateKey] != null
+                  ? showBlurDialogCalendar(context, dateKey, dayOrders)
+                  : false;
+              //    print('Нажали на дату defaultBuilder $dateKey → заказы: $dayOrders');
             },
             child: Container(
               decoration: BoxDecoration(
@@ -130,14 +142,18 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(left: 16.r, top: 5.r),
+                    padding: EdgeInsets.only(left: 16.w, top: 5.h),
                     child: Row(
                       children: [
                         Container(
-                            width: 25.w,
-                            child: Text(day.day.toString(), style: textStyleDayCalendar)),
+                          width: 25.w,
+                          child: Text(
+                            day.day.toString(),
+                            style: textStyleDayCalendar,
+                          ),
+                        ),
                         Padding(
-                          padding:  EdgeInsets.only(left: 10.h),
+                          padding: EdgeInsets.only(left: 10.h),
                           child: Center(
                             child: Text(
                               _ordersByDate[dateKey] == null
@@ -150,28 +166,23 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                       ],
                     ),
                   ),
-
                   Expanded(
                     child: Row(
                       children: [
-                        //  if (events.contains(2)) // например, статус 2 = "в работе"
-                        if(processingCount != 0)
+                        if (workingCount != 0)
                           Padding(
                             padding: EdgeInsets.only(left: 16.r),
-                            child: oerderStatus(colorBtJob,
-                                processingCount),
+                            child: orderStatus(colorBtJob, workingCount),
                           ),
                         const Spacer(),
-                        //  if (events.contains(1)) // например, статус 1 = "в ожидании"
-                        if(queueCount != 0)
+                        if (awaitingCount != 0)
                           Padding(
                             padding: EdgeInsets.only(right: 16.r),
-                            child: oerderStatus(colorBtAwait,
-                                queueCount),
+                            child: orderStatus(colorBtAwait, awaitingCount),
                           ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -180,12 +191,12 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         selectedBuilder: (context, day, focusedDay) {
           final dateKey = DateTime(day.year, day.month, day.day);
           final dayOrders = _ordersByDate[dateKey] ?? [];
-          final awaitingCount = dayOrders.where((s) => s == 2).length;
-          final workingCount = dayOrders.where((s) => s == 1).length;
+          final awaitingCount = dayOrders.where((s) => s == 1).length;
+          final workingCount = dayOrders.where((s) => s == 2).length;
           //  final events = _getEventsForDay(day);
           return GestureDetector(
-            onTap: (){
-              print('Нажали на дату $dateKey → заказы: $dayOrders');
+            onTap: () {
+              //     print('Нажали на дату $dateKey → заказы: $dayOrders');
             },
             child: Container(
               decoration: BoxDecoration(
@@ -203,10 +214,14 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     child: Row(
                       children: [
                         Container(
-                            width: 25.w,
-                            child: Text(day.day.toString(), style: textStyleDayCalendar)),
+                          width: 25.w,
+                          child: Text(
+                            day.day.toString(),
+                            style: textStyleDayCalendar,
+                          ),
+                        ),
                         Padding(
-                          padding:  EdgeInsets.only(left: 10.h),
+                          padding: EdgeInsets.only(left: 10.h),
                           child: Center(
                             child: Text(
                               _ordersByDate[dateKey] == null
@@ -223,24 +238,20 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   Expanded(
                     child: Row(
                       children: [
-                        //  if (events.contains(2)) // например, статус 2 = "в работе"
-                        if(awaitingCount != 0)
+                        if (workingCount != 0)
                           Padding(
                             padding: EdgeInsets.only(left: 16.r),
-                            child: oerderStatus(colorBtJob,
-                                awaitingCount),
+                            child: orderStatus(colorBtJob, workingCount),
                           ),
                         const Spacer(),
-                        //  if (events.contains(1)) // например, статус 1 = "в ожидании"
-                        if(workingCount != 0)
+                        if (awaitingCount != 0)
                           Padding(
                             padding: EdgeInsets.only(right: 16.r),
-                            child: oerderStatus(colorBtAwait,
-                                workingCount),
+                            child: orderStatus(colorBtAwait, awaitingCount),
                           ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),
@@ -249,12 +260,15 @@ class _CalendarWidgetState extends State<CalendarWidget> {
         todayBuilder: (context, day, focusedDay) {
           final dateKey = DateTime(day.year, day.month, day.day);
           final dayOrders = _ordersByDate[dateKey] ?? [];
-          final awaitingCount = dayOrders.where((s) => s == 2).length;
-          final workingCount = dayOrders.where((s) => s == 1).length;
+          final awaitingCount = dayOrders.where((s) => s == 1).length;
+          final workingCount = dayOrders.where((s) => s == 2).length;
           //  final events = _getEventsForDay(day);
           return GestureDetector(
-            onTap: (){
-              print('Нажали на дату $dateKey → заказы: $dayOrders');
+            onTap: () {
+              _ordersByDate[dateKey] != null
+                  ? showBlurDialogCalendar(context, dateKey, dayOrders)
+                  : false;
+              //    print('Нажали на дату $dateKey → заказы: $dayOrders');
             },
             child: Container(
               decoration: BoxDecoration(
@@ -272,10 +286,14 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                     child: Row(
                       children: [
                         Container(
-                            width: 25.w,
-                            child: Text(day.day.toString(), style: textStyleDayCalendar)),
+                          width: 25.w,
+                          child: Text(
+                            day.day.toString(),
+                            style: textStyleDayCalendar,
+                          ),
+                        ),
                         Padding(
-                          padding:  EdgeInsets.only(left: 10.h),
+                          padding: EdgeInsets.only(left: 10.h),
                           child: Center(
                             child: Text(
                               _ordersByDate[dateKey] == null
@@ -292,24 +310,20 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                   Expanded(
                     child: Row(
                       children: [
-                        //  if (events.contains(2)) // например, статус 2 = "в работе"
-                        if(awaitingCount != 0)
+                        if (workingCount != 0)
                           Padding(
                             padding: EdgeInsets.only(left: 16.r),
-                            child: oerderStatus(colorBtJob,
-                                awaitingCount),
+                            child: orderStatus(colorBtJob, workingCount),
                           ),
                         const Spacer(),
-                        //  if (events.contains(1)) // например, статус 1 = "в ожидании"
-                        if(workingCount != 0)
+                        if (awaitingCount != 0)
                           Padding(
                             padding: EdgeInsets.only(right: 16.r),
-                            child: oerderStatus(colorBtAwait,
-                                workingCount),
+                            child: orderStatus(colorBtAwait, awaitingCount),
                           ),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

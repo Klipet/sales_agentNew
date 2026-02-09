@@ -8,7 +8,7 @@
   "user": "Utilizator",
   "userHint": "Utilizator name",
   "pass": "Parola",
-  "passHint": "Password123",
+  "passHint": "Password",
   "saveAuth": "Reține datele de autentificare",
   "connect": "Conectare",
   "orders": "Comenzi:",
@@ -42,6 +42,7 @@
     "bodySave": "Șabloane",
     "bodyBtSave": "Vezi șabloane",
     "bodyBtCreateOne": "Comandă",
+    "bodyComplete": "Finalizata",
     "bodyBtCreateThee": "nouă"
   },
   "order": {
@@ -50,8 +51,16 @@
     "price": "Preț unitar (MDL)",
     "sum": "Suma (MDL)",
     "stock": "Stocuri",
+    "code": "Cod",
     "total": "Total:"
   },
+  "client": {
+    "title": "Clienți:",
+    "name":"Denumire juridică",
+    "sold": "Sold",
+    "address":"Adresa"
+  },
+
   "pop": {
     "edit": "Editează",
     "create": "Crează șablon",
@@ -70,7 +79,30 @@
     "panding": "Comenzi în așteptares",
     "templates": "Șabloane"
   },
+  "asl": {
+    "title": "Nomenclatură:",
+    "search": "Caută",
+    "command": "Comandă nouă"
+  },
 
+  "newComand": {
+    "titleComand": "Comandă nouă"
+  },
+
+  "gridColumn": {
+    "cod": "Cod",
+    "name": "Denumire juridică",
+    "idno": "IDNO",
+    "tva": "Cod TVA",
+    "outlans": "Locații",
+    "data": "Data înregistrării",
+    "client": "Client",
+    "address": "Adresă",
+    "status": "Stare comandă",
+    "sum": "Sum",
+    "price": "Preț",
+    "remain": "Stocuri"
+  },
 
   "errors": {
     "incorrectLicense": "Codul licenței incorect",
@@ -83,6 +115,86 @@
     "error520": "Eroare necunoscută a serverului (520). Încercați din nou mai târziu.",
     "error521": "Serverul este deconectat (521). Încercați din nou mai târziu.",
     "error524": "Timpul de așteptare al conexiunii a expirat (524). Încercați din nou mai târziu.",
-    "error525": "Eroare de certificat SSL (525). Încercați din nou mai târziu."
+    "error525": "Eroare de certificat SSL (525). Încercați din nou mai târziu.",
+    "notFound": "Nu am găsit nimic...",
+    "errorCode": "Activarea nu există"
+  },
+  "settings": {
+    "title": "Setări",
+    "licensia": "Cod Licență Sales Agent",
+    "url": "URL",
+    "update": "Actualizare conexiune server",
+    "save": "Păstrează parola salvată pe acest dispozitiv.",
+    "saveComment": "Salvează comentariul detaliat",
+    "exit": "Delogare"
+  },
+  "history": {
+    "title": "Istoric  client"
+  },
+  "searchClient": "Client",
+  "searchClientHint": "Caută după denumire sau IDNO",
+  "newOrder": {
+    "edit": "Modifică",
+    "outlent": "Selectează adresa:",
+    "newOrder": "Creaza document",
+    "btComment": "Comentariu",
+    "btSablon": "Salvează șablon",
+    "btSend": "Transmite comanda",
+    "btAsl": "Adaugă asortiment",
+    "btReturn":"Vizualizează comanda",
+    "serchAsl": "Caută produs",
+    "comment": "Cemmentariu",
+    "commHint": "Introduceți comentariul pentru comanda",
+    "commSave": "Salvare commentariu",
+    "btOrder": "Comandă"
+  },
+  "newOrderdialog": {
+    "price": "Preț unitar",
+    "stok": "Stocuri",
+    "total": "Total:",
+    "spPrice": "Preț special"
+  },
+  "imgError":"Nu s-au găsit imagini...",
+  "outlandError": "Nu am gasti adrese......",
+  "errorStateDel": "Comanda este în lucru sau finisată, nu o puteți șterge",
+  "errorStateEdit": "Comanda este în lucru sau finisată, nu o puteți edita",
+
+  "btClear": {
+    "content": "Sigur dorești să ștergi poziția?",
+    "contentDoc":"Sigur dorești să ștergi document?",
+    "no": "Nu",
+    "da": "Da, șterge"
+  },
+  "toast": {
+    "errorAsl": "Nu am reușit să încarc și să salvez asortimentul.",
+    "update": "Datele se sincronizează, așteptați",
+    "updateSuccess": "Datele au fost actualizate cu succes",
+    "updateFault": "Datele nu au fost actualizate",
+    "netError": "Nu există conexiune la internet.",
+    "loginError":"Eroare de autentificare: nu există conexiune la internet.",
+    "loginNotMatch": "Numele de utilizator sau parola nu coincid.",
+    "loadError": "Eroare de încărcare. {document}",
+    "loadSuccess": "Datele au fost actualizate cu succes. {documents}",
+    "sendSuccess": "Comanda a fost transmisă cu succes!",
+    "sendError": "Transmiterea a eșuat!",
+    "sendErrorSub": "Comanda a fost salvată în șabloane, încercați să o transmiteți mai târziu.",
+    "sendErrorToken": "Comanda a fost salvată în șabloane, token a o experat",
+    "saveTemp": "Șablonul a fost salvat cu succes!"
+  },
+  "documents": {
+    "asl": "Assortiment",
+    "doc": "Documente",
+    "client": "Clienți",
+    "price": "Prețuri"
+  },
+  "comment": {
+    "title": "Cemmentariu",
+    "tel": "Telefon",
+    "hintTel": "Introduceți numerul la telefon",
+    "person": "Persoană",
+    "hintPerson": "Introduceți numele persoanei",
+    "comment": "Commentariu",
+    "hintComment": "Introduceți commentariu",
+    "btSave": "Salvare"
   }
 }

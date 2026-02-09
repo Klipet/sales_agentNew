@@ -40,7 +40,7 @@ const ModelDocumentDbSchema = CollectionSchema(
     r'dateProcessed': PropertySchema(
       id: 4,
       name: r'dateProcessed',
-      type: IsarType.string,
+      type: IsarType.dateTime,
     ),
     r'dateValid': PropertySchema(
       id: 5,
@@ -113,24 +113,8 @@ int _modelDocumentDbEstimateSize(
   }
   bytesCount += 3 + object.clientUid.length * 3;
   bytesCount += 3 + object.code.length * 3;
-  {
-    final value = object.comment;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.dateProcessed;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
-  {
-    final value = object.deliveryAddress;
-    if (value != null) {
-      bytesCount += 3 + value.length * 3;
-    }
-  }
+  bytesCount += 3 + object.comment.length * 3;
+  bytesCount += 3 + object.deliveryAddress.length * 3;
   {
     final value = object.stockName;
     if (value != null) {
@@ -152,7 +136,7 @@ void _modelDocumentDbSerialize(
   writer.writeString(offsets[1], object.clientUid);
   writer.writeString(offsets[2], object.code);
   writer.writeString(offsets[3], object.comment);
-  writer.writeString(offsets[4], object.dateProcessed);
+  writer.writeDateTime(offsets[4], object.dateProcessed);
   writer.writeDateTime(offsets[5], object.dateValid);
   writer.writeString(offsets[6], object.deliveryAddress);
   writer.writeLong(offsets[7], object.state);
@@ -168,21 +152,20 @@ ModelDocumentDb _modelDocumentDbDeserialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  final object = ModelDocumentDb(
-    clientName: reader.readStringOrNull(offsets[0]),
-    clientUid: reader.readString(offsets[1]),
-    code: reader.readString(offsets[2]),
-    comment: reader.readStringOrNull(offsets[3]),
-    dateProcessed: reader.readStringOrNull(offsets[4]),
-    dateValid: reader.readDateTime(offsets[5]),
-    deliveryAddress: reader.readStringOrNull(offsets[6]),
-    state: reader.readLong(offsets[7]),
-    stockName: reader.readStringOrNull(offsets[8]),
-    stockUid: reader.readString(offsets[9]),
-    sum: reader.readDouble(offsets[10]),
-    uid: reader.readString(offsets[11]),
-  );
+  final object = ModelDocumentDb();
+  object.clientName = reader.readStringOrNull(offsets[0]);
+  object.clientUid = reader.readString(offsets[1]);
+  object.code = reader.readString(offsets[2]);
+  object.comment = reader.readString(offsets[3]);
+  object.dateProcessed = reader.readDateTime(offsets[4]);
+  object.dateValid = reader.readDateTime(offsets[5]);
+  object.deliveryAddress = reader.readString(offsets[6]);
   object.id = id;
+  object.state = reader.readLong(offsets[7]);
+  object.stockName = reader.readStringOrNull(offsets[8]);
+  object.stockUid = reader.readString(offsets[9]);
+  object.sum = reader.readDouble(offsets[10]);
+  object.uid = reader.readString(offsets[11]);
   return object;
 }
 
@@ -200,13 +183,13 @@ P _modelDocumentDbDeserializeProp<P>(
     case 2:
       return (reader.readString(offset)) as P;
     case 3:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 4:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 5:
       return (reader.readDateTime(offset)) as P;
     case 6:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 7:
       return (reader.readLong(offset)) as P;
     case 8:
@@ -745,26 +728,8 @@ extension ModelDocumentDbQueryFilter
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      commentIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'comment',
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      commentIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'comment',
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       commentEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -778,7 +743,7 @@ extension ModelDocumentDbQueryFilter
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       commentGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -794,7 +759,7 @@ extension ModelDocumentDbQueryFilter
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       commentLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -810,8 +775,8 @@ extension ModelDocumentDbQueryFilter
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       commentBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -899,76 +864,49 @@ extension ModelDocumentDbQueryFilter
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateProcessedIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'dateProcessed',
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateProcessedIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'dateProcessed',
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateProcessedEqualTo(
-    String? value, {
-    bool caseSensitive = true,
-  }) {
+      dateProcessedEqualTo(DateTime value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
         property: r'dateProcessed',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       dateProcessedGreaterThan(
-    String? value, {
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.greaterThan(
         include: include,
         property: r'dateProcessed',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       dateProcessedLessThan(
-    String? value, {
+    DateTime value, {
     bool include = false,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.lessThan(
         include: include,
         property: r'dateProcessed',
         value: value,
-        caseSensitive: caseSensitive,
       ));
     });
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       dateProcessedBetween(
-    String? lower,
-    String? upper, {
+    DateTime lower,
+    DateTime upper, {
     bool includeLower = true,
     bool includeUpper = true,
-    bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
@@ -977,77 +915,6 @@ extension ModelDocumentDbQueryFilter
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateProcessedStartsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.startsWith(
-        property: r'dateProcessed',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateProcessedEndsWith(
-    String value, {
-    bool caseSensitive = true,
-  }) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.endsWith(
-        property: r'dateProcessed',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateProcessedContains(String value, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.contains(
-        property: r'dateProcessed',
-        value: value,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateProcessedMatches(String pattern, {bool caseSensitive = true}) {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.matches(
-        property: r'dateProcessed',
-        wildcard: pattern,
-        caseSensitive: caseSensitive,
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateProcessedIsEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.equalTo(
-        property: r'dateProcessed',
-        value: '',
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      dateProcessedIsNotEmpty() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(FilterCondition.greaterThan(
-        property: r'dateProcessed',
-        value: '',
       ));
     });
   }
@@ -1109,26 +976,8 @@ extension ModelDocumentDbQueryFilter
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      deliveryAddressIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'deliveryAddress',
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
-      deliveryAddressIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'deliveryAddress',
-      ));
-    });
-  }
-
-  QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       deliveryAddressEqualTo(
-    String? value, {
+    String value, {
     bool caseSensitive = true,
   }) {
     return QueryBuilder.apply(this, (query) {
@@ -1142,7 +991,7 @@ extension ModelDocumentDbQueryFilter
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       deliveryAddressGreaterThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1158,7 +1007,7 @@ extension ModelDocumentDbQueryFilter
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       deliveryAddressLessThan(
-    String? value, {
+    String value, {
     bool include = false,
     bool caseSensitive = true,
   }) {
@@ -1174,8 +1023,8 @@ extension ModelDocumentDbQueryFilter
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QAfterFilterCondition>
       deliveryAddressBetween(
-    String? lower,
-    String? upper, {
+    String lower,
+    String upper, {
     bool includeLower = true,
     bool includeUpper = true,
     bool caseSensitive = true,
@@ -2305,10 +2154,9 @@ extension ModelDocumentDbQueryWhereDistinct
   }
 
   QueryBuilder<ModelDocumentDb, ModelDocumentDb, QDistinct>
-      distinctByDateProcessed({bool caseSensitive = true}) {
+      distinctByDateProcessed() {
     return QueryBuilder.apply(this, (query) {
-      return query.addDistinctBy(r'dateProcessed',
-          caseSensitive: caseSensitive);
+      return query.addDistinctBy(r'dateProcessed');
     });
   }
 
@@ -2388,13 +2236,13 @@ extension ModelDocumentDbQueryProperty
     });
   }
 
-  QueryBuilder<ModelDocumentDb, String?, QQueryOperations> commentProperty() {
+  QueryBuilder<ModelDocumentDb, String, QQueryOperations> commentProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'comment');
     });
   }
 
-  QueryBuilder<ModelDocumentDb, String?, QQueryOperations>
+  QueryBuilder<ModelDocumentDb, DateTime, QQueryOperations>
       dateProcessedProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'dateProcessed');
@@ -2408,7 +2256,7 @@ extension ModelDocumentDbQueryProperty
     });
   }
 
-  QueryBuilder<ModelDocumentDb, String?, QQueryOperations>
+  QueryBuilder<ModelDocumentDb, String, QQueryOperations>
       deliveryAddressProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'deliveryAddress');

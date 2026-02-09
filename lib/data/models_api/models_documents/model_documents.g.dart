@@ -15,9 +15,10 @@ ModelDocuments _$ModelDocumentsFromJson(Map<String, dynamic> json) =>
       dateProcessed: json['DateProcessed'] as String?,
       dateValid: json['DateValid'] as String,
       deliveryAddress: json['DeliveryAddress'] as String?,
-      lines: (json['Lines'] as List<dynamic>)
-          .map((e) => ModelLines.fromJson(e as Map<String, dynamic>))
-          .toList(),
+      lines: (json['Lines'] as List<dynamic>?)
+              ?.map((e) => ModelLines.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       state: (json['State'] as num).toInt(),
       stockName: json['StockName'] as String?,
       stockUid: json['StockUid'] as String,

@@ -1,25 +1,25 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/foundation.dart';
 import 'package:sales_agent/data/providers/api_provider/login_api.dart';
-import 'package:sales_agent/data/providers/api_provider/orders_api.dart';
 import 'package:sales_agent/data/repositories/login_repositori.dart';
-
-import '../../../data/repositories/orders_repositori.dart';
+import '../../../data/repositories/apikey_repositori.dart';
 import 'login_event.dart';
 import 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
   final LoginRepository repository;
-  final OrdersRepositori ordersRepositori;
   final LoginApi actualizationUser;
-  final OrdersApi ordersApi;
 
-  LoginBloc(this.repository, this.actualizationUser, this.ordersApi, this.ordersRepositori) : super(LoginInitial()) {
-    on<CheckSavedLogin>(_onCheckSavedLogin);
+  LoginBloc(this.repository, this.actualizationUser) : super(LoginInitial()) {
+    on<CheckSavedLogin>(onCheckSavedLogin);
     on<FetchLoginData>(_onFetchActivationData);
+    on<SavedLogin>(_savePassword);
   }
 
-  Future<void> _onFetchActivationData(FetchLoginData event, Emitter<LoginState> emit) async {
+  Future<void> _onFetchActivationData(
+    FetchLoginData event,
+    Emitter<LoginState> emit,
+  ) async {
     emit(LoginLoading());
     try {
       String login;
@@ -32,34 +32,40 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         login = event.login;
         password = event.password;
       }
-      if (kDebugMode) {
-        print(login + password);
-      }
       final apiResponse = await actualizationUser.getLogInUser(login, password);
-      if(apiResponse.errorCode == 0){
-        final token = apiResponse.token.uid;
-        final validTo = apiResponse.token.validTo;
-        final userName = apiResponse.user.name;
-        final surName = apiResponse.user.surname ?? '';
+      if (apiResponse.errorCode == 0) {
+        final token = apiResponse.token!.uid ?? '';
+        final validTo = apiResponse.token!.validTo ?? '';
+        final userName = apiResponse.user!.name ?? '';
+        final surName = apiResponse.user!.surname ?? '';
         final String fullName = '$userName$surName';
-        await repository.saveLogin(login, password, token, validTo, fullName, event.save);
-        await ordersRepositori.deleteOrder();
-        await ordersRepositori.deleteLine();
-        final orders = await ordersApi.getOrders();
-        for(var modelDoc in orders!){
-          await ordersRepositori.saveOrders(modelDoc);
-        }
+        await repository.saveLogin(
+          login,
+          password,
+          token,
+          validTo,
+          fullName,
+          event.save,
+        );
         emit(LoginSuccess());
-      }else{
-        emit(LoginFailure(apiResponse.errorMessage.toString()));
+      } else {
+        final loginS = await repository.getLogin() ?? '';
+        final passwordS = await repository.getPassword() ?? '';
+        if (event.password != passwordS || event.login != loginS) {
+          emit(LoginFailure('login nu concide'));
+        }else{
+          emit(LoginFailure(''));
+        }
       }
     } catch (e) {
       emit(LoginFailure(e.toString()));
     }
   }
 
-  Future<void> _onCheckSavedLogin(
-      CheckSavedLogin event, Emitter<LoginState> emit) async {
+  Future<void> onCheckSavedLogin(
+    CheckSavedLogin event,
+    Emitter<LoginState> emit,
+  ) async {
     final loginDB = await repository.getLogin();
     final passwordDB = await repository.getPassword();
     final savePass = await repository.getSavePassword();
@@ -67,4 +73,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       add(FetchLoginData(passwordDB, loginDB, savePass!)); // автологин
     }
   }
+
+  Future<void> _savePassword(SavedLogin event,
+      Emitter<LoginState> emit,) async{
+     await repository.changeSave(event.save);
+}
+
 }

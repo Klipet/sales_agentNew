@@ -47,6 +47,7 @@ final buttonTextStyle = GoogleFonts.montserrat(
   fontWeight: FontWeight.w600,
   fontStyle: FontStyle.normal,
   fontSize: 20.sp,
+  height: 1,
   color: titleColorText,
 );
 
@@ -86,12 +87,14 @@ final textStyleBodyTitleCount = GoogleFonts.poppins(
     fontWeight: FontWeight.w600,
     fontStyle: FontStyle.normal,
     fontSize: 32.sp,
+    height: 1,
     color: subTextColor
 );
 final textStyleBodyBt = GoogleFonts.poppins(
     fontWeight: FontWeight.w500,
     fontStyle: FontStyle.normal,
     fontSize: 18.sp,
+    height: 1,
     color: titleColorText
 );
 final textStyleBodyBtCreate = GoogleFonts.montserrat(
@@ -222,6 +225,136 @@ final textStyleBtOrderRow = GoogleFonts.poppins(
     fontSize: 16.sp,
     color: textColor
 );
+final textStyleAslTitle = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: subTextColor
+);
+final textStyleAslContent = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textStyleAslContentSub = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textStyleAslContentPriceSub = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textStyleSearchClient = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontStyle: FontStyle.normal,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textHintSearchClient = GoogleFonts.nunitoSans(
+  fontWeight: FontWeight.w500,
+  fontStyle: FontStyle.normal,
+  fontSize: 18.sp,
+  color: subTextColor,
+);
+
+final textStyleSerachTitle = GoogleFonts.montserrat(
+    fontWeight: FontWeight.w800,
+    fontSize: 18.sp,
+    color: textColor
+);
+final textStyleSerachTitleIDNO = GoogleFonts.montserrat(
+    fontWeight: FontWeight.w400,
+    fontSize: 16.sp,
+    color: subTextColor
+);
+final textStyleOutlandsText = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontSize: 15.sp,
+    color: textColor
+);
+final textStyleBtAslAdd = GoogleFonts.montserrat(
+    fontWeight: FontWeight.w700,
+    fontSize: 23.sp,
+    color: containerColor
+);
+final textStyleTitleAslAdd = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontSize: 16.sp,
+    color: textColor
+);
+final textStyleTitleAddAssotrimentOrder = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontSize: 23.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+final textStyleRemainAddAssotrimentOrder = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontSize: 16.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+
+final textStyleDialogAddAssortimentTotal = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontSize: 23.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+final textStyleDialogAddAssortimentTotalNegative = GoogleFonts.poppins(
+    fontWeight: FontWeight.w500,
+    fontSize: 23.sp,
+    color: subTextColor,
+    decoration: TextDecoration.none
+);
+final textStyleDialogAddAssortimentTotalInfo = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontSize: 13.sp,
+    color: primariColor,
+    decoration: TextDecoration.none
+);
+final textStyleTableCount = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontSize: 16.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+final textStyleTableDialogDelete = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontSize: 19.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+
+final textStyleDelogare = GoogleFonts.poppins(
+    fontWeight: FontWeight.w300,
+    fontSize: 16.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+final textStyleDialogClient = GoogleFonts.poppins(
+    fontWeight: FontWeight.w700,
+    fontSize: 32.sp,
+    color: borderColor,
+    decoration: TextDecoration.none
+);
+final textStyleDialogClientInfo = GoogleFonts.poppins(
+    fontWeight: FontWeight.w400,
+    fontSize: 19.sp,
+    color: textColor,
+    decoration: TextDecoration.none
+);
+
+
+
+
+
+
 
 
 

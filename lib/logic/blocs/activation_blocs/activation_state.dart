@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../data/models_api/models_api_server/model_response.dart';
+
 abstract class ActivationState extends Equatable  {
   const ActivationState();
 

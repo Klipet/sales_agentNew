@@ -43,14 +43,31 @@ class ActivationApi {
         if (apiResponse.errorCode == 0 && apiResponse.appData != null) {
           return apiResponse;
         }else if(apiResponse.errorCode == 124){
-          throw Exception('errors.incorrectLicense'.tr());
+          return ModelResponse(
+            errorMessage: 'errors.incorrectLicense'.tr(),
+            errorCode: 124,
+            appData: null
+          );
+        }else if(apiResponse.errorCode == 184){
+          return ModelResponse(
+              errorMessage: 'errors.errorCode'.tr(),
+              errorCode: 124,
+              appData: null
+          );
         }
       }
     } catch (e) {
-      throw Exception("Ошибка сервера: ${e.toString()}");
+      return ModelResponse(
+          errorMessage: 'errors.errorCode'.tr(),
+          errorCode: 184,
+          appData: null
+      );
     }
-
-    return null;
+    return ModelResponse(
+        errorMessage: 'errors.errorCode'.tr(),
+        errorCode: 184,
+        appData: null
+    );
   }
 
   Future<ModelRegApp> platformWindows(String license) async {
@@ -135,7 +152,7 @@ class ActivationApi {
         throw Exception('Failed to get public IP');
       }
     } catch (e) {
-      print('Error fetching public IP: $e');
+    //  print('Error fetching public IP: $e');
       return 'Unknown';
     }
   }

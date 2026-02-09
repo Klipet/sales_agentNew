@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:sales_agent/data/models_api/model_login.dart';
+import 'package:sales_agent/data/models_api/model_token.dart';
 import 'package:sales_agent/data/repositories/apikey_repositori.dart';
 import 'package:sales_agent/data/repositories/login_repositori.dart';
 import 'package:http/http.dart' as http;
@@ -22,12 +24,14 @@ class LoginApi{
         final authResponse = ModelLogin.fromJson(response);
         return authResponse;
       }else{
-        throw Exception("Ошибка при логине: ${loginResponse.statusCode}");
+        return ModelLogin(errorCode: 3, errorMessage: loginResponse.statusCode.toString(), token: null, user: null);
       }
     } on TimeoutException {
-      throw Exception("Сервер не отвечает (timeout)");
+      return ModelLogin(errorCode: 2, errorMessage: 'TimeoutException', token: null, user: null);
+    } on SocketException{
+      return ModelLogin(errorCode: 1, errorMessage: 'SocketException', token: null, user: null);
     } catch(e){
-      throw Exception("Ошибка при логине: $e");
+      return ModelLogin(errorCode: 5, errorMessage: e.toString(), token: null, user: null);
     }
   }
 }

@@ -4,40 +4,40 @@ part 'model_lines.g.dart';
 
 @JsonSerializable()
 class ModelLines {
-  @JsonKey(name: 'AssortimentBarcode')
+  @JsonKey(name: 'AssortimentBarcode', defaultValue: '')
   final String? assortimentBarcode;
 
-  @JsonKey(name: 'AssortimentCode')
+  @JsonKey(name: 'AssortimentCode', defaultValue: '' )
   final String assortimentCode;
 
-  @JsonKey(name: 'AssortimentName')
+  @JsonKey(name: 'AssortimentName', defaultValue: '')
   final String assortimentName;
 
-  @JsonKey(name: 'AssortimentUid')
+  @JsonKey(name: 'AssortimentUid', defaultValue: '')
   final String assortimentUid;
 
-  @JsonKey(name: 'Count')
+  @JsonKey(name: 'Count', defaultValue: 0.0)
   final double count;
 
-  @JsonKey(name: 'LineNumber')
+  @JsonKey(name: 'LineNumber', defaultValue: 0)
   final int lineNumber;
 
-  @JsonKey(name: 'Price')
+  @JsonKey(name: 'Price', defaultValue: 0.0)
   final double price;
 
-  @JsonKey(name: 'ProcessedCount')
+  @JsonKey(name: 'ProcessedCount', defaultValue: 0.0)
   final double processedCount;
 
-  @JsonKey(name: 'Sum')
+  @JsonKey(name: 'Sum', defaultValue: 0.0)
   final double sum;
 
-  @JsonKey(name: 'Uid')
+  @JsonKey(name: 'Uid', defaultValue: '')
   final String uid;
 
-  @JsonKey(name: 'UnitName')
+  @JsonKey(name: 'UnitName', defaultValue: '')
   final String unitName;
 
-  @JsonKey(name: 'UnitUid')
+  @JsonKey(name: 'UnitUid', defaultValue: '')
   final String unitUid;
 
   ModelLines({

@@ -30,6 +30,8 @@ class ConvertData{
 
     return '$hours:$minutes:$seconds';
   }
+
+
   DateTime convertDate(String dateStr) {
     // Извлекаем timestamp и смещение из строки с помощью регулярного выражения
     RegExp regExp = RegExp(r'/Date\((\d+)([+-]\d{4})\)/');
@@ -59,6 +61,11 @@ class ConvertData{
     String seconds = localTime.second.toString().padLeft(2, '0');
 
     return localTime;
+  }
+
+
+  String toDateNetFormat(DateTime date) {
+    return '/Date(${date.millisecondsSinceEpoch}+0300)/';
   }
 
 }
