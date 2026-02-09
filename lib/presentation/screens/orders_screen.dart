@@ -1,0 +1,229 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:sales_agent/core/colors_app.dart';
+import 'package:sales_agent/core/styles_text.dart';
+
+import '../widgets/button_widget.dart';
+import '../widgets/table_order_widget.dart';
+import '../widgets/title_home_widget.dart';
+
+class OrdersScreen extends StatefulWidget {
+  const OrdersScreen({super.key});
+
+  @override
+  State<OrdersScreen> createState() => _OrdersScreenState();
+}
+
+class _OrdersScreenState extends State<OrdersScreen> {
+  final TextEditingController _editingController = TextEditingController();
+  String _search = "";
+  int selectedIndex = 0; // индекс активной кнопки
+
+  List<String> icons = [
+    'assets/icons/home/total.svg',
+    'assets/icons/home/job.svg',
+    'assets/icons/home/await.svg',
+    'assets/icons/home/save.svg',
+  ];
+  List<String> textBt = [
+    'orderButtons.all'.tr(),
+    'orderButtons.process'.tr(),
+    'orderButtons.panding'.tr(),
+    'orderButtons.templates'.tr(),
+  ];
+
+  @override
+  void dispose() {
+    _editingController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+           crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(width: 30.w),
+              Container(
+              //  alignment: Alignment.topLeft,
+                width: 386.w,
+                height: 100.h,
+                child: Text(
+                    textHeightBehavior: TextHeightBehavior(
+                        applyHeightToFirstAscent: false
+                    ),
+                  "orders".tr(),
+                  style: primaFontOrders,
+               //  textAlign: TextAlign.center,
+                ),
+              ),
+              Spacer(),
+              Padding(
+                padding: EdgeInsets.only(top: 16.h),
+                child: TitleHomeWidget(),
+              ),
+            ],
+          ),
+          SizedBox(height: 8.h),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ediText(_editingController, 'asl.search'.tr()),
+              SizedBox(width: 15.w),
+              btCreate(context: context),
+            ],
+          ),
+          SizedBox(height: 14.h),
+          Padding(
+            padding: EdgeInsets.only(left: 10.h),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(4, (index) {
+                final isSelected = selectedIndex == index;
+                final icon = icons.elementAt(index);
+                final text = textBt.elementAt(index);
+                return Padding(
+                  padding: EdgeInsets.only(right: 14.w), //надо вернуть 14
+                  child: btStatut(
+                    index: index,
+                    isSelected: isSelected,
+                    assetName: icon,
+                    textBtHint: text,
+                  ),
+                );
+              }),
+            ),
+          ),
+          Expanded(
+            child: Container(
+              margin: EdgeInsets.only(left: 15.h, top: 16.w),
+              child: TableOrderWidget(
+                  key: ValueKey("table_${_editingController.text}"),
+                  status: selectedIndex, search: _search),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget ediText(TextEditingController controller, String hint) {
+    return Container(
+      width: 850.w, // ширина
+      height: 48.h,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: containerColor,
+        borderRadius: BorderRadius.circular(10.r),
+      ),
+      child: TextField(
+        onChanged: (value){
+          setState(() {
+            _search = value;
+            //   controller.text.trim(); // это обновит TableOrderWidget
+          });
+        },
+        textAlign: TextAlign.left,
+        textAlignVertical: TextAlignVertical.center,
+        controller: controller,
+        keyboardType: TextInputType.text,
+        cursorWidth: 1.w,
+        cursorColor: borderColor,
+        decoration: InputDecoration(
+          hintText: hint,
+
+          hintStyle: textStyleHintOrder,
+          suffixIcon: Padding(
+            padding: EdgeInsets.only(bottom: 10.h, top: 10.h ,right: 5.w),
+            child: GestureDetector(
+              onTap: (){
+                setState(() {
+                  _search = controller.text;
+                  if (kDebugMode) {
+                //    print('tap: $_search');
+                  }
+                });
+              },
+              child: SvgPicture.asset(
+                'assets/icons/orders/search.svg',
+                width: 24.w,
+                height: 24.h,
+              ),
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: BorderSide(
+              color: borderColor, // цвет границы
+              width: 1.r, // ширина 1px
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10.r),
+            borderSide: BorderSide(
+              color: borderColor, // цвет границы
+              width: 1.r, // ширина 1px
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+
+
+  Widget btStatut({
+    required int index,
+    required bool isSelected,
+    required String assetName,
+    required String textBtHint,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          selectedIndex = index;
+        });
+      },
+      child: Container(
+        width: 273.w,
+        height: 48.h,
+        decoration: BoxDecoration(
+          color: isSelected ? btSelectedColor : containerColor,
+          borderRadius: BorderRadius.all(Radius.circular(100.r)),
+          border: BoxBorder.all(
+            color: borderColor, // цвет границы
+            width: 1.r, // ширина 1px
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SvgPicture.asset(
+              assetName,
+              color: isSelected ? containerColor : textColor,
+            ),
+            SizedBox(width: 8.w),
+            Container(
+              child: Text(
+                textBtHint,
+                style: textStyleBtOrderRow.copyWith(
+                  color: isSelected ? containerColor : textColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

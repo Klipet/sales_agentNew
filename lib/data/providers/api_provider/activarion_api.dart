@@ -5,10 +5,11 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:http/http.dart' as http;
 import 'package:network_info_plus/network_info_plus.dart';
-import 'package:sales_agent/data/models_api/model_reg_app.dart';
-import 'package:sales_agent/data/models_api/model_response.dart';
+
+import 'package:sales_agent/data/models_api/models_api_server/model_response.dart';
 
 import '../../../core/constans.dart';
+import '../../models_api/models_api_server/model_reg_app.dart';
 import '../../repositories/apikey_repositori.dart';
 
 class ActivationApi {
@@ -34,7 +35,7 @@ class ActivationApi {
           'Authorization': basicAuth,
         },
         body: jsonEncode(deviceInfo.toJson()),
-      );
+      ).timeout(Duration(seconds: 5));
       if (response.statusCode == 200) {
         final responseJson = jsonDecode(response.body);
         final apiResponse = ModelResponse.fromJson(responseJson);
@@ -42,14 +43,31 @@ class ActivationApi {
         if (apiResponse.errorCode == 0 && apiResponse.appData != null) {
           return apiResponse;
         }else if(apiResponse.errorCode == 124){
-          throw Exception('errors.incorrectLicense'.tr());
+          return ModelResponse(
+            errorMessage: 'errors.incorrectLicense'.tr(),
+            errorCode: 124,
+            appData: null
+          );
+        }else if(apiResponse.errorCode == 184){
+          return ModelResponse(
+              errorMessage: 'errors.errorCode'.tr(),
+              errorCode: 124,
+              appData: null
+          );
         }
       }
     } catch (e) {
-      throw Exception("Ошибка сервера: ${e.toString()}");
+      return ModelResponse(
+          errorMessage: 'errors.errorCode'.tr(),
+          errorCode: 184,
+          appData: null
+      );
     }
-
-    return null;
+    return ModelResponse(
+        errorMessage: 'errors.errorCode'.tr(),
+        errorCode: 184,
+        appData: null
+    );
   }
 
   Future<ModelRegApp> platformWindows(String license) async {
@@ -134,7 +152,7 @@ class ActivationApi {
         throw Exception('Failed to get public IP');
       }
     } catch (e) {
-      print('Error fetching public IP: $e');
+    //  print('Error fetching public IP: $e');
       return 'Unknown';
     }
   }

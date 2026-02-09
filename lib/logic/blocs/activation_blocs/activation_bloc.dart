@@ -24,9 +24,10 @@ class ActivationBloc extends Bloc<ActivationEvent, ActivationState> {
         await repository.saveApiKey(apikey!, uri!);
         emit(ActivationSuccess());
       } else {
-        emit(const ActivationFailure("Не удалось активировать лицензию"));
+        emit( ActivationFailure(apiResponse!.errorMessage));
       }
-    } catch (e) {
+    } catch (e, t) {
+      print(t);
       emit(ActivationFailure(e.toString()));
     }
   }

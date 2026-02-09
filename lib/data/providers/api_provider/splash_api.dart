@@ -7,10 +7,11 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:network_info_plus/network_info_plus.dart';
 import 'package:sales_agent/core/constans.dart';
-import 'package:sales_agent/data/models_api/model_post_url.dart';
-import 'package:sales_agent/data/models_api/model_response_url.dart';
 
-import '../../models_api/model_reg_app.dart';
+import 'package:sales_agent/data/models_api/models_api_server/model_response_url.dart';
+
+
+import '../../models_api/models_api_server/model_post_url.dart';
 import '../../repositories/apikey_repositori.dart';
 
 class SplashApi{
@@ -37,12 +38,12 @@ class SplashApi{
         'Authorization': basicAuth,
     },
       body: jsonEncode(deviceInfo.toJson()),
-    );
+    ).timeout(Duration(seconds: 5));
     if(response.statusCode == 200){
 
       final data = jsonDecode(response.body);
       final responseData = ModelResponseUrl.fromJson(data);
-      print(responseData);
+     // print(responseData);
       return responseData;
 
     }else if (response.statusCode == 500) {
@@ -157,7 +158,7 @@ class SplashApi{
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Error fetching public IP: $e');
+     //   print('Error fetching public IP: $e');
       }
       return 'Unknown';
     }

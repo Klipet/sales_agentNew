@@ -18,4 +18,16 @@ class Constant{
   final String PASSWORD = "frj933e9c6epae29";
   final String API_LICENSE = "https://api.edi.md/ISLicenseService/json/";
   final String API_DEV_LICENSE = "https://dev.edi.md";
+
+  final int SABLON = 0;
+  final int ASTEPTARE = 1;
+  final int INLUCRU = 2;
+  final int GATA = 3;
+
+
+
+  final String modelDB = 'modelDB';
+  final String outlet = 'outlet';
+  final String id = 'idDocument';
+
 }

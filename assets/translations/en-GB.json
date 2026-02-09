@@ -1,0 +1,199 @@
+{
+  "licenseCode": "Enter the license code",
+  "codeDigits": "The license code consists of 8 digits",
+  "enter": "OK",
+  "password": "Password",
+  "login": "Login",
+  "auth": "Autentificare",
+  "user": "User",
+  "userHint": "User name",
+  "pass": "Password",
+  "passHint": "Password",
+  "saveAuth": "Remember me",
+  "connect": "Connect",
+  "calendarComand": "Orders",
+  "orders": "Orders:",
+
+  "dialog": {
+    "address": "Address: {address}",
+    "status": "Status: {status}",
+    "sum": "Order sum: {sum}",
+    "btText": "View order"
+  },
+
+  "driver": {
+    "home" : "Home",
+    "orders": "My orders",
+    "client": "Client",
+    "asl": "Assortment",
+    "history": "History orders",
+    "setting": "Settings"
+  },
+  "client": {
+    "title": "Clients:",
+    "name": "Legal name",
+    "sold": "Balance",
+    "address": "Address"
+  },
+
+  "home": {
+    "titleName": "Sales Consultant",
+    "titleSesion": "Session expires in:",
+    "bodyTotal": "All orders",
+    "bodyBtTotal": "View all",
+    "bodyJob": "In progress",
+    "bodyBtJob": "View in progress",
+    "bodyAwait": "Pending",
+    "bodyBtAwait": "View pending",
+    "bodySave": "Templates",
+    "bodyComplete": "Complete",
+    "bodyBtSave": "View templates",
+    "bodyBtCreateOne": "New",
+    "bodyBtCreateThee": "order"
+  },
+  "order": {
+    "name": "Name",
+    "count": "Count",
+    "price": "Unit price (MDL)",
+    "sum": "Amount (MDL)",
+    "stock": "Stock",
+    "code": "Cod",
+    "total": "Total:"
+  },
+  "pop": {
+    "edit": "Edit",
+    "create": "Create template",
+    "mark": "Mark for deletion"
+  },
+
+  "tableStatus": {
+    "save": "Template",
+    "queue": "Pending",
+    "procces": "In Progress",
+    "final": "Finalized"
+  },
+  "orderButtons": {
+    "all": "All orders",
+    "process": "Orders in progress",
+    "panding": "Pending orders",
+    "templates": "Templates"
+  },
+  "asl": {
+    "title": "Assortment:",
+    "search": "Search",
+    "command": "New command"
+  },
+
+  "gridColumn": {
+    "cod": "Code",
+    "name": "Display name",
+    "idno": "IDNO",
+    "tva": "TVA cod",
+    "outlans": "Outlans",
+    "data": "Data create",
+    "client": "Client",
+    "address": "Address",
+    "status": "State command",
+    "sum": "Sum",
+    "price": "Price",
+    "remain": "Remains"
+  },
+  "newComand": {
+    "titleComand": "New Command"
+  },
+
+  "errors": {
+    "incorrectLicense": "Yor code is incorrect",
+    "error500": "Internal server error (500). Please try again later.",
+    "error502": "Server temporarily unavailable (502). Please try again later.",
+    "error503": "Service overloaded or temporarily unavailable (503). Please try again later.",
+    "error504": "Server response timeout exceeded (504). Please try again later.",
+    "error404": "Requested resource not found (404). Please try again later.",
+    "error509": "Server bandwidth limit exceeded (509). Please try again later.",
+    "error520": "Unknown server error (520). Please try again later.",
+    "error521": "Server is offline (521). Please try again later.",
+    "error524": "Connection timeout expired (524). Please try again later.",
+    "error525": "SSL certificate error (525). Please try again later.",
+    "notFound": "I found nothing...",
+    "errorCode": "Activation code not exist"
+  },
+  "settings": {
+    "title": "Settings",
+    "licensia": "Sales Agent License Code",
+    "url": "URL",
+    "update": "Update server connection",
+    "save": "Keep the password saved on this device.",
+    "saveComment": "Save detailed comment",
+    "exit": "Log out"
+  },
+  "history": {
+    "title": "Client history"
+  },
+  "searchClient": "Client",
+  "searchClientHint": "Search by name or IDNO",
+
+  "newOrder": {
+    "edit": "Edit",
+   "outlent": "Select address:",
+    "newOrder": "Create order",
+    "btComment": "Add comment",
+    "btSablon": "Save template",
+    "btSend": "Send order",
+    "btAsl": "Add assortment",
+    "btReturn": "View order",
+    "serchAsl": "Search assortment",
+    "comment": "Comment",
+    "commHint": "Enter a comment for the order",
+    "commSave": "Save comment",
+    "btOrder": "Order"
+  },
+  "newOrderdialog": {
+    "price": "Unit price",
+    "stok": "Stock",
+    "total": "Total:",
+    "spPrice": "Special price"
+  },
+  "imgError": "No images found...",
+  "outlandError": "Not found address......",
+  "errorStateDel": "The order is in progress or completed and cannot be deleted",
+  "errorStateEdit": "The order is in progress or completed and cannot be edited",
+
+  "btClear": {
+    "content": "Sigur dorești să ștergi poziția?",
+    "contentDoc": "Sigur dorești să ștergi Document?",
+    "no": "Nu",
+    "da": "Da, șterge"
+  },
+  "toast": {
+    "errorAsl": "Failed to load and save the assortment.",
+    "update": "Data is syncing, please wait.",
+    "updateSuccess": "The data has been successfully updated.",
+    "updateFault": "The data was not updated.",
+    "netError": "No internet connection.",
+    "loginError":"Login error: no internet connection.",
+    "loginNotMatch": "Login or password does not match.",
+    "loadError": "Loading error {document}",
+    "loadSuccess": "The data has been successfully updated. {documents}",
+    "sendSuccess": "The order has been successfully submitted!",
+    "sendError": "Failed to send!",
+    "sendErrorSub": "The order has been saved in templates, please try to submit it later.",
+    "sendErrorToken": "The order has been saved in templates, the token has expired.",
+    "saveTemp": "The template has been saved successfully!"
+  },
+  "documents": {
+    "asl": "Assortment",
+    "doc": "Documents",
+    "client": "Clients",
+    "price": "Prices"
+  },
+  "comment": {
+    "title": "Comment",
+    "tel": "Phone",
+    "hintTel": "Enter phone number",
+    "person": "Contact person",
+    "hintPerson": "Enter the person's name",
+    "comment": "Comment",
+    "hintComment": "Enter a comment",
+    "btSave": "Save"
+  }
+}
