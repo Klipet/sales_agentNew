@@ -233,7 +233,7 @@ class _BodyHomeWidgetState extends State<BodyHomeWidget> {
   Widget buttonNewCommand() {
     return Container(
       width: 205.w,
-      //  height: 152.h,
+      height: 152.h,
       margin: EdgeInsets.only(left: 20.w, right: 20.w),
       padding: EdgeInsets.only(top: 10.h, bottom: 22.h, left: 42.w, right: 42.w),
       decoration: BoxDecoration(

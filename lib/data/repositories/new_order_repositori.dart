@@ -342,6 +342,9 @@ class NewOrderRepository {
         ..processedCount = lines.processedCount
         ..sum = lines.sum
         ..uid = lines.uid
+        ..nonWhole = lines.nonWhole
+        ..priceSpecial = lines.priceSpecial
+        ..remain = lines.remain
         ..lineUuid = ''
         ..unitName = lines.unitName
         ..unitUid = lines.unitUid;

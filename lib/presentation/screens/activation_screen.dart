@@ -124,71 +124,75 @@ class _ActivationScreenUiState extends State<ActivationScreenUi> {
       },
       builder: (context, state) {
         return Scaffold(
-          body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                'assets/icons/splash_logo.svg',
-                width: 150.w,
-                height: 150.h,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      //const SizedBox(height: 64),
-                      Text(
-                        'licenseCode'.tr(),
-                        style: GoogleFonts.montserrat(
-                          fontSize: 48.sp,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w700,
+
+          
+          body: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/icons/splash_logo.svg',
+                  width: 150.w,
+                  height: 150.h,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        //const SizedBox(height: 64),
+                        Text(
+                          'licenseCode'.tr(),
+                          style: GoogleFonts.montserrat(
+                            fontSize: 48.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 20.h),
-                      Text(
-                        'codeDigits'.tr(),
-                        style: GoogleFonts.montserrat(
-                          fontSize: 32.sp,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w400,
+                        SizedBox(height: 20.h),
+                        Text(
+                          'codeDigits'.tr(),
+                          style: GoogleFonts.montserrat(
+                            fontSize: 32.sp,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 30.h),
-                      Pinput(
-                        forceErrorState: error,
-                        closeKeyboardWhenCompleted: true,
-                        keyboardAppearance: Brightness.dark,
-                        autofocus: true,
-                        length: 8,
-                        defaultPinTheme: defaultPinTheme,
-                        errorPinTheme: errorPinPutTema,
-                        pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
-                        controller: _controller,
-                        showCursor: false,
-                        readOnly: true,
-                        submittedPinTheme: putTheme,
-                        onChanged: (value) {
-                          if (error) {
-                            setState(() {
-                              error = false;
-                            });
-                          }
-                        },
-                        onLongPress: () {
-                          _controller.clear();
-                        },
-                      ),
-                      SizedBox(height: 10.h),
-                      _keybord(),
-                      if (errorText != null) ...[],
-                    ],
-                  ),
-                ],
-              ),
-            ],
+                        SizedBox(height: 30.h),
+                        Pinput(
+                          forceErrorState: error,
+                          closeKeyboardWhenCompleted: true,
+                          keyboardAppearance: Brightness.dark,
+                          autofocus: true,
+                          length: 8,
+                          defaultPinTheme: defaultPinTheme,
+                          errorPinTheme: errorPinPutTema,
+                          pinputAutovalidateMode: PinputAutovalidateMode.onSubmit,
+                          controller: _controller,
+                          showCursor: false,
+                          readOnly: true,
+                          submittedPinTheme: putTheme,
+                          onChanged: (value) {
+                            if (error) {
+                              setState(() {
+                                error = false;
+                              });
+                            }
+                          },
+                          onLongPress: () {
+                            _controller.clear();
+                          },
+                        ),
+                        SizedBox(height: 10.h),
+                        _keybord(),
+                        if (errorText != null) ...[],
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         );
       },
