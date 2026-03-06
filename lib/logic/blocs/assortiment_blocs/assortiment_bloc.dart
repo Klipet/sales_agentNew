@@ -13,7 +13,7 @@ class AssortimentBloc extends Cubit<AssortimentState>{
   Future<void> fetchAssortiment() async{
     emit(AssortimentLoading());
     try{
-      final asl = await assortimentApi.getAssortiment();
+    /*  final asl = await assortimentApi.getAssortiment();
       if(asl.isEmpty){
         print(asl);
         emit(AssortimentFailureNonInternet(404));
@@ -24,6 +24,12 @@ class AssortimentBloc extends Cubit<AssortimentState>{
 
       //  }
         emit(AssortimentSuccess(asl));
+      }
+     */
+      await assortimentRepositori.syncAssortiment();
+      final data = await assortimentRepositori.getLocalAssortiment();
+      if (!isClosed) {
+        emit(AssortimentSuccess(data));
       }
     }catch(e){
     //  if(!isClosed){

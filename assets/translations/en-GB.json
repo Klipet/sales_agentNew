@@ -145,7 +145,8 @@
     "comment": "Comment",
     "commHint": "Enter a comment for the order",
     "commSave": "Save comment",
-    "btOrder": "Order"
+    "btOrder": "Order",
+    "updatePrice": "Check discount"
   },
   "newOrderdialog": {
     "price": "Unit price",
@@ -178,7 +179,8 @@
     "sendError": "Failed to send!",
     "sendErrorSub": "The order has been saved in templates, please try to submit it later.",
     "sendErrorToken": "The order has been saved in templates, the token has expired.",
-    "saveTemp": "The template has been saved successfully!"
+    "saveTemp": "The template has been saved successfully!",
+    "updatePrice": "Checking discount"
   },
   "documents": {
     "asl": "Assortment",

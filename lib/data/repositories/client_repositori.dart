@@ -6,35 +6,45 @@ import '../models_api/models_client/contragent_response.dart';
 import 'db_provider.dart';
 
 class ClientRepositori {
-  Future<void> saveClient(ContragentResponse client) async {
-    final isar = await DbProvider.instance();
-    List<ModelOutlensDb> outlens = [];
 
-    final db = ModelClientDb(
-      balance: client.balance ?? 0.0,
-      code: client.code ?? '----',
-      idnp: client.idnp ?? '----',
-      image: client.image ?? [],
-      name: client.name ?? '----',
-      pricelistUid: client.pricelistUid ?? '----',
-      tvaCode: client.tvaCode ?? '----',
-      uid: client.uid ?? '',
-    );
-    if (client.outlets != null) {
-      outlens = client.outlets.map((outlents) {
-        return ModelOutlensDb(
-          address: outlents.address ?? '',
-          comment: outlents.comment ?? '',
-        );
-      }).toList();
+
+  Future<void> saveClient(List<ContragentResponse> clients) async {
+    final isar = await DbProvider.instance();
+
+    final List<ModelClientDb> dbList = [];
+    final List<ModelOutlensDb> outlensList = [];
+
+    for (var client in clients) {
+      final db = ModelClientDb(
+        balance: client.balance ?? 0.0,
+        code: client.code ?? '----',
+        idnp: client.idnp ?? '----',
+        image: client.image ?? [],
+        name: client.name ?? '----',
+        pricelistUid: client.pricelistUid ?? '----',
+        tvaCode: client.tvaCode ?? '----',
+        uid: client.uid ?? '',
+      );
+
+      final outlens = client.outlets
+          ?.map((o) => ModelOutlensDb(
+        address: o.address ?? '',
+        comment: o.comment ?? '',
+      )).toList() ?? [];
+
+      db.outlets.addAll(outlens); // связываем до транзакции
+      dbList.add(db);
+      outlensList.addAll(outlens);
     }
 
     await isar.writeTxn(() async {
-      await isar.modelClientDbs.put(db); // сначала документ
-      await isar.modelOutlensDbs.putAll(outlens); // потом строки
-      // связываем через IsarLinks
-      db.outlets.addAll(outlens);
-      await db.outlets.save();
+      await isar.modelClientDbs.putAll(dbList);       // все клиенты за раз
+      await isar.modelOutlensDbs.putAll(outlensList); // все аутлеты за раз
+
+      // сохраняем связи
+      for (final db in dbList) {
+        await db.outlets.save();
+      }
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:isar/isar.dart';
@@ -13,13 +14,22 @@ import 'package:syncfusion_flutter_datagrid/datagrid.dart';
 import '../../core/colors_app.dart';
 import '../../core/styles_text.dart';
 import '../../core/utils/new_order_asl_sours.dart';
+import '../../data/models_api/models_actie_price/client_price_response.dart';
+import '../../logic/blocs/price_actie_blocs/price_actie_bloc.dart';
+import '../../logic/blocs/price_actie_blocs/price_actie_state.dart';
 import '../../packages/toast_costom.dart';
 import '../dialogs/new_order_clear.dart';
+import 'loading_widget.dart';
 
 class TableNewOrderAsl extends StatefulWidget {
   final int orderId;
+  final String clientUUid;
 
-  TableNewOrderAsl({super.key, required this.orderId});
+  TableNewOrderAsl({
+    super.key,
+    required this.orderId,
+    required this.clientUUid,
+  });
 
   @override
   State<TableNewOrderAsl> createState() => _TableNewOrderAslState();
@@ -30,7 +40,6 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
   final newRepo = NewOrderRepository();
   bool _isLoading = true;
   bool _isEmptyLine = true;
-  final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
@@ -235,6 +244,26 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
     return total;
   }
 
+  Widget buttonUpdatePrice() {
+    return GestureDetector(
+      onTap: () {},
+      child: Container(
+        constraints: BoxConstraints(maxHeight: 32.h, maxWidth: 147.w),
+        //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: containerColor,
+          borderRadius: BorderRadius.all(Radius.circular(100.r)),
+          border: Border.all(color: borderColor, width: 1.w),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [Text("Verifica reducere")],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     if (_isEmptyLine) {
@@ -264,6 +293,8 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
           ),
         ],
       );
+    }else if(_isLoading){
+      return LoadingWidget(width: MediaQuery.of(context).size.width, height: MediaQuery.of(context).size.height);
     }
     return Container(
       decoration: BoxDecoration(
@@ -341,6 +372,11 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
                     label: SizedBox(),
                   ),
                   GridColumn(
+                    columnName: 'priceActie',
+                    width: 0,
+                    label: SizedBox(),
+                  ),
+                  GridColumn(
                     columnName: 'sum',
                     width: 105.w,
                     label: Center(
@@ -358,13 +394,70 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
               ),
             ),
           ),
-
           Container(
-            margin: EdgeInsets.only(bottom: 16.r, right: 32.r, top: 10.r),
+            margin: EdgeInsets.only(
+              bottom: 16.r,
+              right: 32.r,
+              top: 10.r,
+              left: 32.r,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
+                BlocConsumer<PriceActieBloc, PriceActieState>(
+                  listener: (context, state) async {
+                    if (state is PriceActieLoaded) {
+                      CustomToast.dismissAll();
+                      setState(() {
+                        _isLoading = false;
+                      });
+                      await newRepo.savePricesToIsar(
+                      orderId: widget.orderId,
+                      prices: state.response.prices,
+                      );
+                      _loadLines();
+                      for(var price in state.response.prices){
+                        print("Цены: ${price.price}");
+                      }
+
+                    } else if (state is PriceActieError) {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      ToastResponseError(context: context, textError: 'toast.updatePrice'.tr()).showError();
+                    }else if(state is PriceActieLoading){
+                      ToastResponseError(context: context, textError: 'toast.updatePrice'.tr()).showUpdate();
+                    }
+                  },
+                  builder: (context, state) {
+                    _isLoading = state is PriceActieLoading;
+                    return GestureDetector(
+                      onTap: _isLoading ? null : _loadPriceActie,
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxHeight: 50.h,
+                          maxWidth: 175.w,
+                        ),
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                          color: containerColor,
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(100.r),
+                          ),
+                          border: Border.all(color: borderColor, width: 1.w),
+                        ),
+                        child: Center(
+                          child: Text(
+                            'newOrder.updatePrice'.tr(),
+                            style: textStyleDialogOrderContent,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                Spacer(),
                 Text('order.total'.tr(), style: textStyleDialogOrderTotal),
                 SizedBox(width: 5.w),
                 Text(
@@ -376,6 +469,15 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> _loadPriceActie() async {
+    final lines = await newRepo.getOrderLines(widget.orderId);
+    final priceUuids = lines.map((e) => e.lineUuid).toList();
+    context.read<PriceActieBloc>().onLoadPrices(
+      widget.clientUUid,
+      priceUuids,
     );
   }
 }

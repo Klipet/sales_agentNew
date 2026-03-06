@@ -52,7 +52,9 @@ class NewOrderPostBloc extends Bloc<NewOrderPostEvent, NewOrderPostState> {
           assortimentUid: line.assortimentUid,
           count: line.count,
           lineNumber: line.lineNumber,
-          price: line.price,
+          price: line.priceActie != 0 && line.price > line.priceActie
+              ? line.priceActie
+              : line.price,
           processedCount: line.processedCount,
           sum: line.sum,
           uid: '00000000-0000-0000-0000-000000000000',

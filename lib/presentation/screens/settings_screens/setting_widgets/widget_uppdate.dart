@@ -23,6 +23,7 @@ import '../../../../logic/blocs/clients_bloc/clients_state.dart';
 import '../../../../logic/blocs/document_bloc/documents_cubit.dart';
 import '../../../../logic/blocs/price_blocs/price_cubit.dart';
 import '../../../../logic/blocs/price_blocs/price_state.dart';
+import '../../../../packages/toast_costom.dart';
 
 class WidgetUppdate extends StatelessWidget {
   const WidgetUppdate({super.key});
@@ -132,7 +133,10 @@ class _WidgetUppdateUIState extends State<WidgetUppdateUI> {
     print('✅ $moduleName загружен ($_loadedCount/$_totalCount)');
 
     if (_loadedCount == _totalCount) {
-      ToastResponseError(context: context, textError: 'toast.updateSuccess'.tr()).showUpdateSucces();
+      CustomToast.dismissAll();
+      Future.delayed(Duration(seconds: 1), () {
+        ToastResponseError(context: context, textError: 'toast.updateSuccess'.tr()).showUpdateSucces();
+      });
     }
   }
 

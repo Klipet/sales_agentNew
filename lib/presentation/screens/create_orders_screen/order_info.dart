@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -17,7 +18,10 @@ import '../../../data/models_api/models_client/ourlets_response.dart';
 import '../../../data/models_api/new_order_post/new_order_model_post_response_api.dart';
 import '../../../data/models_db/model_db_clients/model_client_db.dart';
 
+import '../../../data/providers/api_provider/price_actie_api.dart';
 import '../../../data/providers/navigator_provider.dart';
+import '../../../data/repositories/login_repositori.dart';
+import '../../../logic/blocs/price_actie_blocs/price_actie_bloc.dart';
 import '../../dialogs/order_dialog_status.dart';
 import '../../widgets/buttons_new_order_widget.dart';
 import '../../widgets/new_order_title_widget.dart';
@@ -100,7 +104,15 @@ class _FreeStepCreateState extends State<FreeStepCreate> {
               idnp: '',
               page: 7,
             ),
-          Expanded(child: TableNewOrderAsl(orderId: idDocument ?? 0)),
+          Expanded(
+            child: BlocProvider(
+              create: (context) => PriceActieBloc(PriceActieApi(), LoginRepository()),
+              child: TableNewOrderAsl(
+                orderId: idDocument ?? 0,
+                clientUUid: clientDb?.uid ?? '',
+              ),
+            ),
+          ),
           SizedBox(height: 15.w),
           ButtonsNewOrderWidget(
             clientDb: clientDb,

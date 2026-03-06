@@ -146,7 +146,8 @@
     "comment": "Cemmentariu",
     "commHint": "Introduceți comentariul pentru comanda",
     "commSave": "Salvare commentariu",
-    "btOrder": "Comandă"
+    "btOrder": "Comandă",
+    "updatePrice": "Verifică reducerea"
   },
   "newOrderdialog": {
     "price": "Preț unitar",
@@ -179,7 +180,8 @@
     "sendError": "Transmiterea a eșuat!",
     "sendErrorSub": "Comanda a fost salvată în șabloane, încercați să o transmiteți mai târziu.",
     "sendErrorToken": "Comanda a fost salvată în șabloane, token a o experat",
-    "saveTemp": "Șablonul a fost salvat cu succes!"
+    "saveTemp": "Șablonul a fost salvat cu succes!",
+    "updatePrice": "Verificăm reducerea"
   },
   "documents": {
     "asl": "Assortiment",

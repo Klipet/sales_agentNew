@@ -28,8 +28,8 @@ class AssortimentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
-          AssortimentBloc(AssortimentApi(), AssortimentRepositori())
-            ..fetchAssortiment(),
+          AssortimentBloc(AssortimentApi(), AssortimentRepositori()),
+           // ..fetchAssortiment(),
       child: AssortimentUI(),
     );
   }

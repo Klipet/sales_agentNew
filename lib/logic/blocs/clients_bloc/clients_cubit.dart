@@ -16,12 +16,10 @@ class ClientsCubit extends Cubit<ClientsState> {
       await clientRepositori.deleteClient();
       await clientRepositori.deleteOutlens();
 
-      final orders = await clientApi.getClient();
-      if (orders != null) {
-        for (var modelDoc in orders) {
-          await clientRepositori.saveClient(modelDoc);
-        }
-        emit(ClientsLoaded(orders));
+      final clients = await clientApi.getClient();
+      if (clients != null) {
+          await clientRepositori.saveClient(clients);
+        emit(ClientsLoaded(clients));
       } else {
         emit(ClientsError("Не удалось загрузить клиентов"));
       }

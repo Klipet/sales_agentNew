@@ -2,9 +2,24 @@ import 'package:isar/isar.dart';
 import 'package:sales_agent/data/models_api/models_assortiment/assortiment_model.dart';
 
 import '../models_db/model_db_assortiment/model_assortiment_db.dart';
+import '../providers/api_provider/assotriment_api.dart';
 import 'db_provider.dart';
 
 class AssortimentRepositori {
+
+  Future<void> syncAssortiment() async {
+    final AssortimentApi assortimentApi = AssortimentApi();
+    final asl = await assortimentApi.getAssortiment();
+    await deleteAssortiment();
+    await saveAssortiment(asl);
+  }
+
+  Future<List<ModelAssortimentDB>> getLocalAssortiment() async {
+    final isar = await DbProvider.instance();
+    return await isar.modelAssortimentDBs.where().findAll();
+  }
+
+
   Future<void> saveAssortiment(List<AssortimentModel> list) async {
     final isar = await DbProvider.instance();
 

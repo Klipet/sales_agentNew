@@ -15,6 +15,8 @@ class ToastResponseError{
 
   void showError() {
     CustomToast.showCustom(
+      animationDuration: Duration(milliseconds: 300),
+      autoCloseDuration: Duration(seconds: 5),
       context: context,
       onDismiss: () {},
       builder: (context, dismiss) {
@@ -29,6 +31,8 @@ class ToastResponseError{
 
   void showUpdate() {
     CustomToast.showCustom(
+      animationDuration: Duration(milliseconds: 5),
+      autoCloseDuration: Duration(hours: 1),
       width: 565.w,
       height: 160.h,
       context: context,
@@ -44,6 +48,8 @@ class ToastResponseError{
 
   void showUpdateSucces() {
     CustomToast.showCustom(
+      animationDuration: Duration(milliseconds: 300),
+      autoCloseDuration: Duration(seconds: 5),
       width: 565.w,
       height: 160.h,
       context: context,
@@ -59,6 +65,8 @@ class ToastResponseError{
 
   void showErrorConnect() {
     CustomToast.showCustom(
+      animationDuration: Duration(seconds: 5),
+      autoCloseDuration: Duration(milliseconds: 300),
       context: context,
       onDismiss: () {},
       builder: (context, dismiss) {
