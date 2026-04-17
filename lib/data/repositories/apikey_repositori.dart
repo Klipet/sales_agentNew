@@ -2,11 +2,12 @@ import '../models_db/model_apikey.dart';
 import 'db_provider.dart';
 
 class ApikeyRepository {
-  Future<void> saveApiKey(String key, String uri) async {
+  Future<void> saveApiKey(String key, String uri, String licenseCode) async {
     final isar = await DbProvider.instance();
     final model = ModelApikey()
       ..id = 0
       ..apiKey = key
+      ..codeLicense = licenseCode
       ..uri = uri;
 
     await isar.writeTxn(() => isar.modelApikeys.put(model));
@@ -16,6 +17,11 @@ class ApikeyRepository {
     final isar = await DbProvider.instance();
     final settings = await isar.modelApikeys.get(0);
     return settings?.apiKey;
+  }
+  Future<String?> getlicenseCode() async {
+    final isar = await DbProvider.instance();
+    final settings = await isar.modelApikeys.get(0);
+    return settings?.codeLicense;
   }
 
   Future<String?> getUrl() async {

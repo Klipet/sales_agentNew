@@ -8,7 +8,9 @@ class LoginRepository {
       String token,
       String validTo,
       String userName,
-      bool savePass) async {
+      bool savePass,
+      DateTime lastAcces,
+      ) async {
     final isar = await DbProvider.instance();
     final model = ModelLogin()
       ..id = 0
@@ -17,6 +19,7 @@ class LoginRepository {
       ..tokenUid = token
       ..tokenValid = validTo
       ..userName = userName
+      ..lastAcces = lastAcces
       ..savePass = savePass;
 
     await isar.writeTxn(() => isar.modelLogins.put(model));
@@ -38,6 +41,12 @@ class LoginRepository {
     final isar = await DbProvider.instance();
     final settings = await isar.modelLogins.get(0);
     return settings?.password;
+  }
+
+  Future<DateTime?> getLastAces() async {
+    final isar = await DbProvider.instance();
+    final settings = await isar.modelLogins.get(0);
+    return settings?.lastAcces;
   }
 
   Future<String?> getValodTo() async {

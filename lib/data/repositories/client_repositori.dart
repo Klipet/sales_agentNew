@@ -1,6 +1,8 @@
 import 'package:isar/isar.dart';
 import 'package:sales_agent/data/models_db/model_db_clients/model_client_db.dart';
+import 'package:sales_agent/data/models_db/model_db_clients/model_comment_client_db.dart';
 import 'package:sales_agent/data/models_db/model_db_clients/model_outlens_db.dart';
+import 'package:sales_agent/data/repositories/client_comment_repository.dart';
 
 import '../models_api/models_client/contragent_response.dart';
 import 'db_provider.dart';
@@ -10,6 +12,9 @@ class ClientRepositori {
 
   Future<void> saveClient(List<ContragentResponse> clients) async {
     final isar = await DbProvider.instance();
+    final clientCommentRepository = ClientCommentRepository();
+    final saveComment = await clientCommentRepository.getAllComments();
+
 
     final List<ModelClientDb> dbList = [];
     final List<ModelOutlensDb> outlensList = [];
@@ -46,6 +51,15 @@ class ClientRepositori {
         await db.outlets.save();
       }
     });
+
+    for (final comment in saveComment) {
+      final exists = clients.any((c) => c.uid == comment.clientUUid);
+      if (exists) {
+        await clientCommentRepository.saveCommentById(comment.clientUUid ?? '', comment);
+        print("${exists} =====  ${comment.clientUUid} ----------- ${comment}");
+      }
+    }
+
   }
 
   Future<List<ModelClientDb>> getAllClients() async {

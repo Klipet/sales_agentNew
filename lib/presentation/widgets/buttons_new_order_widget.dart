@@ -49,7 +49,7 @@ class ButtonsNewOrderWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(width: 10.w,),
-                buttonAddCommentOrder(context, id ?? -1),
+                buttonAddCommentOrder(context: context,id: id ?? -1, clientId: clientDb?.id ?? -1, clientUUid: clientDb?.uid ?? ''),
                 SizedBox(width: 10.w,),
                 buttonSaveOrder(context, onConfirm),
                 SizedBox(width: 10.w,),
@@ -190,14 +190,12 @@ Widget buttonSaveOrder(BuildContext context,  Function(NewOrderModelPostResponse
   );
 }
 
-Widget buttonAddCommentOrder(BuildContext context, int id){
+Widget buttonAddCommentOrder({required BuildContext context, required int id, required int clientId, required String clientUUid}){
   return  GestureDetector(
     onTap: () {
-   //   dialogComment(context: context, order: id);
-
       showDialog(
           context: context,
-          builder: (context) => DialogCommentUI(orderId: id,)
+          builder: (context) => DialogCommentUI(orderId: id, clientId: clientId, clientUUid: clientUUid,)
       );
 
     },

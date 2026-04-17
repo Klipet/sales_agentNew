@@ -193,8 +193,12 @@
     "title": "Cemmentariu",
     "tel": "Telefon",
     "hintTel": "Introduceți numerul la telefon",
-    "person": "Persoană",
+    "personName": "Numele",
     "hintPerson": "Introduceți numele persoanei",
+    "personSurname": "Prenumele",
+    "hintPersonSurname": "Introduceți prenume persoanei",
+    "address": "Adresa",
+    "hintAddress": "Introduceți adresa",
     "comment": "Commentariu",
     "hintComment": "Introduceți commentariu",
     "btSave": "Salvare"

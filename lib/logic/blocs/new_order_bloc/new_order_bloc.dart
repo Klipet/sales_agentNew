@@ -2,9 +2,11 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:isar/isar.dart';
 import 'package:provider/provider.dart';
+import 'package:sales_agent/data/repositories/client_comment_repository.dart';
 
 import '../../../core/constans.dart';
 
+import '../../../data/models_api/model_comment_clietn.dart';
 import '../../../data/providers/navigator_provider.dart';
 import '../../../data/repositories/new_order_repositori.dart';
 import 'new_order_event.dart';
@@ -13,6 +15,7 @@ import 'new_order_state.dart';
 class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
   final NewOrderRepository repository;
   final BuildContext context;
+  ClientCommentRepository clientCommentRepository = ClientCommentRepository();
 
   NewOrderBloc(this.repository, this.context) : super(NewOrderInitial()) {
     on<CreateOrderEvent>(_onCreateOrder);
@@ -240,9 +243,14 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     Emitter<NewOrderState> emit,
   ) async {
     emit(NewOrderLineCount());
+    final comment = '${event.modelCommentClietn!.name} ${event.modelCommentClietn!.surName} ${event.modelCommentClietn!.phone} ${event.modelCommentClietn!.address} ${event.modelCommentClietn!.comment}';
+     event.modelCommentClietn.toString();
+    if(event.modelCommentClietn?.saveComment == true){
+       clientCommentRepository.saveComment(clientId: event.clientId, comment: event.modelCommentClietn!);
+    }
     final order = await repository.addCommentToOrder(
-      event.orderId,
-      event.comment,
+     id:  event.orderId,
+     comment:  comment,
     );
     if (order) {
       emit(AddComentSucces());
@@ -255,7 +263,16 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     LoadCommentEvent event,
     Emitter<NewOrderState> emit,
   ) async {
-    final orderComment = await repository.getCommentFromOrder(event.orderId);
-    emit(CommentLoadedState(orderComment));
+    final clientComment = await clientCommentRepository.getComment(event.clientId);
+    final clientCommentModel = ModelCommentClient(
+      phone: clientComment?.phone ?? '',
+      name: clientComment?.name,
+      surName: clientComment?.surName,
+      address: clientComment?.address,
+      comment: clientComment?.comment,
+      clientUUid: event.clientUUid,
+      saveComment: clientComment?.saveComment ?? false
+    );
+    emit(CommentLoadedState(clientCommentModel));
   }
 }

@@ -29,8 +29,9 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
           if (apiResponse != null && apiResponse.errorCode == 0) {
             final url = apiResponse.appData?.uri;
             final apikey = apiResponse.appData?.licenseID;
+            final licenseCode = apiResponse.appData?.licenseCode;
             if (apikey != null && url != null) {
-              await repository.saveApiKey(apikey, url);
+              await repository.saveApiKey(apikey, url, licenseCode!);
               emit(SplashSuccess()); // 👉 переход на LoginScreen
             }else {
               emit(SplashError("Некорректные данные от сервера"));

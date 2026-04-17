@@ -21,7 +21,8 @@ class ActivationBloc extends Bloc<ActivationEvent, ActivationState> {
       if (apiResponse != null && apiResponse.errorCode == 0 && apiResponse.appData != null) {
         final apikey = apiResponse.appData?.licenseID;
         final uri = apiResponse.appData?.uri;
-        await repository.saveApiKey(apikey!, uri!);
+        final licenseCode = apiResponse.appData?.licenseCode;
+        await repository.saveApiKey(apikey!, uri!, licenseCode!);
         emit(ActivationSuccess());
       } else {
         emit( ActivationFailure(apiResponse!.errorMessage));

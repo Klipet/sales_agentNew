@@ -1,4 +1,6 @@
 import 'package:bloc/bloc.dart';
+import 'package:sales_agent/data/models_db/model_db_clients/model_comment_client_db.dart';
+import 'package:sales_agent/data/repositories/client_comment_repository.dart';
 
 import '../../../data/providers/api_provider/client_api.dart';
 import '../../../data/repositories/client_repositori.dart';
@@ -13,6 +15,8 @@ class ClientsCubit extends Cubit<ClientsState> {
   Future<void> fetchClients() async {
     emit(ClientsLoading());
     try {
+
+
       await clientRepositori.deleteClient();
       await clientRepositori.deleteOutlens();
 

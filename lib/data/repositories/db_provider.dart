@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sales_agent/data/models_db/model_db_clients/model_client_db.dart';
+import 'package:sales_agent/data/models_db/model_db_clients/model_comment_client_db.dart';
 import 'package:sales_agent/data/models_db/model_db_clients/model_outlens_db.dart';
 import 'package:sales_agent/data/models_db/model_login.dart';
 
@@ -20,7 +21,7 @@ class DbProvider {
     final dir = await getApplicationDocumentsDirectory();
     _isar = await Isar.open(
       [ModelApikeySchema, ModelLoginSchema, ModelDocumentDbSchema, ModelLinesDbSchema,
-        ModelClientDbSchema, ModelOutlensDbSchema, ModelAssortimentDBSchema, PriceListsSchema, PricesSchema,
+        ModelClientDbSchema, ModelOutlensDbSchema, ModelAssortimentDBSchema, PriceListsSchema, PricesSchema, ModelCommentClientDbSchema
       ],
       directory: dir.path,
     );

@@ -188,14 +188,19 @@
     "client": "Clients",
     "price": "Prices"
   },
+
   "comment": {
     "title": "Comment",
     "tel": "Phone",
     "hintTel": "Enter phone number",
-    "person": "Contact person",
-    "hintPerson": "Enter the person's name",
+    "personName": "First name",
+    "hintPerson": "Enter first name",
+    "personSurname": "Last name",
+    "hintPersonSurname": "Enter last name",
+    "address": "Address",
+    "hintAddress": "Enter address",
     "comment": "Comment",
-    "hintComment": "Enter a comment",
+    "hintComment": "Enter comment",
     "btSave": "Save"
   }
 }

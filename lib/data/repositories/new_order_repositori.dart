@@ -435,7 +435,7 @@ class NewOrderRepository {
     }
   }
 
-  Future<bool> addCommentToOrder(int id, String comment) async {
+  Future<bool> addCommentToOrder({required int id, required String comment}) async {
     final isar = await DbProvider.instance();
     try{
       await isar.writeTxn(() async {
