@@ -70,5 +70,6 @@ class CommentLoadingState extends NewOrderState {}
 
 class CommentLoadedState extends NewOrderState {
   final ModelCommentClient comment;
-  CommentLoadedState(this.comment);
+  final String commentToServer;
+  CommentLoadedState(this.comment, this.commentToServer);
 }

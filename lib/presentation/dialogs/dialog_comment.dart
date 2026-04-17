@@ -113,27 +113,21 @@ class _DialogContentState extends State<DialogContent> {
   }
 
   // Парсим комментарий из базы
-  void _loadComment(ModelCommentClient comment) {
-    if (!comment.saveComment) return;
-    try {
-      if (comment.address != null) {
-        setState(() {
-          commentControllerTel.text = comment.phone ?? '';
-          commentControllerUserName.text = comment.name ?? '';
-          commentControllerComment.text = comment.comment ?? '';
-          commentControllerUserSurname.text = comment.surName ?? '';
-          commentControllerAddress.text = comment.address ?? '';
-          saveComment = comment.saveComment;
-
-          commentControllerSimpl.text =
-              '${comment.comment} ${comment.name} ${comment.surName} ${comment.phone} ${comment.address}';
-        });
-      }
-    } catch (e) {
-      // Если это не JSON, показываем в первом поле
-      commentControllerSimpl.text = e.toString();
-      commentControllerComment.text = e.toString();
+  void _loadComment(ModelCommentClient comment, String commentServer) {
+    if (comment.saveComment) {
+      setState(() {
+        commentControllerTel.text = comment.phone ?? '';
+        commentControllerUserName.text = comment.name ?? '';
+        commentControllerUserSurname.text = comment.surName ?? '';
+        commentControllerAddress.text = comment.address ?? '';
+        commentControllerComment.text = comment.comment ?? '';
+        saveComment = comment.saveComment;
+      });
+    }else{
+      commentControllerComment.text = commentServer;
     }
+
+
   }
 
   @override
@@ -142,7 +136,7 @@ class _DialogContentState extends State<DialogContent> {
       listener: (context, state) {
         if (state is CommentLoadedState) {
           print(state.comment);
-          _loadComment(state.comment);
+          _loadComment(state.comment, state.commentToServer);
         }
       },
 
@@ -212,7 +206,7 @@ class _DialogContentState extends State<DialogContent> {
                 );
                 Navigator.pop(context);
               },
-              icon: Icon(Icons.check, size: 16.r),
+              icon: Icon(Icons.savings_sharp, size: 25.r),
               label: Text('comment.btSave'.tr()),
               style: ElevatedButton.styleFrom(
                 backgroundColor: Color(0xFF1D9E75),
@@ -311,6 +305,7 @@ class _DialogContentState extends State<DialogContent> {
             hintText: hint,
             hintStyle: textStyleDialogOrderData.copyWith(
               fontWeight: FontWeight.w200,
+              color: Colors.grey
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: borderColor),
@@ -385,6 +380,7 @@ class _DialogContentState extends State<DialogContent> {
               hintText: hint,
               hintStyle: textStyleDialogOrderData.copyWith(
                 fontWeight: FontWeight.w200,
+                color: Colors.grey
               ),
             ),
           ),

@@ -264,6 +264,8 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     Emitter<NewOrderState> emit,
   ) async {
     final clientComment = await clientCommentRepository.getComment(event.clientId);
+    final serverComment = await repository.getOrder(event.orderId);
+    final commentServer = serverComment?.comment?? '';
     final clientCommentModel = ModelCommentClient(
       phone: clientComment?.phone ?? '',
       name: clientComment?.name,
@@ -273,6 +275,6 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
       clientUUid: event.clientUUid,
       saveComment: clientComment?.saveComment ?? false
     );
-    emit(CommentLoadedState(clientCommentModel));
+    emit(CommentLoadedState(clientCommentModel, commentServer));
   }
 }
