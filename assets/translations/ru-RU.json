@@ -18,7 +18,8 @@
     "address": "Адрес: {address}",
     "status": "Статус: {status}",
     "sum": "Сумма заказа: {sum}",
-    "btText": "Просмотреть"
+    "btText": "Просмотреть",
+    "titleHome": "Нет заказов"
   },
   "driver": {
     "home": "Главная",

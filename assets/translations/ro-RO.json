@@ -27,7 +27,8 @@
     "address": "Adresă: {address}",
     "status": "Status: {status}",
     "sum": "Suma comenzii: {sum}",
-    "btText": "Vezi comanda"
+    "btText": "Vezi comanda",
+    "titleHome": "Nu ai nicio comandă"
   },
 
   "home": {

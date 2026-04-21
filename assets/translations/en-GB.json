@@ -18,7 +18,8 @@
     "address": "Address: {address}",
     "status": "Status: {status}",
     "sum": "Order sum: {sum}",
-    "btText": "View order"
+    "btText": "View order",
+    "titleHome": "No orders available"
   },
 
   "driver": {
