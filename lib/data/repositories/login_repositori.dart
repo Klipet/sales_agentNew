@@ -3,14 +3,15 @@ import 'package:sales_agent/data/models_db/model_login.dart';
 import 'db_provider.dart';
 
 class LoginRepository {
-  Future<void> saveLogin(String login,
-      String password,
-      String token,
-      String validTo,
-      String userName,
-      bool savePass,
-      DateTime lastAcces,
-      ) async {
+  Future<void> saveLogin(
+    String login,
+    String password,
+    String token,
+    String validTo,
+    String userName,
+    bool savePass,
+    DateTime lastAcces,
+  ) async {
     final isar = await DbProvider.instance();
     final model = ModelLogin()
       ..id = 0
@@ -49,6 +50,15 @@ class LoginRepository {
     return settings?.lastAcces;
   }
 
+  Future<void> setLastAces(DateTime access) async {
+    final isar = await DbProvider.instance();
+    await isar.writeTxn(() async {
+      final settings = await isar.modelLogins.get(0);
+      settings!.lastAcces = access;
+      await isar.modelLogins.put(settings);
+    });
+  }
+
   Future<String?> getValodTo() async {
     final isar = await DbProvider.instance();
     final settings = await isar.modelLogins.get(0);
@@ -72,9 +82,9 @@ class LoginRepository {
     await isar.writeTxn(() => isar.modelLogins.delete(0));
   }
 
-  Future<void> changeSave(bool save)async {
+  Future<void> changeSave(bool save) async {
     final isar = await DbProvider.instance();
-    await isar.writeTxn(()async{
+    await isar.writeTxn(() async {
       final settings = await isar.modelLogins.get(0);
       settings!.savePass = save;
       await isar.modelLogins.put(settings);

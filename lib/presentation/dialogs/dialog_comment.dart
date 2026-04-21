@@ -21,13 +21,17 @@ Future dialogComment({
   required BuildContext context,
   required int order,
   required int clientId,
-  required String clientUUid
+  required String clientUUid,
 }) {
   return showDialog(
     context: context,
     barrierDismissible: false,
     builder: (context) {
-      return DialogCommentUI(orderId: order, clientId: clientId, clientUUid: clientUUid,);
+      return DialogCommentUI(
+        orderId: order,
+        clientId: clientId,
+        clientUUid: clientUUid,
+      );
     },
   );
 }
@@ -50,7 +54,11 @@ class DialogCommentUI extends StatelessWidget {
       create: (_) =>
           NewOrderBloc(NewOrderRepository(), context)
             ..add(LoadCommentEvent(orderId, clientId, clientUUid)),
-      child: DialogContent(orderId: orderId, clientId: clientId, clientUUid: clientUUid,),
+      child: DialogContent(
+        orderId: orderId,
+        clientId: clientId,
+        clientUUid: clientUUid,
+      ),
     );
   }
 }
@@ -123,11 +131,9 @@ class _DialogContentState extends State<DialogContent> {
         commentControllerComment.text = comment.comment ?? '';
         saveComment = comment.saveComment;
       });
-    }else{
+    } else {
       commentControllerComment.text = commentServer;
     }
-
-
   }
 
   @override
@@ -152,7 +158,6 @@ class _DialogContentState extends State<DialogContent> {
               controllerComment: commentControllerComment,
               controllerAddress: commentControllerAddress,
               controllerUserSurname: commentControllerUserSurname,
-              saveComment: saveComment,
               order: widget.orderId,
               clientUUid: widget.clientUUid,
               clientId: widget.clientId,
@@ -172,14 +177,12 @@ class _DialogContentState extends State<DialogContent> {
     required TextEditingController controllerComment,
     required TextEditingController controllerUserSurname,
     required TextEditingController controllerAddress,
-    required bool saveComment,
     required FocusNode focusNode,
     required int order,
     required int clientId,
     required String clientUUid,
   }) {
     PhoneNumber number = PhoneNumber(isoCode: 'MD');
-
     return Column(
       children: [
         Row(
@@ -188,9 +191,6 @@ class _DialogContentState extends State<DialogContent> {
             Spacer(),
             ElevatedButton.icon(
               onPressed: () {
-                setState(() {
-                  saveComment = true;
-                });
                 final modelComment = ModelCommentClient(
                   name: controllerUser.text,
                   comment: controllerComment.text,
@@ -198,7 +198,7 @@ class _DialogContentState extends State<DialogContent> {
                   address: controllerAddress.text,
                   surName: controllerUserSurname.text,
                   saveComment: saveComment,
-                  clientUUid: clientUUid
+                  clientUUid: clientUUid,
                 );
                 print(clientUUid);
                 context.read<NewOrderBloc>().add(
@@ -206,10 +206,12 @@ class _DialogContentState extends State<DialogContent> {
                 );
                 Navigator.pop(context);
               },
-              icon: Icon(Icons.savings_sharp, size: 25.r),
-              label: Text('comment.btSave'.tr()),
+              icon: Icon(Icons.save_as_sharp, size: 25.r),
+              label: Text('comment.btSave'.tr(), style: buttonTextStyle.copyWith(
+                fontWeight: FontWeight.w300
+              ),),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF1D9E75),
+                backgroundColor: buttonColor,
                 foregroundColor: Colors.white,
                 shape: StadiumBorder(),
                 padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
@@ -277,6 +279,33 @@ class _DialogContentState extends State<DialogContent> {
                   hint: 'comment.hintComment'.tr(),
                   maxLines: 3,
                 ),
+                Padding(
+                  padding: EdgeInsets.only(top: 6.w),
+                  child: GestureDetector(
+                    onTap: () => setState(() => saveComment = !saveComment),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          saveComment
+                              ? 'assets/icons/chek_box.svg'
+                              : 'assets/icons/chec_unbox.svg',
+                          width: 30.w,
+                          height: 30.h,
+                          fit: BoxFit.fill,
+                          color: saveComment ? colorBtAwait : colorBtJob,
+                        ),
+                        SizedBox(width: 15.w,),
+                        Text(
+                          "comment.chSaveComment".tr(),
+                          style: textStyleDialogOrderData.copyWith(
+                            fontWeight: FontWeight.w200,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             );
           },
@@ -305,7 +334,7 @@ class _DialogContentState extends State<DialogContent> {
             hintText: hint,
             hintStyle: textStyleDialogOrderData.copyWith(
               fontWeight: FontWeight.w200,
-              color: Colors.grey
+              color: Colors.grey,
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: borderColor),
@@ -380,7 +409,7 @@ class _DialogContentState extends State<DialogContent> {
               hintText: hint,
               hintStyle: textStyleDialogOrderData.copyWith(
                 fontWeight: FontWeight.w200,
-                color: Colors.grey
+                color: Colors.grey,
               ),
             ),
           ),

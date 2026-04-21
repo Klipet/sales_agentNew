@@ -201,6 +201,7 @@
     "hintAddress": "Enter address",
     "comment": "Comment",
     "hintComment": "Enter comment",
-    "btSave": "Save"
+    "btSave": "Save",
+    "chSaveComment": "Save comment to local database"
   }
 }

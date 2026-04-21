@@ -201,6 +201,7 @@
     "hintAddress": "Introduceți adresa",
     "comment": "Commentariu",
     "hintComment": "Introduceți commentariu",
-    "btSave": "Salvare"
+    "btSave": "Salvare",
+    "chSaveComment": "Salvare comentariului in baza locala"
   }
 }

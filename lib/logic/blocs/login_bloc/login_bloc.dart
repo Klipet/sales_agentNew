@@ -32,13 +32,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         login = event.login;
         password = event.password;
       }
+      final lastAccess = await repository.getLastAces();
       final apiResponse = await actualizationUser.getLogInUser(login, password);
       if (apiResponse.errorCode == 0) {
         final token = apiResponse.token!.uid ?? '';
         final validTo = apiResponse.token!.validTo ?? '';
         final userName = apiResponse.user!.name ?? '';
         final surName = apiResponse.user!.surname ?? '';
-        final lastAcces = DateTime.now();
         final String fullName = '$userName$surName';
         await repository.saveLogin(
           login,
@@ -47,9 +47,9 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           validTo,
           fullName,
           event.save,
-          lastAcces,
+          lastAccess ?? DateTime.now().subtract(const Duration(days: 1)),
         );
-        emit(LoginSuccess(lastAcces));
+        emit(LoginSuccess(lastAccess ?? DateTime.now()));
       } else {
         final loginS = await repository.getLogin() ?? '';
         final passwordS = await repository.getPassword() ?? '';

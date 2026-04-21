@@ -245,9 +245,7 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     emit(NewOrderLineCount());
     final comment = '${event.modelCommentClietn!.name} ${event.modelCommentClietn!.surName} ${event.modelCommentClietn!.phone} ${event.modelCommentClietn!.address} ${event.modelCommentClietn!.comment}';
      event.modelCommentClietn.toString();
-    if(event.modelCommentClietn?.saveComment == true){
-       clientCommentRepository.saveComment(clientId: event.clientId, comment: event.modelCommentClietn!);
-    }
+     clientCommentRepository.saveComment(clientId: event.clientId, comment: event.modelCommentClietn!);
     final order = await repository.addCommentToOrder(
      id:  event.orderId,
      comment:  comment,

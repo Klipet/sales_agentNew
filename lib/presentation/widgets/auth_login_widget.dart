@@ -80,6 +80,7 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
   final TextEditingController _controllerLogin = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   int _loadedCount = 0;
+  final lastAcess = LoginRepository();
   final int _totalCount = 4; // Количество блоков
 
   bool _isLoading = false;
@@ -108,7 +109,7 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
     return MultiBlocListener(
       listeners: [
         BlocListener<LoginBloc, LoginState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is LoginFailure) {
               print(state.message);
               if(state.message == ''){
@@ -119,7 +120,17 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
             } else if (state is LoginSuccess) {
               // Сбрасываем счётчик модулей
               _loadedCount = 0;
-              _refreshAllData(lastAces: state.lastAcces);
+              final access = await lastAcess.getLastAces();
+              if(access?.day != DateTime.now().day){
+                lastAcess.setLastAces(DateTime.now());
+                _refreshAllData(lastAces: state.lastAcces);
+              }else{
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => HomeDrawer()),
+                      (route) => false,
+                );
+              }
               _controllerPassword.clear();
               _controllerLogin.clear();
             }
@@ -378,19 +389,11 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
     });
     print('_refreshAllData: internet ${widget.connectInternet} ${lastAces.day}');
 
-    if(lastAces.day != DateTime.now().day){
+
       context.read<AssortimentBloc>().fetchAssortiment();
       context.read<DocumentsCubit>().fetchOrders();
       context.read<ClientsCubit>().fetchClients();
       context.read<PriceCubit>().fetchPriceList();
-    }else{
-
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => HomeDrawer()),
-            (route) => false,
-      );
-    }
   }
 
   void _onModuleLoaded(String moduleName) {
