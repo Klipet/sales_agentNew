@@ -41,8 +41,8 @@ class AddAslToOrder extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) =>
-              AssortimentBloc(AssortimentApi(), AssortimentRepositori())
-                ..fetchAssortiment(),
+              AssortimentBloc(AssortimentApi(), AssortimentRepositori()),
+              //  ..fetchAssortiment(),
         ),
         BlocProvider(
           create: (_) =>
@@ -104,7 +104,6 @@ class _AddAslToOrderState extends State<AddAslToOrderUI> {
           context.read<NewOrderBloc>().add(LoadLineCountEvent(idDoc));
           outlands = outlet ?? OutletsResponse(address: '', comment: '');
           priceLists = price;
-          print('price: Order $priceLists');
           isLoaded = true;
         });
         // await getPrice(client.uid!);

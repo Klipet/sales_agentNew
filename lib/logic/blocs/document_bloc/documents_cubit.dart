@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 
 import '../../../data/providers/api_provider/orders_api.dart';
 import '../../../data/repositories/orders_repositori.dart';
+import '../../../services/app_logger.dart';
 import 'documants_state.dart';
 
 
@@ -22,9 +23,21 @@ class DocumentsCubit extends Cubit<DocumentState> {
         }
         emit(OrdersLoaded(orders));
       } else {
+        await AppLogger().log(
+          action: 'DocumentsCubit',
+          message: orders,
+          details: "Не удалось загрузить заказы",
+          type: 2,
+        );
         emit(OrdersError("Не удалось загрузить заказы"));
       }
     } catch (e) {
+      await AppLogger().log(
+        action: 'DocumentsCubit',
+        message: e.toString(),
+        details: "Не удалось загрузить заказы",
+        type: 2,
+      );
       emit(OrdersError(e.toString()));
     }
   }

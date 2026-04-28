@@ -15,6 +15,7 @@ class ModelLinesDb {
   late int lineNumber;
   late double price;
   late double priceSpecial;
+  late double priceActie;
   late double processedCount;
   late double sum;
   late String uid;

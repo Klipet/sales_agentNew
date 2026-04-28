@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:sales_agent/data/models_api/model_comment_clietn.dart';
 import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dart';
 
 abstract class NewOrderState {}
@@ -68,6 +69,7 @@ class AddComentError extends NewOrderState{
 class CommentLoadingState extends NewOrderState {}
 
 class CommentLoadedState extends NewOrderState {
-  final String comment;
-  CommentLoadedState(this.comment);
+  final ModelCommentClient comment;
+  final String commentToServer;
+  CommentLoadedState(this.comment, this.commentToServer);
 }

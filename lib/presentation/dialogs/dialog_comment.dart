@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:sales_agent/core/colors_app.dart';
+import 'package:sales_agent/data/models_api/model_comment_clietn.dart';
 import 'package:sales_agent/data/repositories/new_order_repositori.dart';
 import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_bloc.dart';
 import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_event.dart';
@@ -16,129 +17,156 @@ import 'package:sales_agent/logic/blocs/new_order_bloc/new_order_state.dart';
 
 import '../../core/styles_text.dart';
 
-Future dialogComment({required BuildContext context, required int order}) {
+Future dialogComment({
+  required BuildContext context,
+  required int order,
+  required int clientId,
+  required String clientUUid,
+}) {
   return showDialog(
     context: context,
     barrierDismissible: false,
     builder: (context) {
-      return  DialogCommentUI(orderId: order);
+      return DialogCommentUI(
+        orderId: order,
+        clientId: clientId,
+        clientUUid: clientUUid,
+      );
     },
   );
 }
 
 class DialogCommentUI extends StatelessWidget {
   final int orderId;
+  final int clientId;
+  final String clientUUid;
 
-  const DialogCommentUI({super.key, required this.orderId});
+  const DialogCommentUI({
+    super.key,
+    required this.orderId,
+    required this.clientId,
+    required this.clientUUid,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) =>
           NewOrderBloc(NewOrderRepository(), context)
-            ..add(LoadCommentEvent(orderId)),
-      child: DialogContent(orderId: orderId),
+            ..add(LoadCommentEvent(orderId, clientId, clientUUid)),
+      child: DialogContent(
+        orderId: orderId,
+        clientId: clientId,
+        clientUUid: clientUUid,
+      ),
     );
   }
 }
 
 class DialogContent extends StatefulWidget {
   final int orderId;
+  final int clientId;
+  final String clientUUid;
 
-  const DialogContent({super.key, required this.orderId});
+  const DialogContent({
+    super.key,
+    required this.orderId,
+    required this.clientId,
+    required this.clientUUid,
+  });
 
   @override
   State<DialogContent> createState() => _DialogContentState();
 }
 
 class _DialogContentState extends State<DialogContent> {
-  final TextEditingController commentController = TextEditingController();
+  final TextEditingController commentControllerSimpl = TextEditingController();
   final TextEditingController commentControllerTel = TextEditingController();
-  final TextEditingController commentControllerComment = TextEditingController();
-  final TextEditingController commentControllerUser = TextEditingController();
+  final TextEditingController commentControllerComment =
+      TextEditingController();
+  final TextEditingController commentControllerUserName =
+      TextEditingController();
+  final TextEditingController commentControllerUserSurname =
+      TextEditingController();
+  final TextEditingController commentControllerAddress =
+      TextEditingController();
   final FocusNode telFocus = FocusNode();
   final FocusNode commentFocus = FocusNode();
-  final FocusNode userFocus = FocusNode();
+  final FocusNode userNameFocus = FocusNode();
+  final FocusNode userSurnameFocus = FocusNode();
+  final FocusNode addressFocus = FocusNode();
+  bool saveComment = false;
 
   @override
   void initState() {
     super.initState();
   }
+
   @override
   void dispose() {
-    commentController.dispose();
+    commentControllerSimpl.dispose();
     commentControllerTel.dispose();
     commentControllerComment.dispose();
-    commentControllerUser.dispose();
+    commentControllerUserName.dispose();
+    commentControllerUserSurname.dispose();
+    commentControllerAddress.dispose();
 
     telFocus.dispose();
-    userFocus.dispose();
+    userNameFocus.dispose();
     commentFocus.dispose();
+    userSurnameFocus.dispose();
+    addressFocus.dispose();
 
     super.dispose();
   }
 
   // Парсим комментарий из базы
-  void _loadComment(String comment) {
-    if (comment.isEmpty) return;
-
-    try {
-      Map<String, dynamic> data = jsonDecode(comment);
+  void _loadComment(ModelCommentClient comment, String commentServer) {
+    if (comment.saveComment) {
       setState(() {
-        commentControllerTel.text = data['tel'] ?? '';
-        commentControllerUser.text = data['person'] ?? '';
-        commentControllerComment.text = data['comment'] ?? '';
-        commentController.text = comment;
+        commentControllerTel.text = comment.phone ?? '';
+        commentControllerUserName.text = comment.name ?? '';
+        commentControllerUserSurname.text = comment.surName ?? '';
+        commentControllerAddress.text = comment.address ?? '';
+        commentControllerComment.text = comment.comment ?? '';
+        saveComment = comment.saveComment;
       });
-    } catch (e) {
-      // Если это не JSON, показываем в первом поле
-      commentController.text = comment;
+    } else {
+      commentControllerComment.text = commentServer;
     }
-  }
-
-  // Собираем комментарий для сохранения
-  String _buildComment() {
-    Map<String, String> data = {
-      'tel': commentControllerTel.text.trim(),
-      'person': commentControllerUser.text.trim(),
-      'comment': commentControllerComment.text.trim(),
-    };
-    return jsonEncode(data);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<NewOrderBloc, NewOrderState>(
-        listener: (context, state) {
-          if (state is CommentLoadedState) {
-            print(state.comment);
-            _loadComment(state.comment);
-          }
-        },
-      
-        child: AlertDialog(
-          constraints:  BoxConstraints(
-            maxWidth: 800.w,
-          //  minHeight: 450.h,
-          //  maxHeight: 450.h,
-            minWidth: 800.w,
-          ),
-          backgroundColor: containerColor,
-          content: SafeArea(
-            child: SingleChildScrollView(
-              child: contentSupra(
-                  context: context,
-                  controllerTel: commentControllerTel,
-                  controllerUser: commentControllerUser,
-                  controllerComment: commentControllerComment,
-                  order: widget.orderId,
-                  focusNode: telFocus,
-              ),
-            )
-                  //  contentSimp(context, commentController, widget.orderId)
+      listener: (context, state) {
+        if (state is CommentLoadedState) {
+          print(state.comment);
+          _loadComment(state.comment, state.commentToServer);
+        }
+      },
 
+      child: AlertDialog(
+        constraints: BoxConstraints(maxWidth: 800.w, minWidth: 800.w),
+        backgroundColor: containerColor,
+        content: SafeArea(
+          child: SingleChildScrollView(
+            child: contentSupra(
+              context: context,
+              controllerTel: commentControllerTel,
+              controllerUser: commentControllerUserName,
+              controllerComment: commentControllerComment,
+              controllerAddress: commentControllerAddress,
+              controllerUserSurname: commentControllerUserSurname,
+              order: widget.orderId,
+              clientUUid: widget.clientUUid,
+              clientId: widget.clientId,
+              focusNode: telFocus,
+            ),
           ),
+          //  contentSimp(context, commentControllerSimp, widget.orderId)
         ),
+      ),
     );
   }
 
@@ -147,102 +175,142 @@ class _DialogContentState extends State<DialogContent> {
     required TextEditingController controllerTel,
     required TextEditingController controllerUser,
     required TextEditingController controllerComment,
+    required TextEditingController controllerUserSurname,
+    required TextEditingController controllerAddress,
     required FocusNode focusNode,
     required int order,
+    required int clientId,
+    required String clientUUid,
   }) {
-    PhoneNumber number = PhoneNumber(
-      isoCode: 'MD', // MD / RO / RU — подставь нужное
-    );
-    return  Column(
-        children: [
-          Row(
-            children: [
-              Text('comment.title'.tr(), style: textStyleDialogClient),
-              Spacer(),
-              GestureDetector(
-                onTap: () {
-                  final comment = _buildComment();
-                  context.read<NewOrderBloc>().add(
-                    AddCommentEvent(order, comment),
-                  );
-                  Navigator.pop(context);
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
+    PhoneNumber number = PhoneNumber(isoCode: 'MD');
+    return Column(
+      children: [
+        Row(
+          children: [
+            Text('comment.title'.tr(), style: textStyleDialogClient),
+            Spacer(),
+            ElevatedButton.icon(
+              onPressed: () {
+                final modelComment = ModelCommentClient(
+                  name: controllerUser.text,
+                  comment: controllerComment.text,
+                  phone: controllerTel.text,
+                  address: controllerAddress.text,
+                  surName: controllerUserSurname.text,
+                  saveComment: saveComment,
+                  clientUUid: clientUUid,
+                );
+                print(clientUUid);
+                context.read<NewOrderBloc>().add(
+                  AddCommentEvent(order, modelComment, clientId),
+                );
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.save_as_sharp, size: 25.r),
+              label: Text('comment.btSave'.tr(), style: buttonTextStyle.copyWith(
+                fontWeight: FontWeight.w300
+              ),),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: buttonColor,
+                foregroundColor: Colors.white,
+                shape: StadiumBorder(),
+                padding: EdgeInsets.symmetric(horizontal: 18.w, vertical: 10.h),
+              ),
+            ),
+            SizedBox(width: 20.w),
+            InkWell(
+              onTap: () => Navigator.pop(context),
+              borderRadius: BorderRadius.circular(10.r),
+              child: Container(
+                width: 32.r,
+                height: 32.r,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: borderColor),
+                ),
+                child: SvgPicture.asset('assets/icons/close.svg'),
+              ),
+            ),
+          ],
+        ),
+        BlocBuilder<NewOrderBloc, NewOrderState>(
+          builder: (context, state) {
+            if (state is CommentLoadingState) {
+              return Center(child: CircularProgressIndicator());
+            }
+            return Column(
+              children: [
+                // Поле: Телефон
+                _buildTextFieldTel(
+                  controller: controllerTel,
+                  label: 'comment.tel'.tr(),
+                  hint: 'comment.hintTel'.tr(),
+                  isoCode: number,
+                ),
+                // Поле: Человек
+                Row(
                   children: [
-                    Container(
-                      constraints: BoxConstraints(
-                        maxHeight: 50.h,
-                        maxWidth: 100.w,
+                    Expanded(
+                      child: _buildTextField(
+                        controller: controllerUser,
+                        label: 'comment.personName'.tr(),
+                        hint: 'comment.hintPerson'.tr(),
                       ),
-                      //  padding: EdgeInsets.symmetric(vertical: 6.h, horizontal: 25.w),
-                      alignment: Alignment.center,
-                      //   margin: EdgeInsets.only(bottom: 0.w),
-                      decoration: BoxDecoration(
-                        color: buttonColor,
-                        borderRadius: BorderRadius.all(Radius.circular(100.r)),
-                        border: Border.all(color: borderColor, width: 1.w),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.save_outlined,
-                            color: Colors.white,
-                            size: 24.r,
-                          ),
-                          //  SizedBox(width: 8.h),
-                          //  Text('comment.btSave'.tr(), style: buttonTextStyle),
-                        ],
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: _buildTextField(
+                        controller: controllerUserSurname,
+                        label: 'comment.personSurname'.tr(),
+                        hint: 'comment.hintPersonSurname'.tr(),
                       ),
                     ),
                   ],
                 ),
-              ),
-              Spacer(),
-              GestureDetector(
-                onTap: () {
-                  Navigator.pop(context);
-                },
-                child: SvgPicture.asset('assets/icons/close.svg'),
-              ),
-            ],
-          ),
-           BlocBuilder<NewOrderBloc, NewOrderState>(
-              builder: (context, state) {
-                if (state is CommentLoadingState) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                return Column(
-                  children: [
-                    // Поле: Телефон
-                    _buildTextFieldTel(
-                      controller: controllerTel,
-                      label: 'comment.tel'.tr(),
-                      hint: 'comment.hintTel'.tr(),
-                      isoCode: number,
+                _buildTextField(
+                  controller: controllerAddress,
+                  label: 'comment.address'.tr(),
+                  hint: 'comment.hintAddress'.tr(),
+                ),
+                // Поле: Comment
+                _buildTextField(
+                  controller: controllerComment,
+                  label: 'comment.comment'.tr(),
+                  hint: 'comment.hintComment'.tr(),
+                  maxLines: 3,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: 6.w),
+                  child: GestureDetector(
+                    onTap: () => setState(() => saveComment = !saveComment),
+                    child: Row(
+                      children: [
+                        SvgPicture.asset(
+                          saveComment
+                              ? 'assets/icons/chek_box.svg'
+                              : 'assets/icons/chec_unbox.svg',
+                          width: 30.w,
+                          height: 30.h,
+                          fit: BoxFit.fill,
+                          color: saveComment ? colorBtAwait : colorBtJob,
+                        ),
+                        SizedBox(width: 15.w,),
+                        Text(
+                          "comment.chSaveComment".tr(),
+                          style: textStyleDialogOrderData.copyWith(
+                            fontWeight: FontWeight.w200,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
                     ),
-
-                    // Поле: Человек
-                    _buildTextField(
-                      controller: controllerUser,
-                      label: 'comment.person'.tr(),
-                      hint: 'comment.hintPerson'.tr(),
-                    ),
-                    // Поле: Comment
-
-                    _buildTextField(
-                    controller: controllerComment,
-                    label: 'comment.comment'.tr(),
-                    hint: 'comment.hintComment'.tr(),
-                    maxLines: 3,
-
-                    ),
-                  ],
-                );
-              },
-            ),
-        ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ],
     );
   }
 
@@ -256,18 +324,17 @@ class _DialogContentState extends State<DialogContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         SizedBox(height: 16.h),
         Text(label, style: textStyleAslTitle),
         SizedBox(height: 5.h),
         TextField(
           controller: controller,
-
           maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hint,
             hintStyle: textStyleDialogOrderData.copyWith(
               fontWeight: FontWeight.w200,
+              color: Colors.grey,
             ),
             enabledBorder: OutlineInputBorder(
               borderSide: BorderSide(color: borderColor),
@@ -326,9 +393,7 @@ class _DialogContentState extends State<DialogContent> {
               //  controller.text = value.phoneNumber.toString();
               print('onInputChanged: ${value.phoneNumber}');
             },
-            selectorConfig: SelectorConfig(
-              showFlags: true,
-            ),
+            selectorConfig: SelectorConfig(showFlags: true),
             ignoreBlank: true,
             autoValidateMode: AutovalidateMode.disabled,
             textFieldController: controller,
@@ -344,6 +409,7 @@ class _DialogContentState extends State<DialogContent> {
               hintText: hint,
               hintStyle: textStyleDialogOrderData.copyWith(
                 fontWeight: FontWeight.w200,
+                color: Colors.grey,
               ),
             ),
           ),
@@ -405,9 +471,9 @@ class _DialogContentState extends State<DialogContent> {
         Spacer(),
         GestureDetector(
           onTap: () {
-            context.read<NewOrderBloc>().add(
-              AddCommentEvent(order, controller.text),
-            );
+            //  context.read<NewOrderBloc>().add(
+            //    AddCommentEvent(order, controller.text),
+            //   );
           },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,

@@ -23,6 +23,11 @@ class SplashApi{
 
   Future<ModelResponseUrl> registerUrl() async {
     ModelPostUrl deviceInfo;
+    const env = String.fromEnvironment('ENV');
+
+    String baseUrl = env == 'dev'
+        ? constants.API_DEV_LICENSE
+        : constants.API_LICENSE;
 
     String licenseCode = await repository.getApiKey() ?? '';
     if (Platform.isAndroid) {
@@ -30,7 +35,8 @@ class SplashApi{
     } else {
       deviceInfo = await platformWindows(licenseCode);
     }
-    final url = Uri.parse('${constants.API_LICENSE}GetURI');
+    print(baseUrl);
+    final url = Uri.parse('${baseUrl}GetURI');
     final String basicAuth =
         'Basic ${base64Encode(utf8.encode('${constants.USERNAME}:${constants.PASSWORD}'))}';
     final response = await http.post(url, headers: {

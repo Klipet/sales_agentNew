@@ -15,6 +15,8 @@ class ToastResponseNewOrder {
 
   void toastSucces() {
     CustomToast.showCustom(
+      animationDuration: Duration(seconds: 5),
+      autoCloseDuration: Duration(milliseconds: 300),
       width: 565.w,
       height:160.h,
       context: context,
@@ -31,6 +33,8 @@ class ToastResponseNewOrder {
 
   void toastError() {
     CustomToast.showCustom(
+      animationDuration: Duration(seconds: 5),
+      autoCloseDuration: Duration(milliseconds: 300),
       width: 565.w,
       height: 241.h,
       context: context,
@@ -45,6 +49,8 @@ class ToastResponseNewOrder {
     );
   }void toastTokenInvalid() {
     CustomToast.showCustom(
+      animationDuration: Duration(seconds: 5),
+      autoCloseDuration: Duration(milliseconds: 300),
       context: context,
       onDismiss: () {},
       builder: (context, dismiss) {
@@ -59,6 +65,8 @@ class ToastResponseNewOrder {
 
   void toastSave() {
     CustomToast.showCustom(
+      animationDuration: Duration(seconds: 5),
+      autoCloseDuration: Duration(milliseconds: 300),
       context: context,
       onDismiss: () {},
       builder: (context, dismiss) {

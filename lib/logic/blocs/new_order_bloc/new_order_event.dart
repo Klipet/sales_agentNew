@@ -1,4 +1,5 @@
 import 'package:isar/isar.dart';
+import 'package:sales_agent/data/models_api/model_comment_clietn.dart';
 import 'package:sales_agent/data/models_api/models_client/ourlets_response.dart';
 import 'package:sales_agent/data/models_api/models_client_detail/client_detail.dart';
 import 'package:sales_agent/data/models_db/model_db_clients/model_outlens_db.dart';
@@ -86,12 +87,15 @@ class DeleteOrderEvent extends NewOrderEvent {}
 
 class AddCommentEvent extends NewOrderEvent {
   final int orderId;
-  final String comment;
-  AddCommentEvent(this.orderId, this.comment);
+  final ModelCommentClient? modelCommentClietn;
+  final int clientId;
+  AddCommentEvent(this.orderId, this.modelCommentClietn, this.clientId);
 }
 
 class LoadCommentEvent extends NewOrderEvent {
   final int orderId;
+  final int clientId;
+  final String clientUUid;
 
-  LoadCommentEvent(this.orderId);
+  LoadCommentEvent(this.orderId, this.clientId, this.clientUUid);
 }

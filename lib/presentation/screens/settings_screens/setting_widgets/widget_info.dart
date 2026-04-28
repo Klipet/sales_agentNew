@@ -28,10 +28,10 @@ class _WidgetInfoState extends State<WidgetInfo> {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         FutureBuilder<String?>(
-          future: modalApi.getApiKey(),
+          future: modalApi.getlicenseCode(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return const Text("Загрузка API KEY...");
+              return const Text("Загрузка Кода лицензий...");
             }
             return textInfo('settings.licensia'.tr(), snapshot.data ?? '' );
           },

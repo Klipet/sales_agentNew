@@ -1,5 +1,6 @@
 
 import 'package:isar/isar.dart';
+import 'model_comment_client_db.dart';
 import 'model_outlens_db.dart';
 
 part 'model_client_db.g.dart';
@@ -15,7 +16,8 @@ class ModelClientDb{
   late String? pricelistUid;
   late String? tvaCode;
   late String? uid;
-  final  outlets = IsarLinks<ModelOutlensDb>();
+  final outlets = IsarLinks<ModelOutlensDb>();
+  final commentClient = IsarLinks<ModelCommentClientDb>();
 
   ModelClientDb({
     this.balance,

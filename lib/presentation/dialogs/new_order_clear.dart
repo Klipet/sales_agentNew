@@ -40,24 +40,6 @@ Future<bool?> showDeleteConfirmation ({
 
         actions: [
           GestureDetector(
-            onTap: () => Navigator.of(contextDigital).pop(false),
-            child: Container(
-              alignment: Alignment.center,
-              constraints: BoxConstraints(
-                maxWidth: 153.w,
-                maxHeight: 48.h,
-                minWidth: 153.w,
-                minHeight: 48.h,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: borderColor, width: 1),
-                borderRadius: BorderRadius.all(Radius.circular(25.r)),
-              ),
-              child: Text('btClear.no'.tr(), style: textStyleTableDialogDelete),
-            ),
-          ),
-          GestureDetector(
             onTap: ()  {
               Navigator.of(contextDigital).pop(true);
             },
@@ -77,6 +59,24 @@ Future<bool?> showDeleteConfirmation ({
                 'btClear.da'.tr(),
                 style: textStyleTableDialogDelete.copyWith(color: Colors.white),
               ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => Navigator.of(contextDigital).pop(false),
+            child: Container(
+              alignment: Alignment.center,
+              constraints: BoxConstraints(
+                maxWidth: 153.w,
+                maxHeight: 48.h,
+                minWidth: 153.w,
+                minHeight: 48.h,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: borderColor, width: 1),
+                borderRadius: BorderRadius.all(Radius.circular(25.r)),
+              ),
+              child: Text('btClear.no'.tr(), style: textStyleTableDialogDelete),
             ),
           ),
         ],

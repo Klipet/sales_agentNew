@@ -62,38 +62,43 @@ const ModelLinesDbSchema = CollectionSchema(
       name: r'price',
       type: IsarType.double,
     ),
-    r'priceSpecial': PropertySchema(
+    r'priceActie': PropertySchema(
       id: 9,
+      name: r'priceActie',
+      type: IsarType.double,
+    ),
+    r'priceSpecial': PropertySchema(
+      id: 10,
       name: r'priceSpecial',
       type: IsarType.double,
     ),
     r'processedCount': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'processedCount',
       type: IsarType.double,
     ),
     r'remain': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'remain',
       type: IsarType.double,
     ),
     r'sum': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'sum',
       type: IsarType.double,
     ),
     r'uid': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'uid',
       type: IsarType.string,
     ),
     r'unitName': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'unitName',
       type: IsarType.string,
     ),
     r'unitUid': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'unitUid',
       type: IsarType.string,
     )
@@ -151,13 +156,14 @@ void _modelLinesDbSerialize(
   writer.writeString(offsets[6], object.lineUuid);
   writer.writeBool(offsets[7], object.nonWhole);
   writer.writeDouble(offsets[8], object.price);
-  writer.writeDouble(offsets[9], object.priceSpecial);
-  writer.writeDouble(offsets[10], object.processedCount);
-  writer.writeDouble(offsets[11], object.remain);
-  writer.writeDouble(offsets[12], object.sum);
-  writer.writeString(offsets[13], object.uid);
-  writer.writeString(offsets[14], object.unitName);
-  writer.writeString(offsets[15], object.unitUid);
+  writer.writeDouble(offsets[9], object.priceActie);
+  writer.writeDouble(offsets[10], object.priceSpecial);
+  writer.writeDouble(offsets[11], object.processedCount);
+  writer.writeDouble(offsets[12], object.remain);
+  writer.writeDouble(offsets[13], object.sum);
+  writer.writeString(offsets[14], object.uid);
+  writer.writeString(offsets[15], object.unitName);
+  writer.writeString(offsets[16], object.unitUid);
 }
 
 ModelLinesDb _modelLinesDbDeserialize(
@@ -177,13 +183,14 @@ ModelLinesDb _modelLinesDbDeserialize(
   object.lineUuid = reader.readString(offsets[6]);
   object.nonWhole = reader.readBool(offsets[7]);
   object.price = reader.readDouble(offsets[8]);
-  object.priceSpecial = reader.readDouble(offsets[9]);
-  object.processedCount = reader.readDouble(offsets[10]);
-  object.remain = reader.readDouble(offsets[11]);
-  object.sum = reader.readDouble(offsets[12]);
-  object.uid = reader.readString(offsets[13]);
-  object.unitName = reader.readString(offsets[14]);
-  object.unitUid = reader.readString(offsets[15]);
+  object.priceActie = reader.readDouble(offsets[9]);
+  object.priceSpecial = reader.readDouble(offsets[10]);
+  object.processedCount = reader.readDouble(offsets[11]);
+  object.remain = reader.readDouble(offsets[12]);
+  object.sum = reader.readDouble(offsets[13]);
+  object.uid = reader.readString(offsets[14]);
+  object.unitName = reader.readString(offsets[15]);
+  object.unitUid = reader.readString(offsets[16]);
   return object;
 }
 
@@ -221,10 +228,12 @@ P _modelLinesDbDeserializeProp<P>(
     case 12:
       return (reader.readDouble(offset)) as P;
     case 13:
-      return (reader.readString(offset)) as P;
+      return (reader.readDouble(offset)) as P;
     case 14:
       return (reader.readString(offset)) as P;
     case 15:
+      return (reader.readString(offset)) as P;
+    case 16:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1253,6 +1262,72 @@ extension ModelLinesDbQueryFilter
   }
 
   QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      priceActieEqualTo(
+    double value, {
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'priceActie',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      priceActieGreaterThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'priceActie',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      priceActieLessThan(
+    double value, {
+    bool include = false,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'priceActie',
+        value: value,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
+      priceActieBetween(
+    double lower,
+    double upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    double epsilon = Query.epsilon,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'priceActie',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        epsilon: epsilon,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterFilterCondition>
       priceSpecialEqualTo(
     double value, {
     double epsilon = Query.epsilon,
@@ -2055,6 +2130,19 @@ extension ModelLinesDbQuerySortBy
     });
   }
 
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> sortByPriceActie() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priceActie', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy>
+      sortByPriceActieDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priceActie', Sort.desc);
+    });
+  }
+
   QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> sortByPriceSpecial() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'priceSpecial', Sort.asc);
@@ -2274,6 +2362,19 @@ extension ModelLinesDbQuerySortThenBy
     });
   }
 
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> thenByPriceActie() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priceActie', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy>
+      thenByPriceActieDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'priceActie', Sort.desc);
+    });
+  }
+
   QueryBuilder<ModelLinesDb, ModelLinesDb, QAfterSortBy> thenByPriceSpecial() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'priceSpecial', Sort.asc);
@@ -2427,6 +2528,12 @@ extension ModelLinesDbQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ModelLinesDb, ModelLinesDb, QDistinct> distinctByPriceActie() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'priceActie');
+    });
+  }
+
   QueryBuilder<ModelLinesDb, ModelLinesDb, QDistinct> distinctByPriceSpecial() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'priceSpecial');
@@ -2537,6 +2644,12 @@ extension ModelLinesDbQueryProperty
   QueryBuilder<ModelLinesDb, double, QQueryOperations> priceProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'price');
+    });
+  }
+
+  QueryBuilder<ModelLinesDb, double, QQueryOperations> priceActieProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'priceActie');
     });
   }
 

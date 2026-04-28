@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:sales_agent/data/providers/api_provider/client_api.dart';
 import 'package:sales_agent/data/providers/api_provider/login_api.dart';
 import 'package:sales_agent/data/providers/api_provider/orders_api.dart';
@@ -22,7 +21,6 @@ import 'package:sales_agent/presentation/widgets/home_drawer.dart';
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 
 import '../../core/colors_app.dart';
-import '../../core/errors/error_toast.dart';
 import '../../core/styles_text.dart';
 import '../../data/providers/api_provider/assotriment_api.dart';
 import '../../data/providers/api_provider/price_list_client_api.dart';
@@ -80,6 +78,7 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
   final TextEditingController _controllerLogin = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
   int _loadedCount = 0;
+  final lastAcess = LoginRepository();
   final int _totalCount = 4; // Количество блоков
 
   bool _isLoading = false;
@@ -108,18 +107,27 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
     return MultiBlocListener(
       listeners: [
         BlocListener<LoginBloc, LoginState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is LoginFailure) {
-              print(state.message);
               if(state.message == ''){
-                _onModuleError('Login','toast.loginError'.tr());
+                _onModuleErrorAuth('Login','toast.loginNotMatch'.tr());
               }else if(state.message == 'login nu concide'){
                 _onModuleErrorAuth('Login','toast.loginNotMatch'.tr());
               }
             } else if (state is LoginSuccess) {
               // Сбрасываем счётчик модулей
               _loadedCount = 0;
-              _refreshAllData();
+              final access = await lastAcess.getLastAces();
+              if(access?.day != DateTime.now().day){
+                lastAcess.setLastAces(DateTime.now());
+                _refreshAllData(lastAces: state.lastAcces);
+              }else{
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (_) => HomeDrawer()),
+                      (route) => false,
+                );
+              }
               _controllerPassword.clear();
               _controllerLogin.clear();
             }
@@ -372,21 +380,17 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
     );
   }
 
-  void _refreshAllData() {
+  void _refreshAllData({required DateTime lastAces}) {
     setState(() {
       _loadedCount = 0;
     });
-    print('_refreshAllData: internet ${widget.connectInternet}');
-  //  if (widget.connectInternet) {
+    print('_refreshAllData: internet ${widget.connectInternet} ${lastAces.day}');
+
+
       context.read<AssortimentBloc>().fetchAssortiment();
       context.read<DocumentsCubit>().fetchOrders();
       context.read<ClientsCubit>().fetchClients();
       context.read<PriceCubit>().fetchPriceList();
- //   } else {
-  //    _onModuleError('все модули', 'toast.updateFault'.tr());
- //   }
-
-    //  ToastResponseError(context: context, textError: 'Datele se sincronizează, așteptați').showUpdate();
   }
 
   void _onModuleLoaded(String moduleName) {

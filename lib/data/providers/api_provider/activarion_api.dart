@@ -7,8 +7,10 @@ import 'package:http/http.dart' as http;
 import 'package:network_info_plus/network_info_plus.dart';
 
 import 'package:sales_agent/data/models_api/models_api_server/model_response.dart';
+import 'package:sales_agent/data/providers/api_provider/log_request_post_api.dart';
 
 import '../../../core/constans.dart';
+import '../../models_api/models_api_server/log_request.dart';
 import '../../models_api/models_api_server/model_reg_app.dart';
 import '../../repositories/apikey_repositori.dart';
 
@@ -16,8 +18,10 @@ class ActivationApi {
   final deviceInfoPlugin = DeviceInfoPlugin();
   final Constant constants = Constant();
   final info = NetworkInfo();
+  final log = LogRequestPostApi();
 
   Future<ModelResponse?> activationLicense(String licenseCode) async {
+    const env = String.fromEnvironment('ENV');
     ModelRegApp deviceInfo;
     if (Platform.isAndroid) {
       deviceInfo = await platformAndroid(licenseCode);
@@ -25,48 +29,60 @@ class ActivationApi {
       deviceInfo = await platformWindows(licenseCode);
     }
     try {
-      final url = Uri.parse('${constants.API_LICENSE}RegisterApplication');
+      String baseUrl = env == 'dev'
+          ? constants.API_DEV_LICENSE
+          : constants.API_LICENSE;
+
+      print('$baseUrl + ${env.toString()}');
+      final url = Uri.parse('${baseUrl}RegisterApplication');
       final String basicAuth =
           'Basic ${base64Encode(utf8.encode('${constants.USERNAME}:${constants.PASSWORD}'))}';
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': basicAuth,
-        },
-        body: jsonEncode(deviceInfo.toJson()),
-      ).timeout(Duration(seconds: 5));
+      final response = await http
+          .post(
+            url,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': basicAuth,
+            },
+            body: jsonEncode(deviceInfo.toJson()),
+          )
+          .timeout(Duration(seconds: 5));
       if (response.statusCode == 200) {
         final responseJson = jsonDecode(response.body);
         final apiResponse = ModelResponse.fromJson(responseJson);
-
         if (apiResponse.errorCode == 0 && apiResponse.appData != null) {
           return apiResponse;
-        }else if(apiResponse.errorCode == 124){
+        } else if (apiResponse.errorCode == 124) {
           return ModelResponse(
             errorMessage: 'errors.incorrectLicense'.tr(),
             errorCode: 124,
-            appData: null
+            appData: null,
           );
-        }else if(apiResponse.errorCode == 184){
+        } else if (apiResponse.errorCode == 184) {
           return ModelResponse(
-              errorMessage: 'errors.errorCode'.tr(),
-              errorCode: 124,
-              appData: null
+            errorMessage: 'errors.errorCode'.tr(),
+            errorCode: 124,
+            appData: null,
+          );
+        } else {
+          return ModelResponse(
+            errorMessage: 'errors.errorCode'.tr(),
+            errorCode: 124,
+            appData: null,
           );
         }
       }
     } catch (e) {
       return ModelResponse(
-          errorMessage: 'errors.errorCode'.tr(),
-          errorCode: 184,
-          appData: null
+        errorMessage: 'errors.errorCode'.tr(),
+        errorCode: 184,
+        appData: null,
       );
     }
     return ModelResponse(
-        errorMessage: 'errors.errorCode'.tr(),
-        errorCode: 184,
-        appData: null
+      errorMessage: 'errors.errorCode'.tr(),
+      errorCode: 184,
+      appData: null,
     );
   }
 
@@ -152,7 +168,7 @@ class ActivationApi {
         throw Exception('Failed to get public IP');
       }
     } catch (e) {
-    //  print('Error fetching public IP: $e');
+      //  print('Error fetching public IP: $e');
       return 'Unknown';
     }
   }

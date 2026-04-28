@@ -7,4 +7,6 @@ class ModelApikey {
   Id id = 0;
   late String apiKey;
   late String uri;
+  late String codeLicense;
+  late String company;
 }

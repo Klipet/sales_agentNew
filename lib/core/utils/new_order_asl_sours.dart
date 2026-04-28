@@ -15,8 +15,7 @@ class NewOrderAslSours extends DataGridSource {
   onIncrement;
   final Function(int lineId, double currentCount, ModelLinesDb item)?
   onDecrement;
-  final Function(int lineId, double newValue, ModelLinesDb item)?
-  onSetValue;
+  final Function(int lineId, double newValue, ModelLinesDb item)? onSetValue;
 
 
   NewOrderAslSours({
@@ -24,8 +23,8 @@ class NewOrderAslSours extends DataGridSource {
     this.onIncrement,
     this.onDecrement,
     this.onSetValue,
-
   });
+
   final Map<int, TextEditingController> _controllers = {};
 
   List<DataGridRow> _rows = [];
@@ -34,9 +33,7 @@ class NewOrderAslSours extends DataGridSource {
   TextEditingController _getController(ModelLinesDb line) {
     return _controllers.putIfAbsent(
       line.id,
-          () => TextEditingController(
-        text: (line.count ?? 0).toStringAsFixed(2),
-      ),
+      () => TextEditingController(text: (line.count ?? 0).toStringAsFixed(2)),
     );
   }
 
@@ -58,7 +55,14 @@ class NewOrderAslSours extends DataGridSource {
           ),
           DataGridCell<double>(columnName: 'count', value: line.count ?? 0.0),
           DataGridCell<double>(columnName: 'price', value: line.price ?? 0.0),
-          DataGridCell<double>(columnName: 'priceSp', value: line.priceSpecial ?? 0.0),
+          DataGridCell<double>(
+            columnName: 'priceSp',
+            value: line.priceSpecial ?? 0.0,
+          ),
+          DataGridCell<double>(
+            columnName: 'priceActie',
+            value: line.priceActie ?? 0.0,
+          ),
           DataGridCell<double>(columnName: 'sum', value: line.sum ?? 0.0),
           DataGridCell<ModelLinesDb>(columnName: 'actions', value: line),
         ],
@@ -145,14 +149,18 @@ class NewOrderAslSours extends DataGridSource {
                   child: TextField(
                     controller: _getController(line),
                     textAlign: TextAlign.center,
-                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     style: textStyleTableCount,
                     decoration: const InputDecoration(
                       border: InputBorder.none,
                       isDense: true,
                     ),
                     onSubmitted: (value) {
-                      final parsed = double.tryParse(value.replaceAll(',', '.'));
+                      final parsed = double.tryParse(
+                        value.replaceAll(',', '.'),
+                      );
                       if (parsed != null) {
                         // ✅ Правильный вызов с 3 параметрами
                         onSetValue?.call(line.id, parsed, line);
@@ -177,39 +185,58 @@ class NewOrderAslSours extends DataGridSource {
               ],
             ),
           );
-        }if (cell.columnName == 'price') {
+        }
+        if (cell.columnName == 'price') {
           // получаем value из priceSp
-          final priceSpValue = row.getCells().firstWhere(
-                (c) => c.columnName == 'priceSp',
-          ).value as double?;
-          final price = row.getCells().firstWhere(
-                (c) => c.columnName == 'price',
-          ).value as double?;
-          if(priceSpValue == price){
-
-          return Container(
-            alignment: Alignment.centerRight,
-            padding: EdgeInsets.only(right: 16.r),
-            decoration: BoxDecoration(
-              color: containerColor,
-              border: borderSideTable(cell),
-            ),
-            child: Text(
-              priceSpValue!.toStringAsFixed(2),
-              style: textStyleDialogOrderContent.copyWith(color: Colors.red),
-            ),
-          );}else{
+          final priceSpValue =
+              row.getCells().firstWhere((c) => c.columnName == 'priceSp').value
+                  as double?;
+          final price =
+              row.getCells().firstWhere((c) => c.columnName == 'price').value
+                  as double?;
+          final priceActie =
+          row.getCells().firstWhere((c) => c.columnName == 'priceActie').value
+          as double?;
+          print("$priceSpValue == $price == $priceActie");
+          if (priceSpValue == price) {
             return Container(
-                alignment: Alignment.centerRight,
-                padding: EdgeInsets.only(right: 16.r),
-                decoration: BoxDecoration(
-                  color: containerColor,
-                  border: borderSideTable(cell),
-                ),
-                child: Text(
-                  price!.toStringAsFixed(2),
-                  style: textStyleDialogOrderContent,
-                ));
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 16.r),
+              decoration: BoxDecoration(
+                color: containerColor,
+                border: borderSideTable(cell),
+              ),
+              child: Text(
+                priceSpValue!.toStringAsFixed(2),
+                style: textStyleDialogOrderContent.copyWith(color: Colors.red),
+              ),
+            );
+          }else if (priceActie! > 0) {
+            return Container(
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 16.r),
+              decoration: BoxDecoration(
+                color: containerColor,
+                border: borderSideTable(cell),
+              ),
+              child: Text(
+                priceActie!.toStringAsFixed(2),
+                style: textStyleDialogOrderContent.copyWith(color: Colors.red),
+              ),
+            );
+          }else {
+            return Container(
+              alignment: Alignment.centerRight,
+              padding: EdgeInsets.only(right: 16.r),
+              decoration: BoxDecoration(
+                color: containerColor,
+                border: borderSideTable(cell),
+              ),
+              child: Text(
+                price!.toStringAsFixed(2),
+                style: textStyleDialogOrderContent,
+              ),
+            );
           }
         }
         return newOrderTable(cell, isFirst);

@@ -11,7 +11,10 @@ class LoginInitial extends LoginState {}
 
 class LoginLoading extends LoginState {}
 
-class LoginSuccess extends LoginState {}
+class LoginSuccess extends LoginState {
+  final DateTime lastAcces;
+  const LoginSuccess(this.lastAcces);
+}
 
 class LoginFailure extends LoginState {
   final String message;

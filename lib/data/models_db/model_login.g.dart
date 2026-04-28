@@ -17,33 +17,38 @@ const ModelLoginSchema = CollectionSchema(
   name: r'ModelLogin',
   id: 7505315058451117507,
   properties: {
-    r'login': PropertySchema(
+    r'lastAcces': PropertySchema(
       id: 0,
+      name: r'lastAcces',
+      type: IsarType.dateTime,
+    ),
+    r'login': PropertySchema(
+      id: 1,
       name: r'login',
       type: IsarType.string,
     ),
     r'password': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'password',
       type: IsarType.string,
     ),
     r'savePass': PropertySchema(
-      id: 2,
+      id: 3,
       name: r'savePass',
       type: IsarType.bool,
     ),
     r'tokenUid': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'tokenUid',
       type: IsarType.string,
     ),
     r'tokenValid': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'tokenValid',
       type: IsarType.string,
     ),
     r'userName': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'userName',
       type: IsarType.string,
     )
@@ -82,12 +87,13 @@ void _modelLoginSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.login);
-  writer.writeString(offsets[1], object.password);
-  writer.writeBool(offsets[2], object.savePass);
-  writer.writeString(offsets[3], object.tokenUid);
-  writer.writeString(offsets[4], object.tokenValid);
-  writer.writeString(offsets[5], object.userName);
+  writer.writeDateTime(offsets[0], object.lastAcces);
+  writer.writeString(offsets[1], object.login);
+  writer.writeString(offsets[2], object.password);
+  writer.writeBool(offsets[3], object.savePass);
+  writer.writeString(offsets[4], object.tokenUid);
+  writer.writeString(offsets[5], object.tokenValid);
+  writer.writeString(offsets[6], object.userName);
 }
 
 ModelLogin _modelLoginDeserialize(
@@ -98,12 +104,13 @@ ModelLogin _modelLoginDeserialize(
 ) {
   final object = ModelLogin();
   object.id = id;
-  object.login = reader.readString(offsets[0]);
-  object.password = reader.readString(offsets[1]);
-  object.savePass = reader.readBool(offsets[2]);
-  object.tokenUid = reader.readString(offsets[3]);
-  object.tokenValid = reader.readString(offsets[4]);
-  object.userName = reader.readString(offsets[5]);
+  object.lastAcces = reader.readDateTime(offsets[0]);
+  object.login = reader.readString(offsets[1]);
+  object.password = reader.readString(offsets[2]);
+  object.savePass = reader.readBool(offsets[3]);
+  object.tokenUid = reader.readString(offsets[4]);
+  object.tokenValid = reader.readString(offsets[5]);
+  object.userName = reader.readString(offsets[6]);
   return object;
 }
 
@@ -115,16 +122,18 @@ P _modelLoginDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTime(offset)) as P;
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
-      return (reader.readBool(offset)) as P;
-    case 3:
       return (reader.readString(offset)) as P;
+    case 3:
+      return (reader.readBool(offset)) as P;
     case 4:
       return (reader.readString(offset)) as P;
     case 5:
+      return (reader.readString(offset)) as P;
+    case 6:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -267,6 +276,60 @@ extension ModelLoginQueryFilter
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.between(
         property: r'id',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition> lastAccesEqualTo(
+      DateTime value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'lastAcces',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition>
+      lastAccesGreaterThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'lastAcces',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition> lastAccesLessThan(
+    DateTime value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'lastAcces',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterFilterCondition> lastAccesBetween(
+    DateTime lower,
+    DateTime upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'lastAcces',
         lower: lower,
         includeLower: includeLower,
         upper: upper,
@@ -962,6 +1025,18 @@ extension ModelLoginQueryLinks
 
 extension ModelLoginQuerySortBy
     on QueryBuilder<ModelLogin, ModelLogin, QSortBy> {
+  QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> sortByLastAcces() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAcces', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> sortByLastAccesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAcces', Sort.desc);
+    });
+  }
+
   QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> sortByLogin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'login', Sort.asc);
@@ -1049,6 +1124,18 @@ extension ModelLoginQuerySortThenBy
     });
   }
 
+  QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> thenByLastAcces() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAcces', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> thenByLastAccesDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'lastAcces', Sort.desc);
+    });
+  }
+
   QueryBuilder<ModelLogin, ModelLogin, QAfterSortBy> thenByLogin() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'login', Sort.asc);
@@ -1124,6 +1211,12 @@ extension ModelLoginQuerySortThenBy
 
 extension ModelLoginQueryWhereDistinct
     on QueryBuilder<ModelLogin, ModelLogin, QDistinct> {
+  QueryBuilder<ModelLogin, ModelLogin, QDistinct> distinctByLastAcces() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'lastAcces');
+    });
+  }
+
   QueryBuilder<ModelLogin, ModelLogin, QDistinct> distinctByLogin(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -1171,6 +1264,12 @@ extension ModelLoginQueryProperty
   QueryBuilder<ModelLogin, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<ModelLogin, DateTime, QQueryOperations> lastAccesProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'lastAcces');
     });
   }
 

@@ -9,7 +9,7 @@ class AssortimentInitial extends AssortimentState {}
 class AssortimentLoading extends AssortimentState {}
 
 class AssortimentSuccess extends AssortimentState {
-  final List<AssortimentModel> orders;
+  final List<ModelAssortimentDB> orders;
   AssortimentSuccess(this.orders);
 }
 

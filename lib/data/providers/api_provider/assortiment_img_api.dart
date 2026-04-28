@@ -11,25 +11,23 @@ class AssortimentImgApi{
 
   Future<AssortimentImgResponse> postImg({
     required Map<String, dynamic> orderData,
+    http.Client? client,
   }) async{
     final url = await apikeyRepository.getUrl();
+    final usedClient = client ?? http.Client();
     try {
       final jsonString = jsonEncode(orderData);
       final baseUrl = url!.endsWith("/") ? url : "$url/";
       final urlPars = Uri.parse(baseUrl)
-          .resolve(
-          'json/GetAssortimentImages');
-      print(urlPars);
-      print("JSON отправки:");
-      print(jsonString);
-      final ordersResponse = await http.post(
+          .resolve('json/GetAssortimentImages');
+      final ordersResponse = await usedClient.post(
         urlPars,
         headers: {
           'Content-Type': 'application/json; charset=utf-8', // ✅ ОБЯЗАТЕЛЬНО!
           'Accept': 'application/json',
         },
         body: jsonString,
-      ).timeout(const Duration(seconds: 30));
+      ).timeout(const Duration(seconds: 5));
       if (ordersResponse.statusCode == 200) {
         final data = jsonDecode(ordersResponse.body);
         return AssortimentImgResponse.fromJson(data);
@@ -41,9 +39,14 @@ class AssortimentImgApi{
     }on FormatException catch (e) {
       throw Exception('Ошибка формата данных (JSON): $e');
     } catch(e,  stack){
+      usedClient.close();
       throw Exception(
         'Ошибка сервера 2: ${e}, ${stack}',
       );
+    } finally {
+      if (client == null) {
+        usedClient.close(); // закрываем только если мы сами создавали клиент
+      }
     }
   }
 

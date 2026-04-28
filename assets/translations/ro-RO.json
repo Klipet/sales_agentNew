@@ -27,7 +27,8 @@
     "address": "Adresă: {address}",
     "status": "Status: {status}",
     "sum": "Suma comenzii: {sum}",
-    "btText": "Vezi comanda"
+    "btText": "Vezi comanda",
+    "titleHome": "Nu ai nicio comandă"
   },
 
   "home": {
@@ -146,7 +147,8 @@
     "comment": "Cemmentariu",
     "commHint": "Introduceți comentariul pentru comanda",
     "commSave": "Salvare commentariu",
-    "btOrder": "Comandă"
+    "btOrder": "Comandă",
+    "updatePrice": "Verifică reducerea"
   },
   "newOrderdialog": {
     "price": "Preț unitar",
@@ -179,7 +181,8 @@
     "sendError": "Transmiterea a eșuat!",
     "sendErrorSub": "Comanda a fost salvată în șabloane, încercați să o transmiteți mai târziu.",
     "sendErrorToken": "Comanda a fost salvată în șabloane, token a o experat",
-    "saveTemp": "Șablonul a fost salvat cu succes!"
+    "saveTemp": "Șablonul a fost salvat cu succes!",
+    "updatePrice": "Verificăm reducerea"
   },
   "documents": {
     "asl": "Assortiment",
@@ -191,10 +194,15 @@
     "title": "Cemmentariu",
     "tel": "Telefon",
     "hintTel": "Introduceți numerul la telefon",
-    "person": "Persoană",
+    "personName": "Numele",
     "hintPerson": "Introduceți numele persoanei",
+    "personSurname": "Prenumele",
+    "hintPersonSurname": "Introduceți prenume persoanei",
+    "address": "Adresa",
+    "hintAddress": "Introduceți adresa",
     "comment": "Commentariu",
     "hintComment": "Introduceți commentariu",
-    "btSave": "Salvare"
+    "btSave": "Salvare",
+    "chSaveComment": "Salvare comentariului in baza locala"
   }
 }

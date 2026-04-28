@@ -11,4 +11,6 @@ class ModelLogin {
   late String tokenValid;
   late String userName;
   late bool savePass;
+  late DateTime lastAcces;
+
 }

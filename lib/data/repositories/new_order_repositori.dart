@@ -4,6 +4,7 @@ import 'package:sales_agent/data/models_db/model_db_orders/model_document_db.dar
 import 'package:sales_agent/data/models_db/model_db_orders/model_lines_db.dart';
 import 'package:uuid/uuid.dart';
 
+import '../models_api/models_actie_price/client_price_response.dart';
 import '../models_api/models_client_prices/prices.dart';
 import '../models_db/model_db_assortiment/model_assortiment_db.dart';
 import '../models_db/model_db_clients/model_client_db.dart';
@@ -61,7 +62,6 @@ class NewOrderRepository {
   Future<int> addOutland({
     OutletsResponse? outlet,
     required int orderId,
-
   }) async {
     final isar = await DbProvider.instance();
     String? deliveryAddress;
@@ -112,6 +112,39 @@ class NewOrderRepository {
     });
   }
 
+  Future<void> savePricesToIsar({
+    required Id orderId,
+    required List<PriceItem> prices,
+  }) async {
+    final isar = Isar.getInstance()!;
+
+    final order = await isar.modelDocumentDbs.get(orderId);
+    if (order == null) throw Exception('Заказ с ID $orderId не найден');
+
+    await order.lines.load();
+    final lines = order.lines.toList();
+
+    // создаём map для быстрого поиска по assortimentUid
+    final priceMap = {for (var p in prices) p.assortimentUid: p.price};
+
+    final updatedLines = <ModelLinesDb>[];
+
+    for (final line in lines) {
+      final newPrice = priceMap[line.assortimentUid];
+      if (newPrice != null && newPrice < line.price) {
+        line.priceActie = newPrice;
+        line.sum = double.parse((newPrice * line.count).toStringAsFixed(2));
+        updatedLines.add(line);
+      }
+    }
+
+    if (updatedLines.isNotEmpty) {
+      await isar.writeTxn(() async {
+        await isar.modelLinesDbs.putAll(updatedLines);
+      });
+    }
+  }
+
 
 
   /// Добавление товара в заказ
@@ -155,6 +188,7 @@ class NewOrderRepository {
         ..unitName = item.unitName ?? 'шт'
         ..price = price
         ..priceSpecial = specilPrice
+        ..priceActie = 0.0
         ..sum = sum
         ..uid = '00000000-0000-0000-0000-000000000000'
         ..unitUid = ''
@@ -264,7 +298,7 @@ class NewOrderRepository {
 
       // Обновляем количество и сумму
       line.count = newQuantity;
-      line.sum = line.price * newQuantity;
+      line.sum = line.priceActie == 0 ? line.price * newQuantity: line.priceActie*newQuantity;
       line.processedCount = newQuantity;
 
       // Добавляем новую сумму
@@ -342,6 +376,9 @@ class NewOrderRepository {
         ..processedCount = lines.processedCount
         ..sum = lines.sum
         ..uid = lines.uid
+        ..nonWhole = lines.nonWhole
+        ..priceSpecial = lines.priceSpecial
+        ..remain = lines.remain
         ..lineUuid = ''
         ..unitName = lines.unitName
         ..unitUid = lines.unitUid;
@@ -398,7 +435,7 @@ class NewOrderRepository {
     }
   }
 
-  Future<bool> addCommentToOrder(int id, String comment) async {
+  Future<bool> addCommentToOrder({required int id, required String comment}) async {
     final isar = await DbProvider.instance();
     try{
       await isar.writeTxn(() async {

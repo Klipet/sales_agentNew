@@ -70,6 +70,12 @@ const ModelClientDbSchema = CollectionSchema(
       name: r'outlets',
       target: r'ModelOutlensDb',
       single: false,
+    ),
+    r'commentClient': LinkSchema(
+      id: -7548495971942288491,
+      name: r'commentClient',
+      target: r'ModelCommentClientDb',
+      single: false,
     )
   },
   embeddedSchemas: {},
@@ -199,7 +205,7 @@ Id _modelClientDbGetId(ModelClientDb object) {
 }
 
 List<IsarLinkBase<dynamic>> _modelClientDbGetLinks(ModelClientDb object) {
-  return [object.outlets];
+  return [object.outlets, object.commentClient];
 }
 
 void _modelClientDbAttach(
@@ -207,6 +213,8 @@ void _modelClientDbAttach(
   object.id = id;
   object.outlets
       .attach(col, col.isar.collection<ModelOutlensDb>(), r'outlets', id);
+  object.commentClient.attach(
+      col, col.isar.collection<ModelCommentClientDb>(), r'commentClient', id);
 }
 
 extension ModelClientDbQueryWhereSort
@@ -1576,6 +1584,67 @@ extension ModelClientDbQueryLinks
     return QueryBuilder.apply(this, (query) {
       return query.linkLength(
           r'outlets', lower, includeLower, upper, includeUpper);
+    });
+  }
+
+  QueryBuilder<ModelClientDb, ModelClientDb, QAfterFilterCondition>
+      commentClient(FilterQuery<ModelCommentClientDb> q) {
+    return QueryBuilder.apply(this, (query) {
+      return query.link(q, r'commentClient');
+    });
+  }
+
+  QueryBuilder<ModelClientDb, ModelClientDb, QAfterFilterCondition>
+      commentClientLengthEqualTo(int length) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'commentClient', length, true, length, true);
+    });
+  }
+
+  QueryBuilder<ModelClientDb, ModelClientDb, QAfterFilterCondition>
+      commentClientIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'commentClient', 0, true, 0, true);
+    });
+  }
+
+  QueryBuilder<ModelClientDb, ModelClientDb, QAfterFilterCondition>
+      commentClientIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'commentClient', 0, false, 999999, true);
+    });
+  }
+
+  QueryBuilder<ModelClientDb, ModelClientDb, QAfterFilterCondition>
+      commentClientLengthLessThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'commentClient', 0, true, length, include);
+    });
+  }
+
+  QueryBuilder<ModelClientDb, ModelClientDb, QAfterFilterCondition>
+      commentClientLengthGreaterThan(
+    int length, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(r'commentClient', length, include, 999999, true);
+    });
+  }
+
+  QueryBuilder<ModelClientDb, ModelClientDb, QAfterFilterCondition>
+      commentClientLengthBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.linkLength(
+          r'commentClient', lower, includeLower, upper, includeUpper);
     });
   }
 }

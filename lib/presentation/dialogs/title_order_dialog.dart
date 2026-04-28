@@ -93,7 +93,7 @@ void showBlurDialogTotal(
                     } else if (snapshot.hasError) {
                       return Center(child: Text("Ошибка: ${snapshot.error}"));
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text("Нет заказов"));
+                      return Center(child: Text('dialog.titleHome'.tr(), style: textStyleHomeSubTitle,));
                     }
 
                     final orders = snapshot.data!;

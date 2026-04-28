@@ -3,6 +3,7 @@ import 'package:sales_agent/data/repositories/price_repositori.dart';
 import 'package:sales_agent/logic/blocs/price_blocs/price_state.dart';
 
 import '../../../data/providers/api_provider/price_list_client_api.dart';
+import '../../../services/app_logger.dart';
 
 class PriceCubit extends Cubit<PriceState> {
   final PriceListClientApi _priceApi;
@@ -20,9 +21,19 @@ class PriceCubit extends Cubit<PriceState> {
         await priceRepositori.saveClientPrice(price);
         emit(PriceLoaded());
       } else {
+        await AppLogger().log(
+          action: 'PriceCubit',
+          message: price,
+          type: 2,
+        );
         emit(PriceError("Не удалось загрузить Прайс клиента"));
       }
     } catch (e) {
+      await AppLogger().log(
+        action: 'PriceCubit',
+        message: e.toString(),
+        type: 2,
+      );
       emit(PriceError(e.toString()));
     }
   }
