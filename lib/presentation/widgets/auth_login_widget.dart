@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:hexcolor/hexcolor.dart';
 import 'package:sales_agent/data/providers/api_provider/client_api.dart';
 import 'package:sales_agent/data/providers/api_provider/login_api.dart';
 import 'package:sales_agent/data/providers/api_provider/orders_api.dart';
@@ -22,7 +21,6 @@ import 'package:sales_agent/presentation/widgets/home_drawer.dart';
 import 'package:sales_agent/presentation/widgets/loading_widget.dart';
 
 import '../../core/colors_app.dart';
-import '../../core/errors/error_toast.dart';
 import '../../core/styles_text.dart';
 import '../../data/providers/api_provider/assotriment_api.dart';
 import '../../data/providers/api_provider/price_list_client_api.dart';
@@ -111,9 +109,8 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
         BlocListener<LoginBloc, LoginState>(
           listener: (context, state) async {
             if (state is LoginFailure) {
-              print(state.message);
               if(state.message == ''){
-                _onModuleError('Login','toast.loginError'.tr());
+                _onModuleErrorAuth('Login','toast.loginNotMatch'.tr());
               }else if(state.message == 'login nu concide'){
                 _onModuleErrorAuth('Login','toast.loginNotMatch'.tr());
               }

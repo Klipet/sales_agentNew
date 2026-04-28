@@ -27,7 +27,7 @@ class OrdersRepositori {
       ..dateProcessed =
           ConvertData().convertDate(modelDoc.dateProcessed ?? '') ??
           DateTime.now()
-      ..dateValid = ConvertData().convertDate(modelDoc.dateValid ?? '')
+      ..dateValid = ConvertData().convertDate(modelDoc.dateValid ?? '') ?? DateTime.now()
       ..deliveryAddress = modelDoc.deliveryAddress ?? ''
       ..state = modelDoc.state
       ..stockName = modelDoc.stockName
@@ -43,6 +43,8 @@ class OrdersRepositori {
         ..count = lines.count
         ..lineNumber = lines.lineNumber
         ..price = lines.price
+        ..priceActie = 0.0
+        ..priceSpecial = 0.0
         ..processedCount = lines.processedCount
         ..sum = lines.sum
         ..uid = lines.uid

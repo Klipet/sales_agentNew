@@ -4,6 +4,7 @@ import 'package:sales_agent/data/repositories/client_comment_repository.dart';
 
 import '../../../data/providers/api_provider/client_api.dart';
 import '../../../data/repositories/client_repositori.dart';
+import '../../../services/app_logger.dart';
 import 'clients_state.dart';
 
 class ClientsCubit extends Cubit<ClientsState> {
@@ -25,9 +26,21 @@ class ClientsCubit extends Cubit<ClientsState> {
           await clientRepositori.saveClient(clients);
         emit(ClientsLoaded(clients));
       } else {
+        await AppLogger().log(
+          action: 'ClientsCubit',
+          message: clients,
+          details: "Не удалось загрузить клиентов",
+          type: 2,
+        );
         emit(ClientsError("Не удалось загрузить клиентов"));
       }
     } catch (e) {
+      await AppLogger().log(
+        action: 'ClientsCubit',
+        message: e.toString(),
+        details: "Не удалось загрузить клиенто",
+        type: 2,
+      );
       emit(ClientsError(e.toString()));
     }
   }

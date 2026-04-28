@@ -22,6 +22,15 @@ class ModelLogin {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return {
+      'ErrorCode': errorCode,
+      'ErrorMessage': errorMessage,
+      'Token': token?.toJson(),
+      'User': user?.toJson(),
+    };
+  }
+
 }
 class ModelUser {
   final String barCode;
@@ -65,6 +74,23 @@ class ModelUser {
       surname: json['Surname'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'BarCode': barCode,
+      'Code': code,
+      'Description': description,
+      'FullName': fullName,
+      'IsFolder': isFolder,
+      'Name': name,
+      'ParentUid': parentUid,
+      'Uid': uid,
+      'IDNP': idnp,
+      'Patronymic': patronymic,
+      'Surname': surname,
+    };
+  }
+
   /// Конструктор-заглушка для null
   factory ModelUser.empty() => ModelUser(
     barCode: '',

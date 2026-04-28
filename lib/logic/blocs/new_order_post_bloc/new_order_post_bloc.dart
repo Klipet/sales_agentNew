@@ -9,6 +9,7 @@ import '../../../data/models_api/new_order_post/new_line_model_api.dart';
 import '../../../data/models_api/new_order_post/new_order_model_post_response_api.dart';
 import '../../../data/providers/api_provider/order_post_api.dart';
 import '../../../data/repositories/new_order_repositori.dart';
+import '../../../services/app_logger.dart';
 import 'new_order_post_state.dart';
 
 class NewOrderPostBloc extends Bloc<NewOrderPostEvent, NewOrderPostState> {
@@ -102,11 +103,22 @@ class NewOrderPostBloc extends Bloc<NewOrderPostEvent, NewOrderPostState> {
         ); // ⚠️ Не забудьте сохранить изменения!
         emit(OrderPostLoaded(response));
       } else {
+        await AppLogger().log(
+          action: 'NewOrderPostBloc',
+          message: response,
+          type: 2,
+        );
         emit(OrderPostError(response));
       }
     } catch (e, stackTrace) {
       print("❌ ERROR in onFetchOrderPostData: $e");
       print("❌ Stack trace: $stackTrace");
+      await AppLogger().log(
+        action: 'NewOrderPostBloc',
+        message: e.toString(),
+        details: stackTrace.toString(),
+        type: 2,
+      );
       emit(OrderPostError(NewOrderModelPostResponseApi(
           errorCode: 106,
           errorMessage: 'ERROR in onFetchOrderPostData',

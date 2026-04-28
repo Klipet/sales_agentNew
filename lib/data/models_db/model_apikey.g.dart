@@ -27,8 +27,13 @@ const ModelApikeySchema = CollectionSchema(
       name: r'codeLicense',
       type: IsarType.string,
     ),
-    r'uri': PropertySchema(
+    r'company': PropertySchema(
       id: 2,
+      name: r'company',
+      type: IsarType.string,
+    ),
+    r'uri': PropertySchema(
+      id: 3,
       name: r'uri',
       type: IsarType.string,
     )
@@ -55,6 +60,7 @@ int _modelApikeyEstimateSize(
   var bytesCount = offsets.last;
   bytesCount += 3 + object.apiKey.length * 3;
   bytesCount += 3 + object.codeLicense.length * 3;
+  bytesCount += 3 + object.company.length * 3;
   bytesCount += 3 + object.uri.length * 3;
   return bytesCount;
 }
@@ -67,7 +73,8 @@ void _modelApikeySerialize(
 ) {
   writer.writeString(offsets[0], object.apiKey);
   writer.writeString(offsets[1], object.codeLicense);
-  writer.writeString(offsets[2], object.uri);
+  writer.writeString(offsets[2], object.company);
+  writer.writeString(offsets[3], object.uri);
 }
 
 ModelApikey _modelApikeyDeserialize(
@@ -79,8 +86,9 @@ ModelApikey _modelApikeyDeserialize(
   final object = ModelApikey();
   object.apiKey = reader.readString(offsets[0]);
   object.codeLicense = reader.readString(offsets[1]);
+  object.company = reader.readString(offsets[2]);
   object.id = id;
-  object.uri = reader.readString(offsets[2]);
+  object.uri = reader.readString(offsets[3]);
   return object;
 }
 
@@ -96,6 +104,8 @@ P _modelApikeyDeserializeProp<P>(
     case 1:
       return (reader.readString(offset)) as P;
     case 2:
+      return (reader.readString(offset)) as P;
+    case 3:
       return (reader.readString(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -465,6 +475,140 @@ extension ModelApikeyQueryFilter
     });
   }
 
+  QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition> companyEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'company',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition>
+      companyGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'company',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition> companyLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'company',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition> companyBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'company',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition>
+      companyStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'company',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition> companyEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'company',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition> companyContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'company',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition> companyMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'company',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition>
+      companyIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'company',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition>
+      companyIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'company',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<ModelApikey, ModelApikey, QAfterFilterCondition> idEqualTo(
       Id value) {
     return QueryBuilder.apply(this, (query) {
@@ -682,6 +826,18 @@ extension ModelApikeyQuerySortBy
     });
   }
 
+  QueryBuilder<ModelApikey, ModelApikey, QAfterSortBy> sortByCompany() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'company', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterSortBy> sortByCompanyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'company', Sort.desc);
+    });
+  }
+
   QueryBuilder<ModelApikey, ModelApikey, QAfterSortBy> sortByUri() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'uri', Sort.asc);
@@ -718,6 +874,18 @@ extension ModelApikeyQuerySortThenBy
   QueryBuilder<ModelApikey, ModelApikey, QAfterSortBy> thenByCodeLicenseDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'codeLicense', Sort.desc);
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterSortBy> thenByCompany() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'company', Sort.asc);
+    });
+  }
+
+  QueryBuilder<ModelApikey, ModelApikey, QAfterSortBy> thenByCompanyDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'company', Sort.desc);
     });
   }
 
@@ -762,6 +930,13 @@ extension ModelApikeyQueryWhereDistinct
     });
   }
 
+  QueryBuilder<ModelApikey, ModelApikey, QDistinct> distinctByCompany(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'company', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<ModelApikey, ModelApikey, QDistinct> distinctByUri(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -787,6 +962,12 @@ extension ModelApikeyQueryProperty
   QueryBuilder<ModelApikey, String, QQueryOperations> codeLicenseProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'codeLicense');
+    });
+  }
+
+  QueryBuilder<ModelApikey, String, QQueryOperations> companyProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'company');
     });
   }
 

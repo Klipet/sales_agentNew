@@ -16,6 +16,15 @@ class ModelToken {
       validTo: json['ValidTo'] ?? '',
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'deviceUid': deviceUid,
+      'uid': uid,
+      'validTo': validTo,
+    };
+  }
+
   factory ModelToken.empty() => ModelToken(
     deviceUid: '',
     uid: '',

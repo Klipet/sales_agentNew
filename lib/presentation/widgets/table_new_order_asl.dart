@@ -475,6 +475,7 @@ class _TableNewOrderAslState extends State<TableNewOrderAsl> {
   Future<void> _loadPriceActie() async {
     final lines = await newRepo.getOrderLines(widget.orderId);
     final priceUuids = lines.map((e) => e.lineUuid).toList();
+    print(priceUuids);
     context.read<PriceActieBloc>().onLoadPrices(
       widget.clientUUid,
       priceUuids,

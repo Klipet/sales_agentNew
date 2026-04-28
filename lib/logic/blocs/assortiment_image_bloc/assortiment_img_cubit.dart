@@ -5,6 +5,7 @@ import 'package:sales_agent/logic/blocs/assortiment_image_bloc/assotriment_img_s
 import '../../../data/models_api/models_assortiment/assortiment_img_body.dart';
 import '../../../data/providers/api_provider/assortiment_img_api.dart';
 import '../../../data/repositories/login_repositori.dart';
+import '../../../services/app_logger.dart';
 
 class AssortimentImgCubit extends Cubit<AssotrimentImgState> {
   final AssortimentImgApi aslImg;
@@ -41,10 +42,13 @@ class AssortimentImgCubit extends Cubit<AssotrimentImgState> {
 
       if (isClosed) return;
 
-      print(imgResponse.images);
-      print("${imgResponse.errorMessage} ClientDetailBloc");
-
       if (imgResponse.errorCode != 0) {
+        await AppLogger().log(
+          action: 'AssortimentImgCubit',
+          message: imgResponse,
+          details: "Ошибка занрузки данных",
+          type: 2,
+        );
         emit(ImgFailure(imgResponse.errorMessage.toString()));
         return;
       }
@@ -53,6 +57,12 @@ class AssortimentImgCubit extends Cubit<AssotrimentImgState> {
 
     } catch (e) {
       if (isClosed) return;
+      await AppLogger().log(
+        action: 'AssortimentImgCubit',
+        message: e,
+        details: "Ошибка занрузки данных",
+        type: 2,
+      );
       emit(ImgFailure(e.toString()));
     }
   }

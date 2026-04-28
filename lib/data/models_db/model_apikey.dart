@@ -8,4 +8,5 @@ class ModelApikey {
   late String apiKey;
   late String uri;
   late String codeLicense;
+  late String company;
 }

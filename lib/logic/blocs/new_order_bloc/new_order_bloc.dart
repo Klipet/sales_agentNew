@@ -9,6 +9,7 @@ import '../../../core/constans.dart';
 import '../../../data/models_api/model_comment_clietn.dart';
 import '../../../data/providers/navigator_provider.dart';
 import '../../../data/repositories/new_order_repositori.dart';
+import '../../../services/app_logger.dart';
 import 'new_order_event.dart';
 import 'new_order_state.dart';
 
@@ -71,6 +72,11 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
       }
     } catch (e) {
       print('❌ Ошибка добавления адреса: $e');
+      await AppLogger().log(
+        action: 'NewOrderBloc',
+        message: e.toString(),
+        type: 2,
+      );
       emit(NewOrderError('Ошибка создания заказа: $e'));
     }
   }
@@ -96,6 +102,12 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
       );
     } catch (e) {
       print('❌ Ошибка создания заказа: $e');
+      await AppLogger().log(
+        action: 'NewOrderBloc',
+        message: e.toString(),
+        details: "Ошибка создания заказа",
+        type: 2,
+      );
       emit(NewOrderError('Ошибка создания заказа: $e'));
     }
   }
@@ -118,6 +130,13 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
         emit(NewOrderUpdated(event.id!, updatedOrder));
       }
     } catch (e) {
+      await AppLogger().log(
+        action: 'NewOrderBloc',
+        message: e.toString(),
+        details: "Ошибка добавления товара:",
+        type: 2,
+      );
+
       print('❌ Ошибка добавления товара: $e');
       emit(NewOrderError('Ошибка добавления товара: $e'));
     }
@@ -135,10 +154,15 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     } else if (currentState is NewOrderUpdated) {
       orderId = currentState.orderId;
     } else {
+      await AppLogger().log(
+        action: 'NewOrderBloc',
+        message: "NewOrderBloc",
+        details: "Заказ не загружен",
+        type: 2,
+      );
       emit(NewOrderError('Заказ не загружен'));
       return;
     }
-
     try {
       emit(NewOrderUpdating(orderId));
 
@@ -152,6 +176,13 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
         emit(NewOrderUpdated(orderId, updatedOrder));
       }
     } catch (e) {
+      await AppLogger().log(
+        action: 'NewOrderBloc',
+        message: e.toString(),
+        details: "Ошибка удаления товара:",
+        type: 2,
+      );
+
       print('❌ Ошибка удаления товара: $e');
       emit(NewOrderError('Ошибка удаления товара: $e'));
     }
@@ -187,6 +218,12 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
         emit(NewOrderUpdated(orderId, updatedOrder));
       }
     } catch (e) {
+      await AppLogger().log(
+        action: 'NewOrderBloc',
+        message: e.toString(),
+        details: "Ошибка обновления количества:",
+        type: 2,
+      );
       print('❌ Ошибка обновления количества: $e');
       emit(NewOrderError('Ошибка обновления количества: $e'));
     }
@@ -206,6 +243,12 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
         emit(NewOrderError('Заказ не найден'));
       }
     } catch (e) {
+      await AppLogger().log(
+        action: 'NewOrderBloc',
+        message: e.toString(),
+        details: "Ошибка загрузки заказа:",
+        type: 2,
+      );
       print('❌ Ошибка загрузки заказа: $e');
       emit(NewOrderError('Ошибка загрузки заказа: $e'));
     }
@@ -225,6 +268,12 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     } else if (currentState is NewOrderCreated) {
       orderId = currentState.orderId;
     } else {
+      await AppLogger().log(
+        action: 'NewOrderBloc',
+        message: "Заказ не загружен",
+        details: "Заказ не загружен:",
+        type: 2,
+      );
       emit(NewOrderError('Заказ не загружен'));
       return;
     }
@@ -233,6 +282,12 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
       await repository.getAllOrders();
       emit(NewOrderDeleted());
     } catch (e) {
+      await AppLogger().log(
+        action: 'NewOrderBloc',
+        message: e.toString(),
+        details: "Ошибка удаления заказа:",
+        type: 2,
+      );
       print('❌ Ошибка удаления заказа: $e');
       emit(NewOrderError('Ошибка удаления заказа: $e'));
     }
@@ -253,6 +308,12 @@ class NewOrderBloc extends Bloc<NewOrderEvent, NewOrderState> {
     if (order) {
       emit(AddComentSucces());
     } else {
+      await AppLogger().log(
+        action: 'NewOrderBloc',
+        message: order,
+        details: "оштбка добавления комментария:",
+        type: 2,
+      );
       emit(AddComentError('Что-то пошло не так в коменатрий'));
     }
   }

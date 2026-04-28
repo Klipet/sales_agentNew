@@ -3,6 +3,8 @@ import 'package:sales_agent/data/providers/api_provider/assotriment_api.dart';
 import 'package:sales_agent/data/repositories/assortiment_repositori.dart';
 import 'package:sales_agent/logic/blocs/assortiment_blocs/assortiment_state.dart';
 
+import '../../../services/app_logger.dart';
+
 
 class AssortimentBloc extends Cubit<AssortimentState>{
   final AssortimentApi assortimentApi;
@@ -13,19 +15,6 @@ class AssortimentBloc extends Cubit<AssortimentState>{
   Future<void> fetchAssortiment() async{
     emit(AssortimentLoading());
     try{
-    /*  final asl = await assortimentApi.getAssortiment();
-      if(asl.isEmpty){
-        print(asl);
-        emit(AssortimentFailureNonInternet(404));
-      }else{
-        await assortimentRepositori.deleteAssortiment();
-        await assortimentRepositori.saveAssortiment(asl);
-      //  if(!isClosed){
-
-      //  }
-        emit(AssortimentSuccess(asl));
-      }
-     */
       await assortimentRepositori.syncAssortiment();
       final data = await assortimentRepositori.getLocalAssortiment();
       if (!isClosed) {
@@ -33,6 +22,12 @@ class AssortimentBloc extends Cubit<AssortimentState>{
       }
     }catch(e){
     //  if(!isClosed){
+      await AppLogger().log(
+        action: 'AssortimentBloc',
+        message: e,
+        details: "Ошибка занрузки данных",
+        type: 2,
+      );
         emit(AssortimentFailure("я не смог загрузить и сохранить ассортимент"));
     //  }
     }
