@@ -85,7 +85,7 @@ class _TableAssortimentWidghetState extends State<TableAssortimentWidghet> {
         // Обрабатываем все варианты parentUid
         final key = item.parentUid ?? '';
         map.putIfAbsent(key, () => []);
-
+        print("ttt");
         map[key]!.add(item);
       }
       setState(() {
