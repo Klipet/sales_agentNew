@@ -39,16 +39,22 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text('SALES AGENT',
-                style: primareFont),
-            SizedBox(height: 26.h), // отступ перед формой
-            AuthLoginWidget(internet: isConnected,),
-          ],
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            minHeight: MediaQuery.of(context).size.height,
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text('SALES AGENT', style: primareFont),
+                SizedBox(height: 26.h),
+                AuthLoginWidget(internet: isConnected),
+              ],
+            ),
+          ),
         ),
       ),
     );

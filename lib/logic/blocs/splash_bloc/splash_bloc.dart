@@ -32,7 +32,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
             final url = apiResponse.appData?.uri;
             final apikey = apiResponse.appData?.licenseID;
             final licenseCode = apiResponse.appData?.licenseCode;
-            final company = apiResponse.appData?.licenseCode;
+            final company = apiResponse.appData?.company;
             if (apikey != null && url != null) {
               await repository.saveApiKey(
                 key: apikey,

@@ -31,9 +31,7 @@ class AppLogger {
     String? entity,
   }) async {
     try {
-      final company = await _apiKeyRepository.getCompany();
-      final licenseId = await _apiKeyRepository.getApiKey();
-      final licenseCode = await _apiKeyRepository.getlicenseCode();
+      final settings = await _apiKeyRepository.getSettings();
 
       final encodedMessage = _safeEncode(message);
 
@@ -46,15 +44,15 @@ class AppLogger {
         ip: '',
         type: type,
         domain: '',
-        entity: licenseCode,
+        entity: settings?.codeLicense ?? '',
         appVersion: '',
         date: DateTime.now(),
         os: 'Android',
         ram: '',
         hdd: '',
-        company: company,
+        company: settings?.company ?? '',
         companyID: 0,
-        licenseID: licenseId,
+        licenseID: settings?.apiKey ?? '',
       );
 
       await _logService.logPostServer(logRequest: request);

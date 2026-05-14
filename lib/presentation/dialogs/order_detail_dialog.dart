@@ -342,6 +342,16 @@ Future<bool?> showDetailOrder({
                                 ),
                               ),
                               GridColumn(
+                                columnName: 'priceSp',
+                                width: 0,
+                                label: SizedBox(),
+                              ),
+                              GridColumn(
+                                columnName: 'priceActie',
+                                width: 0,
+                                label: SizedBox(),
+                              ),
+                              GridColumn(
                                 columnName: 'suma',
                              //  width: 90.w,
                                 label: Center(
