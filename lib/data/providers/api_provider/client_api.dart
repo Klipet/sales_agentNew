@@ -26,10 +26,10 @@ class ClientApi {
         final dataResponse = ClientResponse.fromJson(response);
         return dataResponse.contragents;
       }else{
-        throw Exception("Ошибка Orders: ${ordersResponse.statusCode}");
+        throw Exception("Ошибка Клиетнов: ${ordersResponse.statusCode}");
       }
     }catch(e){
-      throw Exception("Ошибка при загрузки Orders: ${e.toString()}");
+      throw Exception("Ошибка при загрузки Клиентов: ${e.toString()}");
     }
   }
 }

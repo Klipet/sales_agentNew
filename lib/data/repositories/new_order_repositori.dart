@@ -128,7 +128,7 @@ class NewOrderRepository {
     final priceMap = {for (var p in prices) p.assortimentUid: p.price};
 
     final updatedLines = <ModelLinesDb>[];
-
+    double total = 0.0;
     for (final line in lines) {
       final newPrice = priceMap[line.assortimentUid];
       if (newPrice != null && newPrice < line.price) {
@@ -136,11 +136,13 @@ class NewOrderRepository {
         line.sum = double.parse((newPrice * line.count).toStringAsFixed(2));
         updatedLines.add(line);
       }
+      total += line.sum;
     }
-
+    order.sum = total;
     if (updatedLines.isNotEmpty) {
       await isar.writeTxn(() async {
         await isar.modelLinesDbs.putAll(updatedLines);
+        await isar.modelDocumentDbs.put(order); // ✅ не забыть сохранить order
       });
     }
   }
@@ -301,11 +303,9 @@ class NewOrderRepository {
       line.sum = line.priceActie == 0 ? line.price * newQuantity: line.priceActie*newQuantity;
       line.processedCount = newQuantity;
 
-      // Добавляем новую сумму
-      order.sum += line.sum;
-
       // Сохраняем
       await isar.modelLinesDbs.put(line);
+      order.sum += line.sum;
     //  order.tranmit = false;
       await isar.modelDocumentDbs.put(order);
 

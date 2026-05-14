@@ -45,7 +45,6 @@ android {
             storePassword = keystoreProperties["storePassword"] as String
         }
     }
-
     buildTypes {
         getByName("release") {
             signingConfig = signingConfigs.getByName("release")

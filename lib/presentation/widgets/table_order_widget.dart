@@ -149,18 +149,27 @@ class _TableOrderWidgetState extends State<TableOrderWidget> {
     }
 
     if (_dataSource.orderList.isEmpty) {
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset('assets/icons/empti.svg', width: 446.w, height: 259.h,),
-            SizedBox(height: 16),
-            Text(
-              widget.search.isNotEmpty ? 'errors.notFound'.tr() : 'errors.notFound'.tr(),
-              style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+      return LayoutBuilder(
+        builder: (context, constraints) {
+          return SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset('assets/icons/empti.svg', width: 446.w, height: 259.h),
+                    SizedBox(height: 16),
+                    Text(
+                      'errors.notFound'.tr(),
+                      style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ],
-        ),
+          );
+        },
       );
     }
     return Container(

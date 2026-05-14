@@ -29,6 +29,7 @@ import '../../logic/blocs/assortiment_blocs/assortiment_bloc.dart';
 import '../../logic/blocs/assortiment_blocs/assortiment_state.dart';
 import '../../logic/blocs/clients_bloc/clients_cubit.dart';
 import '../../logic/blocs/price_blocs/price_state.dart';
+import '../../services/sync_service_manager.dart';
 import '../toast/toast_response_error.dart';
 
 class AuthLoginWidget extends StatelessWidget {
@@ -77,6 +78,8 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
   bool savePass = false;
   final TextEditingController _controllerLogin = TextEditingController();
   final TextEditingController _controllerPassword = TextEditingController();
+  final FocusNode _focusPassword = FocusNode();
+  final FocusNode _focusLogIn = FocusNode();
   int _loadedCount = 0;
   final lastAcess = LoginRepository();
   final int _totalCount = 4; // Количество блоков
@@ -93,8 +96,13 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
 
   @override
   void dispose() {
+    _focusPassword.dispose();
+    _focusLogIn.dispose();
+    _controllerLogin.dispose();
+    _controllerPassword.dispose();
     super.dispose();
   }
+
   void _setLoading(bool value) {
     if (_isLoading != value) {
       setState(() {
@@ -102,6 +110,7 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocListener(
@@ -109,23 +118,23 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
         BlocListener<LoginBloc, LoginState>(
           listener: (context, state) async {
             if (state is LoginFailure) {
-              if(state.message == ''){
-                _onModuleErrorAuth('Login','toast.loginNotMatch'.tr());
-              }else if(state.message == 'login nu concide'){
-                _onModuleErrorAuth('Login','toast.loginNotMatch'.tr());
+              if (state.message == '') {
+                _onModuleErrorAuth('Login', 'toast.loginNotMatch'.tr());
+              } else if (state.message == 'login nu concide') {
+                _onModuleErrorAuth('Login', 'toast.loginNotMatch'.tr());
               }
             } else if (state is LoginSuccess) {
               // Сбрасываем счётчик модулей
               _loadedCount = 0;
               final access = await lastAcess.getLastAces();
-              if(access?.day != DateTime.now().day){
+              if (access?.day != DateTime.now().day) {
                 lastAcess.setLastAces(DateTime.now());
                 _refreshAllData(lastAces: state.lastAcces);
-              }else{
+              } else {
                 Navigator.pushAndRemoveUntil(
                   context,
                   MaterialPageRoute(builder: (_) => HomeDrawer()),
-                      (route) => false,
+                  (route) => false,
                 );
               }
               _controllerPassword.clear();
@@ -136,11 +145,15 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
         BlocListener<AssortimentBloc, AssortimentState>(
           listener: (context, state) {
             if (state is AssortimentSuccess) {
-
               _onModuleLoaded('documents.asl');
             } else if (state is AssortimentFailure) {
-              _onModuleError('Ассортимент', 'toast.loadError'.tr(namedArgs: { 'documents':'documents.asl'.tr()}));
-            }else if(state is AssortimentLoading){
+              _onModuleError(
+                'Ассортимент',
+                'toast.loadError'.tr(
+                  namedArgs: {'documents': 'documents.asl'.tr()},
+                ),
+              );
+            } else if (state is AssortimentLoading) {
               _setLoading(true);
             }
           },
@@ -151,9 +164,13 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
               LoadingWidget(width: 464.w, height: 448.h);
               _onModuleLoaded('documents.doc');
             } else if (state is OrdersError) {
-              _onModuleError('Документы', 'toast.loadError'.tr(namedArgs: {'documents': 'documents.doc'.tr()}));
-            }
-            else if(state is OrdersLoading){
+              _onModuleError(
+                'Документы',
+                'toast.loadError'.tr(
+                  namedArgs: {'documents': 'documents.doc'.tr()},
+                ),
+              );
+            } else if (state is OrdersLoading) {
               _setLoading(true);
             }
           },
@@ -164,9 +181,13 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
               LoadingWidget(width: 464.w, height: 448.h);
               _onModuleLoaded('documents.client');
             } else if (state is ClientsError) {
-              _onModuleError('Клиенты', 'toast.loadError'.tr(namedArgs: {'documents': 'documents.client'.tr()}));
-            }
-            else if(state is ClientsLoading){
+              _onModuleError(
+                'Клиенты',
+                'toast.loadError'.tr(
+                  namedArgs: {'documents': 'documents.client'.tr()},
+                ),
+              );
+            } else if (state is ClientsLoading) {
               _setLoading(true);
             }
           },
@@ -177,8 +198,13 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
               LoadingWidget(width: 464.w, height: 448.h);
               _onModuleLoaded('documents.price');
             } else if (state is PriceError) {
-              _onModuleError('Цены', 'toast.loadError'.tr(namedArgs: {'documents': 'documents.price'.tr()}));
-            }else if(state is PriceLoading){
+              _onModuleError(
+                'Цены',
+                'toast.loadError'.tr(
+                  namedArgs: {'documents': 'documents.price'.tr()},
+                ),
+              );
+            } else if (state is PriceLoading) {
               _setLoading(true);
             }
           },
@@ -188,139 +214,150 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
         builder: (context, loginState) {
           // Показ загрузки
           if (loginState is LoginLoading) {
-            if(_loadedCount != _totalCount){
+            if (_loadedCount != _totalCount) {
               return LoadingWidget(width: 464.w, height: 448.h);
             }
-          } if(!_isLoading){
-          return ConstrainedBox(
-            constraints: BoxConstraints(maxHeight: 464.h, maxWidth: 448.w),
-            child: Container(
-              decoration: BoxDecoration(
-                color: containerColor,
-                borderRadius: BorderRadius.circular(30.r),
-                border: Border.all(color: borderColor, width: 1.r),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: 48.r),
-                    child: Center(
-                      child: Text('auth'.tr(), style: autentificare),
+          }
+          if (!_isLoading) {
+            return ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 464.h, maxWidth: 448.w),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: containerColor,
+                  borderRadius: BorderRadius.circular(30.r),
+                  border: Border.all(color: borderColor, width: 1.r),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.only(top: 48.r),
+                      child: Center(
+                        child: Text('auth'.tr(), style: autentificare),
+                      ),
                     ),
-                  ),
-                  SizedBox(
-                    width: 328.w,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 15.r,
-                            top: 32.r,
-                            bottom: 8.r,
+                    SizedBox(
+                      width: 328.w,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: 15.r,
+                              top: 32.r,
+                              bottom: 8.r,
+                            ),
+                            child: Text('user'.tr(), style: titleCardInfo),
                           ),
-                          child: Text('user'.tr(), style: titleCardInfo),
-                        ),
-                        Center(
-                          child: ediTextAut(_controllerLogin, 'userHint'.tr()),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(
-                            left: 15.r,
-                            top: 16.r,
-                            bottom: 8.r,
+                          Center(
+                            child: ediTextAut(
+                              _controllerLogin,
+                              _focusLogIn,
+                              'userHint'.tr(),
+                              nextFocus: _focusPassword
+                            ),
                           ),
-                          child: Text('pass'.tr(), style: titleCardInfo),
-                        ),
-                        Center(
-                          child: ediTextAut(
-                            _controllerPassword,
-                            'passHint'.tr(),
-                            obscureText: hidePassword,
-                            suffixIcon: true,
+                          Padding(
+                            padding: EdgeInsets.only(
+                              left: 15.r,
+                              top: 16.r,
+                              bottom: 8.r,
+                            ),
+                            child: Text('pass'.tr(), style: titleCardInfo),
                           ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(top: 16.r, left: 15.r),
-                          child: GestureDetector(
-                            onTap: () => setState(() => savePass = !savePass),
-                            child: Row(
-                              children: [
-                                SvgPicture.asset(
-                                  savePass
-                                      ? 'assets/icons/chek_box.svg'
-                                      : 'assets/icons/chec_unbox.svg',
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(left: 8.0),
-                                    child: Text(
-                                      'saveAuth'.tr(),
-                                      style: titleCardInfo,
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
+                          Center(
+                            child: ediTextAut(
+                              _controllerPassword,
+                              _focusPassword,
+                              'passHint'.tr(),
+                              obscureText: hidePassword,
+                              suffixIcon: true,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 16.r, left: 15.r),
+                            child: GestureDetector(
+                              onTap: () => setState(() => savePass = !savePass),
+                              child: Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    savePass
+                                        ? 'assets/icons/chek_box.svg'
+                                        : 'assets/icons/chec_unbox.svg',
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left: 8.0),
+                                      child: Text(
+                                        'saveAuth'.tr(),
+                                        style: titleCardInfo,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 48.r),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          context.read<LoginBloc>().add(
+                            FetchLoginData(
+                              _controllerLogin.text,
+                              _controllerPassword.text,
+                              savePass,
+                            ),
+                          );
+                        },
+                        style: ButtonStyle(
+                          minimumSize: WidgetStateProperty.all(
+                            Size(175.w, 48.h),
+                          ),
+                          backgroundColor: WidgetStateProperty.all(buttonColor),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(100.r),
                             ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 48.r),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        context.read<LoginBloc>().add(
-                          FetchLoginData(
-                            _controllerLogin.text,
-                            _controllerPassword.text,
-                            savePass,
-                          ),
-                        );
-                      },
-                      style: ButtonStyle(
-                        minimumSize: WidgetStateProperty.all(Size(175.w, 48.h)),
-                        backgroundColor: WidgetStateProperty.all(buttonColor),
-                        shape: WidgetStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(100.r),
+                        child: Text(
+                          'connect'.tr(),
+                          style: buttonTextStyle,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          textScaler: TextScaler.linear(
+                            MediaQuery.of(
+                              context,
+                            ).textScaleFactor.clamp(1.0, 1.3),
                           ),
                         ),
                       ),
-                      child: Text(
-                        'connect'.tr(),
-                        style: buttonTextStyle,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        textScaler: TextScaler.linear(
-                          MediaQuery.of(
-                            context,
-                          ).textScaleFactor.clamp(1.0, 1.3),
-                        ),
-                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          );
-        }else{
+            );
+          } else {
             return LoadingWidget(width: 464.w, height: 448.h);
           }
-          },
+        },
       ),
     );
   }
 
   Widget ediTextAut(
     TextEditingController controller,
+    FocusNode? focus,
     String hint, {
     bool obscureText = false,
     bool suffixIcon = false,
+    FocusNode? nextFocus,
     TextInputType keyboardType = TextInputType.text,
   }) {
     bool hideIcon = true;
@@ -330,6 +367,15 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
       child: TextField(
         controller: controller,
         obscureText: obscureText,
+        focusNode: focus,
+        textInputAction: nextFocus != null
+            ? TextInputAction.next
+            : TextInputAction.done,
+        onSubmitted: (_) {
+          if (nextFocus != null) {
+            nextFocus.requestFocus();
+          }
+        },
         keyboardType: keyboardType,
         decoration: InputDecoration(
           hintText: hint,
@@ -380,34 +426,35 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
     );
   }
 
-  void _refreshAllData({required DateTime lastAces}) {
-    setState(() {
-      _loadedCount = 0;
-    });
-    print('_refreshAllData: internet ${widget.connectInternet} ${lastAces.day}');
+  Future<void> _refreshAllData({required DateTime lastAces}) async {
+    setState(() => _loadedCount = 0);
 
+    // Запускаем сервис перед загрузкой
+    await SyncServiceManager.start();
 
-      context.read<AssortimentBloc>().fetchAssortiment();
-      context.read<DocumentsCubit>().fetchOrders();
-      context.read<ClientsCubit>().fetchClients();
-      context.read<PriceCubit>().fetchPriceList();
+    print(
+      '_refreshAllData: internet ${widget.connectInternet} ${lastAces.day}',
+    );
+
+    context.read<AssortimentBloc>().fetchAssortiment();
+    context.read<DocumentsCubit>().fetchOrders();
+    context.read<ClientsCubit>().fetchClients();
+    context.read<PriceCubit>().fetchPriceList();
   }
 
   void _onModuleLoaded(String moduleName) {
-    setState(() {
-      _loadedCount++;
-    });
-
-    print('✅ ${moduleName.tr()} загружен ($_loadedCount/$_totalCount)');
+    setState(() => _loadedCount++);
+    print('✅ ${moduleName} загружен ($_loadedCount/$_totalCount)');
 
     ToastResponseError(
       context: context,
-      textError: 'toast.loadSuccess'.tr(namedArgs: {
-        'documents' : moduleName.tr()
-      } ),
+      textError: 'toast.loadSuccess'.tr(
+        namedArgs: {'documents': moduleName.tr()},
+      ),
     ).showUpdateSucces();
 
     if (_loadedCount == _totalCount) {
+      SyncServiceManager.stop(); // ← останавливаем сервис
       ToastResponseError(
         context: context,
         textError: 'toast.updateSuccess'.tr(),
@@ -422,20 +469,15 @@ class _AuthLoginWidgetUIState extends State<AuthLoginWidgetUI>
   }
 
   void _onModuleError(String moduleName, String error) {
-    ToastResponseError(
-      context: context,
-      textError: error,
-    ).showError();
+    ToastResponseError(context: context, textError: error).showError();
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => HomeDrawer()),
-          (route) => false,
+      (route) => false,
     );
   }
+
   void _onModuleErrorAuth(String moduleName, String error) {
-   return ToastResponseError(
-      context: context,
-      textError: error,
-    ).showError();
+    return ToastResponseError(context: context, textError: error).showError();
   }
 }

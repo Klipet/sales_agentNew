@@ -24,6 +24,7 @@ import '../../../../logic/blocs/document_bloc/documents_cubit.dart';
 import '../../../../logic/blocs/price_blocs/price_cubit.dart';
 import '../../../../logic/blocs/price_blocs/price_state.dart';
 import '../../../../packages/toast_costom.dart';
+import '../../../../services/sync_service_manager.dart';
 
 class WidgetUppdate extends StatelessWidget {
   const WidgetUppdate({super.key});
@@ -112,10 +113,12 @@ class _WidgetUppdateUIState extends State<WidgetUppdateUI> {
     );
   }
 
-  void _refreshAllData() {
-    setState(() {
-      _loadedCount = 0;
-    });
+  Future<void> _refreshAllData() async {
+    setState(() => _loadedCount = 0);
+
+
+    // Запускаем сервис перед загрузкой
+    await SyncServiceManager.start();
 
     context.read<AssortimentBloc>().fetchAssortiment();
     context.read<DocumentsCubit>().fetchOrders();
@@ -126,13 +129,11 @@ class _WidgetUppdateUIState extends State<WidgetUppdateUI> {
   }
 
   void _onModuleLoaded(String moduleName) {
-    setState(() {
-      _loadedCount++;
-    });
-
-    print('✅ $moduleName загружен ($_loadedCount/$_totalCount)');
+    setState(() => _loadedCount++);
+    print('✅ ${moduleName} загружен ($_loadedCount/$_totalCount)');
 
     if (_loadedCount == _totalCount) {
+      SyncServiceManager.stop(); // ← останавливаем сервис
       CustomToast.dismissAll();
       Future.delayed(Duration(seconds: 1), () {
         ToastResponseError(context: context, textError: 'toast.updateSuccess'.tr()).showUpdateSucces();

@@ -21,7 +21,7 @@ class AssortimentApi {
       final baseUrl = url!.endsWith("/") ? url : "$url/";
       final urlPars = Uri.parse(baseUrl)
           .resolve('json/GetAssortimentList?tokenUid=$token');
-      final aslResponse = await http.get(urlPars).timeout(Duration(minutes: 5));
+      final aslResponse = await http.get(urlPars).timeout(Duration(minutes: 3));
       if(aslResponse.statusCode == 200){
         final response = jsonDecode(aslResponse.body);
         final dataResponse = AssortimentResponse.fromJson(response);

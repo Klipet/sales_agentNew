@@ -20,10 +20,9 @@ class ApikeyRepository {
     return settings?.apiKey;
   }
 
-  Future<String?> getCompany() async {
+  Future<ModelApikey?> getSettings() async {
     final isar = await DbProvider.instance();
-    final settings = await isar.modelApikeys.get(0);
-    return settings?.company;
+    return await isar.modelApikeys.get(0);
   }
 
   Future<String?> getlicenseCode() async {
