@@ -1,16 +1,59 @@
-# sales_agent
+# 🛒 Sales Agent
 
-A new Flutter project.
+Мобильное приложение для торговых агентов — управление заказами, ассортиментом, контрагентами и отчётами в одном месте.
 
-## Getting Started
+## 📱 Скриншоты
 
-This project is a starting point for a Flutter application.
+> *(добавь сюда скриншоты приложения)*
 
-A few resources to get you started if this is your first Flutter project:
+## ✨ Функциональность
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- 🔐 Авторизация с JWT-токеном
+- 📦 Просмотр и управление ассортиментом товаров
+- 🧾 Создание и отслеживание заказов
+- 👥 База контрагентов
+- 📊 Отчёты и аналитика
+- 🌐 Многоязычность (i18n)
+- 📶 Работа офлайн с синхронизацией данных
+- 🗓️ Календарь и планирование
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🛠️ Технологии
+
+| Категория | Технологии |
+|---|---|
+| Фреймворк | Flutter / Dart |
+| State management | BLoC / flutter_bloc |
+| Локальная БД | Isar |
+| Сеть | HTTP / REST API |
+| UI | flutter_screenutil, SidebarX, Syncfusion DataGrid |
+| Локализация | easy_localization |
+| Иконки | icons_launcher |
+| Уведомления | toastification, flutter_styled_toast |
+
+## 🚀 Запуск проекта
+
+### Требования
+
+- Flutter SDK >= 3.8.0
+- Dart >= 3.8.0
+
+## 📂 Структура проекта
+
+```
+lib/
+├── bloc/          # BLoC / Cubit классы
+├── models/        # Модели данных
+├── screens/       # Экраны приложения
+├── widgets/       # Переиспользуемые виджеты
+├── services/      # API и сервисы
+└── main.dart      # Точка входа
+```
+
+## 📦 Платформы
+
+- ✅ Android
+- ✅ Windows
+
+## 👤 Автор
+
+**Юрий Цветков** — [github.com/Klipet](https://github.com/Klipet)
